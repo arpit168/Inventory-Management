@@ -28,7 +28,7 @@ const Products = () => {
   const [sort, setSort] = useState('updatedAt');
   const [order, setOrder] = useState('desc');
   const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(8);
+  const [limit] = useState(8);
   const [totalPages, setTotalPages] = useState(1);
   const [showModal, setShowModal] = useState(false);
   const [editingId, setEditingId] = useState(null);
@@ -237,7 +237,7 @@ const Products = () => {
         </div>
 
         <div className="mt-6 flex flex-wrap gap-3">
-          <label className="flex flex-1 min-w-[220px] items-center gap-3 rounded-2xl border border-slate-300 dark:border-white/10 bg-white dark:bg-slate-900 px-4 py-3 shadow-sm hover:shadow-md transition-all focus-within:ring-2 focus-within:ring-cyan-500 dark:focus-within:ring-cyan-400">
+          <label className="flex flex-1 min-w-55 items-center gap-3 rounded-2xl border border-slate-300 dark:border-white/10 bg-white dark:bg-slate-900 px-4 py-3 shadow-sm hover:shadow-md transition-all focus-within:ring-2 focus-within:ring-cyan-500 dark:focus-within:ring-cyan-400">
             <Search size={16} className="text-slate-400 dark:text-slate-500" />
             <input
               value={search}
