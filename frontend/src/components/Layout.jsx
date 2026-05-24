@@ -16,8 +16,8 @@ const Layout = () => {
   const location = useLocation();
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100 text-slate-900 dark:bg-gradient-to-br dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 dark:text-slate-100">
-      <div className="mx-auto flex min-h-screen max-w-[1600px] flex-col lg:flex-row">
+    <div className="min-h-screen bg-linear-to-br from-slate-50 via-white to-slate-100 text-slate-900 dark:bg-linear-to-br dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 dark:text-slate-100">
+      <div className="mx-auto flex min-h-screen max-w-400 flex-col lg:flex-row">
         <aside className="border-b border-slate-200 bg-white/80 backdrop-blur-md dark:border-white/10 dark:bg-slate-950/75 p-5 lg:min-h-screen lg:w-72 lg:border-b-0 lg:border-r shadow-sm dark:shadow-none">
           <div className="flex items-center justify-between">
             <div>
@@ -26,14 +26,14 @@ const Layout = () => {
             </div>
             <button
               onClick={toggleTheme}
-              className="rounded-full border border-slate-300 bg-slate-100 hover:bg-slate-200 dark:border-cyan-400/40 dark:bg-cyan-400/10 px-3 py-2 text-sm text-slate-700 dark:text-cyan-100 transition-all duration-300 hover:shadow-md"
+              className="rounded-full border border-slate-900 bg-slate-100 hover:bg-slate-600 dark:border-cyan-400/40 dark:bg-cyan-400/50 px-3 py-2 text-sm text-slate-700 dark:text-cyan-100 transition-all duration-300 hover:shadow-md"
               title={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
             >
-              {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
+              {theme === 'light' ? <Sun size={18} /> : <Moon size={18} />}
             </button>
           </div>
 
-          <div className="mt-6 rounded-2xl border border-slate-200 bg-gradient-to-br from-slate-100 to-slate-50 dark:border-cyan-400/30 dark:bg-cyan-400/10 p-4 shadow-sm dark:shadow-none">
+          <div className="mt-6 rounded-2xl border border-slate-200 bg-linear-to-br from-slate-800 to-slate-500 dark:border-cyan-400/30 dark:bg-cyan-400/10 p-4 shadow-sm dark:shadow-none">
             <p className="text-sm text-slate-600 dark:text-slate-200">Welcome back</p>
             <p className="mt-1 text-lg font-semibold text-slate-900 dark:text-white">{user?.name || 'Shopkeeper'}</p>
             <p className="text-sm text-slate-500 dark:text-slate-300">{user?.email}</p>
@@ -72,7 +72,7 @@ const Layout = () => {
         <main className="flex-1 p-4 sm:p-6 lg:p-8">
           <div className="mb-8 flex flex-wrap items-center justify-between gap-4">
             <div>
-              <p className="text-sm uppercase tracking-[0.35em] text-cyan-600 dark:text-cyan-300">Premium inventory control</p>
+              <p className="text-sm uppercase tracking-[0.35em] text-cyan-600 dark:text-cyan-300"> Hey! {user?.name || 'Shopkeeper'}</p>
               <h2 className="mt-2 text-3xl font-bold text-slate-900 dark:text-white">{location.pathname === '/dashboard' ? 'Command center' : 'Inventory management'}</h2>
             </div>
 

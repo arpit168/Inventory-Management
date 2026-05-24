@@ -33,7 +33,7 @@ const Login = () => {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-950 dark:to-slate-900 px-4 py-12">
+    <div className="flex min-h-screen items-center justify-center bg-linear-to-br from-slate-50 to-slate-100 dark:from-slate-950 dark:to-slate-900 px-4 py-12">
       <div className="grid w-full max-w-5xl overflow-hidden rounded-xl border border-slate-200 dark:border-white/10 bg-white dark:bg-slate-950/80 shadow-xl hover:shadow-2xl lg:grid-cols-[1.1fr_0.9fr] transition-shadow">
         <div className="p-8 sm:p-10 border-r border-slate-200 dark:border-white/10">
           <p className="text-sm uppercase tracking-[0.35em] text-cyan-600 dark:text-cyan-300 font-semibold">Inventory Pro</p>

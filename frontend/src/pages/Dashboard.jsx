@@ -56,7 +56,7 @@ const Dashboard = () => {
         {statCards.map(({ key, label, icon: Icon, accent, textColor }) => (
           <div
             key={key}
-            className={`rounded-2xl border border-slate-200 dark:border-white/10 bg-gradient-to-br ${accent} p-6 shadow-sm hover:shadow-md dark:shadow-none dark:hover:shadow-lg transition-all duration-300 hover:-translate-y-1`}
+            className={`rounded-2xl border border-slate-200 dark:border-white/10 bg-linear-to-br ${accent} p-6 shadow-sm hover:shadow-md dark:shadow-none dark:hover:shadow-lg transition-all duration-300 hover:-translate-y-1`}
           >
             <div className="flex items-center justify-between">
               <div>

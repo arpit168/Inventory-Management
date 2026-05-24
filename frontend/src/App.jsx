@@ -15,12 +15,14 @@ import Register from './pages/Register';
 import Reports from './pages/Reports';
 import ResetPassword from './pages/ResetPassword';
 import { ToastContainer } from './components/ToastContainer';
+import { Toaster } from 'react-hot-toast';
 
 const App = () => (
   <AuthProvider>
     <ToastProvider>
       <BrowserRouter>
         <ToastContainer />
+        <Toaster/>
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
