@@ -1,6 +1,7 @@
 import Product from '../models/Product.js';
-import Notification from '../models/Notification.js';
 import RemovedProduct from '../models/RemovedProduct.js';
+import { addNotification } from '../utils/notifications.js';
+import { escapeRegex } from '../utils/escapeRegex.js';
 
 const getMetrics = (product) => {
   const quantity = Number(product.quantity || 0);
@@ -25,21 +26,15 @@ const getMetrics = (product) => {
   };
 };
 
-const addNotification = async (
-  userId,
-  type,
-  title,
-  message,
-  relatedProduct = ''
-) => {
-  await Notification.create({
-    user: userId,
-    type,
-    title,
-    message,
-    relatedProduct,
-  });
-};
+const ALLOWED_SORT_FIELDS = new Set([
+  'name',
+  'category',
+  'quantity',
+  'buyingPrice',
+  'sellingPrice',
+  'createdAt',
+  'updatedAt',
+]);
 
 export const getProducts = async (req, res, next) => {
   try {
@@ -61,36 +56,23 @@ export const getProducts = async (req, res, next) => {
     }
 
     if (search) {
+      const escaped = escapeRegex(search);
       query.$or = [
-        {
-          name: {
-            $regex: search,
-            $options: 'i',
-          },
-        },
-        {
-          category: {
-            $regex: search,
-            $options: 'i',
-          },
-        },
-        {
-          sku: {
-            $regex: search,
-            $options: 'i',
-          },
-        },
+        { name: { $regex: escaped, $options: 'i' } },
+        { category: { $regex: escaped, $options: 'i' } },
+        { sku: { $regex: escaped, $options: 'i' } },
       ];
     }
 
     const pageNum = Math.max(Number(page), 1);
-    const limitNum = Math.max(Number(limit), 1);
+    const limitNum = Math.min(Math.max(Number(limit), 1), 100);
 
+    const sortField = ALLOWED_SORT_FIELDS.has(sort) ? sort : 'updatedAt';
     const sortDirection = order === 'asc' ? 1 : -1;
 
     const [products, total] = await Promise.all([
       Product.find(query)
-        .sort({ [sort]: sortDirection })
+        .sort({ [sortField]: sortDirection })
         .skip((pageNum - 1) * limitNum)
         .limit(limitNum)
         .lean(),
@@ -204,26 +186,25 @@ export const updateProduct = async (req, res, next) => {
     const previousQuantity = Number(product.quantity);
     const previousStatus = product.status;
 
-    const payload = req.body;
+    const {
+      name,
+      category,
+      sku,
+      quantity,
+      buyingPrice,
+      sellingPrice,
+      lowStockThreshold,
+      description,
+    } = req.body;
 
-    Object.assign(product, payload);
-
-    product.quantity = Number(
-      payload.quantity ?? product.quantity
-    );
-
-    product.buyingPrice = Number(
-      payload.buyingPrice ?? product.buyingPrice
-    );
-
-    product.sellingPrice = Number(
-      payload.sellingPrice ?? product.sellingPrice
-    );
-
-    product.lowStockThreshold = Number(
-      payload.lowStockThreshold ??
-        product.lowStockThreshold
-    );
+    if (name !== undefined) product.name = name;
+    if (category !== undefined) product.category = category;
+    if (sku !== undefined) product.sku = sku;
+    if (description !== undefined) product.description = description;
+    if (quantity !== undefined) product.quantity = Number(quantity);
+    if (buyingPrice !== undefined) product.buyingPrice = Number(buyingPrice);
+    if (sellingPrice !== undefined) product.sellingPrice = Number(sellingPrice);
+    if (lowStockThreshold !== undefined) product.lowStockThreshold = Number(lowStockThreshold);
 
     product.status =
       product.quantity <= 0
@@ -460,41 +441,27 @@ export const getAnalytics = async (req, res, next) => {
     }).lean();
 
     const totalProducts = products.length;
+    const enriched = products.map((p) => ({ ...p, ...getMetrics(p) }));
 
-    const totalInventoryValue = products.reduce(
-      (sum, product) =>
-        sum + getMetrics(product).inventoryValue,
-      0
-    );
+    let totalInventoryValue = 0;
+    let totalStockCount = 0;
+    let outOfStockCount = 0;
+    let lowStockCount = 0;
+    let totalProfit = 0;
+    let totalLoss = 0;
 
-    const totalStockCount = products.reduce(
-      (sum, product) =>
-        sum + Number(product.quantity || 0),
-      0
-    );
+    for (const p of enriched) {
+      totalInventoryValue += p.inventoryValue;
+      totalStockCount += Number(p.quantity || 0);
+      totalProfit += p.profit;
+      totalLoss += p.loss;
 
-    const outOfStockCount = products.filter(
-      (product) => product.quantity <= 0
-    ).length;
-
-    const lowStockCount = products.filter(
-      (product) =>
-        product.quantity > 0 &&
-        product.quantity <=
-          Number(product.lowStockThreshold || 5)
-    ).length;
-
-    const totalProfit = products.reduce(
-      (sum, product) =>
-        sum + getMetrics(product).profit,
-      0
-    );
-
-    const totalLoss = products.reduce(
-      (sum, product) =>
-        sum + getMetrics(product).loss,
-      0
-    );
+      if (p.quantity <= 0) {
+        outOfStockCount += 1;
+      } else if (p.quantity <= Number(p.lowStockThreshold || 5)) {
+        lowStockCount += 1;
+      }
+    }
 
     const salesData = products.flatMap((product) =>
       (product.activityLogs || [])
@@ -577,10 +544,7 @@ export const getAnalytics = async (req, res, next) => {
 
       recentActivity,
 
-      products: products.map((product) => ({
-        ...product,
-        ...getMetrics(product),
-      })),
+      products: enriched,
     });
   } catch (error) {
     return next(error);

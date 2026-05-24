@@ -1,4 +1,5 @@
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
+import { Toaster } from 'react-hot-toast';
 import Layout from './components/Layout';
 import ProtectedRoute from './components/ProtectedRoute';
 import { AuthProvider } from './context/AuthContext';
@@ -14,15 +15,12 @@ import Profile from './pages/Profile';
 import Register from './pages/Register';
 import Reports from './pages/Reports';
 import ResetPassword from './pages/ResetPassword';
-import { ToastContainer } from './components/ToastContainer';
-import { Toaster } from 'react-hot-toast';
 
 const App = () => (
   <AuthProvider>
     <ToastProvider>
       <BrowserRouter>
-        <ToastContainer />
-        <Toaster/>
+        <Toaster position="top-right" />
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />

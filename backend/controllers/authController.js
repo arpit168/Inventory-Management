@@ -3,29 +3,12 @@ import crypto from 'crypto';
 import jwt from 'jsonwebtoken';
 
 import User from '../models/User.js';
+import { addNotification } from '../utils/notifications.js';
 
 const signToken = (userId) =>
-  jwt.sign({ id: userId }, process.env.JWT_SECRET || 'dev-secret', {
+  jwt.sign({ id: userId }, process.env.JWT_SECRET, {
     expiresIn: '7d',
   });
-
-const createNotification = async (
-  userId,
-  type,
-  title,
-  message,
-  relatedProduct = ''
-) => {
-  const { default: Notification } = await import('../models/Notification.js');
-
-  await Notification.create({
-    user: userId,
-    type,
-    title,
-    message,
-    relatedProduct,
-  });
-};
 
 export const register = async (req, res, next) => {
   try {
@@ -128,8 +111,8 @@ export const forgotPassword = async (req, res, next) => {
     });
 
     if (!user) {
-      return res.status(404).json({
-        message: 'No account found for that email',
+      return res.status(200).json({
+        message: 'If the account exists, a reset token has been generated.',
       });
     }
 
@@ -148,7 +131,7 @@ export const forgotPassword = async (req, res, next) => {
       process.env.CLIENT_URL || 'http://localhost:5173'
     }/reset-password?token=${resetToken}`;
 
-    await createNotification(
+    await addNotification(
       user._id,
       'inventory_update',
       'Password reset requested',
@@ -156,11 +139,16 @@ export const forgotPassword = async (req, res, next) => {
       'account'
     );
 
-    return res.status(200).json({
+    const response = {
       message: 'If the account exists, a reset token has been generated.',
-      resetToken,
-      resetUrl,
-    });
+    };
+
+    if (process.env.NODE_ENV !== 'production') {
+      response.resetToken = resetToken;
+      response.resetUrl = resetUrl;
+    }
+
+    return res.status(200).json(response);
   } catch (error) {
     return next(error);
   }
@@ -234,9 +222,17 @@ export const changePassword = async (req, res, next) => {
       });
     }
 
+    const user = await User.findById(req.user._id).select('+password');
+
+    if (!user) {
+      return res.status(404).json({
+        message: 'User not found',
+      });
+    }
+
     const isCurrentValid = await bcrypt.compare(
       currentPassword,
-      req.user.password
+      user.password
     );
 
     if (!isCurrentValid) {
@@ -245,9 +241,9 @@ export const changePassword = async (req, res, next) => {
       });
     }
 
-    req.user.password = await bcrypt.hash(newPassword, 12);
+    user.password = await bcrypt.hash(newPassword, 12);
 
-    await req.user.save();
+    await user.save();
 
     return res.status(200).json({
       message: 'Password changed successfully',

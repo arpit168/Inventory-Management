@@ -1,22 +1,27 @@
-import { createContext, useContext, useMemo, useState } from 'react';
+import { createContext, useContext, useMemo } from 'react';
+import toast from 'react-hot-toast';
 
 const ToastContext = createContext();
 
 export const ToastProvider = ({ children }) => {
-  const [toasts, setToasts] = useState([]);
-
   const showToast = (message, type = 'info') => {
-    const id = Date.now();
-    setToasts((current) => [...current, { id, message, type }]);
-
-    window.setTimeout(() => {
-      setToasts((current) => current.filter((toast) => toast.id !== id));
-    }, 3500);
+    switch (type) {
+      case 'success':
+        toast.success(message);
+        break;
+      case 'error':
+        toast.error(message);
+        break;
+      default:
+        toast(message);
+        break;
+    }
   };
 
-  const value = useMemo(() => ({ showToast, toasts }), [toasts]);
+  const value = useMemo(() => ({ showToast }), []);
 
   return <ToastContext.Provider value={value}>{children}</ToastContext.Provider>;
 };
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useToast = () => useContext(ToastContext);

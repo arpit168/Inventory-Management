@@ -18,6 +18,14 @@ import reportRoutes from './routes/reportRoutes.js';
 
 import errorHandler from './middleware/errorHandler.js';
 
+const requiredEnvVars = ['MONGO_URI', 'JWT_SECRET'];
+for (const key of requiredEnvVars) {
+  if (!process.env[key]) {
+    console.error(`Missing required environment variable: ${key}`);
+    process.exit(1);
+  }
+}
+
 const app = express();
 
 const PORT = process.env.PORT || 5000;
@@ -39,13 +47,29 @@ app.use(
 
 app.use(compression());
 
-app.use(morgan('dev'));
+if (process.env.NODE_ENV !== 'production') {
+  app.use(morgan('dev'));
+} else {
+  app.use(morgan('combined'));
+}
 
 app.use(
   '/api/',
   rateLimit({
     windowMs: 15 * 60 * 1000,
     max: 200,
+    standardHeaders: true,
+    legacyHeaders: false,
+  })
+);
+
+app.use(
+  '/api/auth/',
+  rateLimit({
+    windowMs: 15 * 60 * 1000,
+    max: 30,
+    standardHeaders: true,
+    legacyHeaders: false,
   })
 );
 

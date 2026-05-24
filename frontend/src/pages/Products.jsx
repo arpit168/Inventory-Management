@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Download, Plus, Search, Trash2, WandSparkles } from 'lucide-react';
 import autoTable from 'jspdf-autotable';
 import jsPDF from 'jspdf';
@@ -7,6 +7,7 @@ import api from '../services/api';
 import { LoadingSkeleton } from '../components/LoadingSkeleton';
 import { useToast } from '../context/ToastContext';
 import { formatCurrency, formatNumber } from '../utils/formatters';
+import { useDebounce } from '../hooks/useDebounce';
 
 const initialForm = {
   name: '',
@@ -28,19 +29,20 @@ const Products = () => {
   const [sort, setSort] = useState('updatedAt');
   const [order, setOrder] = useState('desc');
   const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(8);
+  const [limit] = useState(8);
   const [totalPages, setTotalPages] = useState(1);
   const [showModal, setShowModal] = useState(false);
   const [editingId, setEditingId] = useState(null);
   const [form, setForm] = useState(initialForm);
+  const debouncedSearch = useDebounce(search, 300);
 
-  const loadProducts = async () => {
+  const loadProducts = useCallback(async () => {
     setLoading(true);
 
     try {
       const response = await api.get('/products', {
         params: {
-          search,
+          search: debouncedSearch,
           status,
           sort,
           order,
@@ -56,12 +58,11 @@ const Products = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [debouncedSearch, status, sort, order, page, limit, showToast]);
 
   useEffect(() => {
-    loadProducts();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [page, limit, search, status, sort, order]);
+    loadProducts(); // eslint-disable-line react-hooks/set-state-in-effect
+  }, [loadProducts]);
 
   const filteredBanner = useMemo(() => {
     const metrics = products.reduce(
