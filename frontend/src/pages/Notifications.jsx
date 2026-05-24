@@ -2,9 +2,11 @@ import { useEffect, useState } from 'react';
 import { BellRing, CheckCheck } from 'lucide-react';
 import api from '../services/api';
 import { LoadingSkeleton } from '../components/LoadingSkeleton';
+import { useToast } from '../context/ToastContext';
 import { formatDate } from '../utils/formatters';
 
 const Notifications = () => {
+  const { showToast } = useToast();
   const [notifications, setNotifications] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -22,8 +24,12 @@ const Notifications = () => {
   }, []);
 
   const handleMarkRead = async (id) => {
-    await api.put(`/notifications/${id}/read`);
-    setNotifications((current) => current.map((item) => (item._id === id ? { ...item, read: true } : item)));
+    try {
+      await api.put(`/notifications/${id}/read`);
+      setNotifications((current) => current.map((item) => (item._id === id ? { ...item, read: true } : item)));
+    } catch (error) {
+      showToast(error.response?.data?.message || 'Unable to mark notification as read.', 'error');
+    }
   };
 
   if (loading) {

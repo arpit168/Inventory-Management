@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useMemo, useState } from 'react';
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import api from '../services/api';
 import toast from 'react-hot-toast';
 
@@ -17,7 +17,7 @@ export const AuthProvider = ({ children }) => {
     localStorage.setItem('inventory-theme', theme);
   }, [theme]);
 
-  const fetchProfile = async () => {
+  const fetchProfile = useCallback(async () => {
     if (!token) {
       setLoading(false);
       return;
@@ -36,14 +36,13 @@ export const AuthProvider = ({ children }) => {
     } finally {
       setLoading(false);
     }
-  };
-
-  useEffect(() => {
-    fetchProfile();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token]);
 
-  const login = async (credentials) => {
+  useEffect(() => {
+    fetchProfile(); // eslint-disable-line react-hooks/set-state-in-effect
+  }, [fetchProfile]);
+
+  const login = useCallback(async (credentials) => {
     const response = await api.post('/auth/login', credentials);
     const nextToken = response.data.token;
     localStorage.setItem('inventory-auth-token', nextToken);
@@ -51,9 +50,9 @@ export const AuthProvider = ({ children }) => {
     setToken(nextToken);
     setUser(response.data.user);
     return response.data;
-  };
+  }, []);
 
-  const register = async (payload) => {
+  const register = useCallback(async (payload) => {
     const response = await api.post('/auth/register', payload);
     const nextToken = response.data.token;
     localStorage.setItem('inventory-auth-token', nextToken);
@@ -61,9 +60,9 @@ export const AuthProvider = ({ children }) => {
     setToken(nextToken);
     setUser(response.data.user);
     return response.data;
-  };
+  }, []);
 
-  const logout = async () => {
+  const logout = useCallback(async () => {
     try {
       await api.post('/auth/logout');
     } finally {
@@ -72,15 +71,12 @@ export const AuthProvider = ({ children }) => {
       setToken('');
       setUser(null);
       setNotifications([]);
-
-      toast.success("Logout Successful")
+      toast.success('Logout Successful');
     }
-  };
+  }, []);
 
-  const refreshNotifications = async () => {
-    if (!token) {
-      return;
-    }
+  const refreshNotifications = useCallback(async () => {
+    if (!token) return;
 
     try {
       const response = await api.get('/notifications');
@@ -88,15 +84,15 @@ export const AuthProvider = ({ children }) => {
     } catch (err) {
       setError(err.response?.data?.message || 'Unable to load notifications');
     }
-  };
-
-  useEffect(() => {
-    refreshNotifications();
-    const timer = window.setInterval(refreshNotifications, 30000);
-    return () => window.clearInterval(timer);
   }, [token]);
 
-  const toggleTheme = () => setTheme((current) => (current === 'dark' ? 'light' : 'dark'));
+  useEffect(() => {
+    refreshNotifications(); // eslint-disable-line react-hooks/set-state-in-effect
+    const timer = window.setInterval(refreshNotifications, 30000);
+    return () => window.clearInterval(timer);
+  }, [refreshNotifications]);
+
+  const toggleTheme = useCallback(() => setTheme((current) => (current === 'dark' ? 'light' : 'dark')), []);
 
   const value = useMemo(
     () => ({
@@ -114,10 +110,11 @@ export const AuthProvider = ({ children }) => {
       refreshNotifications,
       setNotifications,
     }),
-    [user, token, theme, notifications, loading, error]
+    [user, token, theme, notifications, loading, error, login, register, logout, toggleTheme, refreshNotifications]
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useAuth = () => useContext(AuthContext);
