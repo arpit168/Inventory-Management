@@ -43,7 +43,9 @@ const Register = () => {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-[radial-gradient(circle_at_top,_rgba(244,114,182,0.3),_transparent_25%),linear-gradient(135deg,_#020617,_#111827)] px-4 py-12">
+    <div className="flex min-h-screen items-center justify-center bg-background: radial-gradient(circle at top, rgba(244,114,182,0.3), transparent 25%),
+            linear-gradient(135deg, #020617, #111827);
+ px-4 py-12">
       <div className="w-full max-w-3xl rounded-[28px] border border-white/10 bg-slate-950/85 p-8 shadow-[0_30px_90px_rgba(244,114,182,0.18)] sm:p-10">
         <div className="flex items-center gap-3">
           <div className="rounded-full bg-fuchsia-400/15 p-2 text-fuchsia-200">

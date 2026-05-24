@@ -45,7 +45,9 @@ const ResetPassword = () => {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-[radial-gradient(circle_at_top,_rgba(34,197,94,0.3),_transparent_22%),linear-gradient(135deg,_#020617,_#111827)] px-4 py-12">
+    <div className="flex min-h-screen items-center justify-center bg-background: radial-gradient(circle at top, rgba(34,197,94,0.3), transparent 22%),
+            linear-gradient(135deg, #020617, #111827);
+               px-4 py-12">
       <div className="w-full max-w-2xl rounded-[28px] border border-white/10 bg-slate-950/85 p-8 sm:p-10">
         <h1 className="text-2xl font-semibold text-white">Reset password</h1>
         <p className="mt-2 text-sm text-slate-300">
