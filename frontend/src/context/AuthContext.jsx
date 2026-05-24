@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import api from '../services/api';
+import toast from 'react-hot-toast';
 
 const AuthContext = createContext();
 
@@ -12,13 +13,7 @@ export const AuthProvider = ({ children }) => {
   const [error, setError] = useState('');
 
   useEffect(() => {
-    // Apply theme class to document root
-    const htmlElement = document.documentElement;
-    if (theme === 'dark') {
-      htmlElement.classList.add('dark');
-    } else {
-      htmlElement.classList.remove('dark');
-    }
+    document.documentElement.classList.toggle('dark', theme === 'dark');
     localStorage.setItem('inventory-theme', theme);
   }, [theme]);
 
@@ -77,6 +72,8 @@ export const AuthProvider = ({ children }) => {
       setToken('');
       setUser(null);
       setNotifications([]);
+
+      toast.success("Logout Successful")
     }
   };
 
