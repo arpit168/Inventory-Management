@@ -10,7 +10,7 @@ import {
   Moon,
   Sun,
   Menu,
-  X,
+
 } from 'lucide-react';
 
 import { NavLink, Outlet, useLocation } from 'react-router-dom';
@@ -83,13 +83,8 @@ const Layout = () => {
                 )}
               </button>
 
-              {/* Close Button Mobile */}
-              <button
-                onClick={() => setSidebarOpen(false)}
-                className="rounded-xl border border-slate-200 bg-slate-100 p-2 lg:hidden dark:border-white/10 dark:bg-white/5"
-              >
-                <X size={18} />
-              </button>
+             
+             
             </div>
           </div>
 
