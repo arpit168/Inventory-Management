@@ -33,7 +33,7 @@ const Layout = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
-    <div className="min-h-screen overflow-hidden bg-gradient-to-br from-slate-50 via-white to-slate-100 text-slate-900 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 dark:text-slate-100">
+    <div className="min-h-screen overflow-hidden bg-linear-to-br from-slate-50 via-white to-slate-100 text-slate-900 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 dark:text-slate-100">
       <div className="flex min-h-screen">
         
         {/* ================= MOBILE OVERLAY ================= */}
@@ -89,7 +89,7 @@ const Layout = () => {
           </div>
 
           {/* User Card */}
-          <div className="mt-6 rounded-3xl border border-cyan-400/20 bg-gradient-to-br from-cyan-500/10 to-blue-500/10 p-4 backdrop-blur-xl">
+          <div className="mt-6 rounded-3xl border border-cyan-400/20 bg-linear-to-br from-cyan-500/10 to-blue-500/10 p-4 backdrop-blur-xl">
             <p className="text-sm text-slate-600 dark:text-slate-300">
               Welcome back
             </p>
@@ -115,7 +115,7 @@ const Layout = () => {
                   onClick={() => setSidebarOpen(false)}
                   className={`group flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-medium transition-all duration-300 ${
                     active
-                      ? 'bg-gradient-to-r from-cyan-500 to-blue-500 text-white shadow-lg shadow-cyan-500/20'
+                      ? 'bg-linear-to-r from-cyan-500 to-blue-500 text-white shadow-lg shadow-cyan-500/20'
                       : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-300 dark:hover:bg-white/5 dark:hover:text-white'
                   }`}
                 >
@@ -152,13 +152,13 @@ const Layout = () => {
                 {/* Hamburger */}
                 <button
                   onClick={() => setSidebarOpen(true)}
-                  className="rounded-xl border border-slate-200 bg-white p-2 shadow-sm transition-all duration-300 hover:scale-105 dark:border-white/10 dark:bg-white/5 lg:hidden"
+                  className="rounded-xl border  border-slate-200 bg-white  shadow-sm transition-all duration-300 hover:scale-105 dark:border-white/10 dark:bg-white/5   "
                 >
-                  <Menu size={20} />
+                  <Menu size={20} className='md:hidden lg:hidden' />
                 </button>
 
                 <div>
-                  <p className="text-xs uppercase tracking-[0.35em] text-cyan-600 dark:text-cyan-300">
+                  <p className="text-xs text-nowrap uppercase tracking-[0.35em] text-cyan-600 dark:text-cyan-300">
                     Hey! {user?.name || 'Shopkeeper'}
                   </p>
 
