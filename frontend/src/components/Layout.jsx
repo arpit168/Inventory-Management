@@ -7,8 +7,7 @@ import {
   Settings,
   ShoppingCart,
   TriangleAlert,
-  Moon,
-  Sun,
+
   Menu,
 
 } from 'lucide-react';
@@ -27,7 +26,7 @@ const links = [
 ];
 
 const Layout = () => {
-  const { user, theme, toggleTheme, logout, notifications } = useAuth();
+  const { user, logout, notifications } = useAuth();
   const location = useLocation();
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -70,23 +69,7 @@ const Layout = () => {
               </h1>
             </div>
 
-            <div className="flex items-center gap-2">
-              {/* Theme Toggle */}
-              <button
-                onClick={toggleTheme}
-                className="rounded-xl border border-slate-200 bg-slate-100 p-2 transition-all duration-300 hover:scale-105 hover:bg-slate-200 dark:border-cyan-400/20 dark:bg-cyan-400/10 dark:hover:bg-cyan-400/20"
-              >
-                {theme === 'light' ? (
-                  <Sun size={18} />
-                ) : (
-                  <Moon size={18} />
-                )}
-              </button>
-
-             
-             
             </div>
-          </div>
 
           {/* User Card */}
           <div className="mt-6 rounded-3xl border border-cyan-400/20 bg-linear-to-br from-cyan-500/10 to-blue-500/10 p-4 backdrop-blur-xl">
