@@ -7,7 +7,6 @@ import {
   Settings,
   ShoppingCart,
   TriangleAlert,
-
   Menu,
 
 } from 'lucide-react';
