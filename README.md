@@ -41,14 +41,15 @@ A modern MERN inventory management platform for shopkeepers with authentication,
 
 ### Backend
 
-Create a `.env` file in `backend/` using the template in `backend/.env.example`:
+Create a `.env` file in `backend/` using the template in `backend/.env.example`
+ 
 
-```env
-PORT=5000
-MONGO_URI=mongodb://127.0.0.1:27017/inventory-management
-JWT_SECRET=replace-with-a-strong-secret
-CLIENT_URL=http://localhost:5173
-```
+1. PORT=5000
+2. MONGO_URI=mongodb://localhost:27017/inventory-management
+3. JWT_SECRET=YOUR_JWT_SECRET
+4. CLIENT_URL=http://localhost:5173
+5. NODE_ENV=development
+`
 
 ### Frontend
 
@@ -95,3 +96,5 @@ Verified commands:
 - `Invoke-WebRequest -Uri http://localhost:5000/api/health -UseBasicParsing | Select-Object -ExpandProperty Content`
 
 If you want, I can also add a one-command root script to start both services together.
+
+
