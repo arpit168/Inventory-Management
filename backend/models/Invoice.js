@@ -37,6 +37,15 @@ const invoiceSchema = new mongoose.Schema(
       type: String,
       trim: true,
     },
+    businessProfile: {
+      businessName: { type: String },
+      ownerName: { type: String },
+      logo: { type: String },
+      email: { type: String },
+      phone: { type: String },
+      gstNumber: { type: String },
+      address: { type: String },
+    },
     items: [invoiceItemSchema],
     subTotal: {
       type: Number,

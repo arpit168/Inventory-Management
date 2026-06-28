@@ -1,15 +1,33 @@
-import { X, Printer, Download } from 'lucide-react';
+import { useState } from 'react';
+import { X, Printer, Download, Mail } from 'lucide-react';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
+import api from '../services/api';
 import { useToast } from '../context/ToastContext';
 
 const InvoicePrintView = ({ invoice, onClose }) => {
   const { showToast } = useToast();
+  const [emailing, setEmailing] = useState(false);
 
   if (!invoice) return null;
 
   const handlePrint = () => {
     window.print();
+  };
+
+  const handleEmail = async () => {
+    const targetEmail = invoice.customerEmail || prompt('Enter customer email address:', '');
+    if (!targetEmail) return;
+
+    setEmailing(true);
+    try {
+      await api.post(`/invoices/${invoice._id}/email`, { targetEmail });
+      showToast(`Invoice emailed to ${targetEmail}!`, 'success');
+    } catch (err) {
+      showToast(err.response?.data?.message || 'Failed to send email', 'error');
+    } finally {
+      setEmailing(false);
+    }
   };
 
   const handleDownloadPDF = () => {
@@ -87,6 +105,13 @@ const InvoicePrintView = ({ invoice, onClose }) => {
           <h3 className="text-lg font-black text-text">Invoice Preview</h3>
           <div className="flex items-center gap-2.5">
             <button
+              onClick={handleEmail}
+              disabled={emailing}
+              className="inline-flex items-center gap-1.5 rounded-xl bg-success px-4 py-2 text-xs font-bold text-white shadow-md hover:bg-success/90 transition disabled:opacity-50"
+            >
+              <Mail size={14} /> {emailing ? 'Sending...' : 'Email Invoice'}
+            </button>
+            <button
               onClick={handleDownloadPDF}
               className="inline-flex items-center gap-1.5 rounded-xl bg-primary px-4 py-2 text-xs font-bold text-slate-950 shadow-md shadow-primary/20 hover:bg-primary-hover transition"
             >
@@ -108,11 +133,30 @@ const InvoicePrintView = ({ invoice, onClose }) => {
         <div className="mt-6 space-y-8 print:mt-0 print:space-y-6">
           
           {/* Header */}
-          <div className="flex flex-col sm:flex-row justify-between items-start gap-4">
-            <div>
-              <p className="text-xs uppercase tracking-[0.3em] font-extrabold text-primary print:text-cyan-700">INVENTORY PRO</p>
-              <h1 className="text-2xl font-black mt-1 text-text print:text-black">COMMERCIAL SUITE</h1>
-              <p className="text-xs text-text-muted mt-1">Date: {new Date(invoice.createdAt).toLocaleDateString()}</p>
+          <div className="flex flex-col sm:flex-row justify-between items-start gap-4 border-b border-border pb-6 print:border-black">
+            <div className="flex items-center gap-4">
+              {invoice.businessProfile?.logo && (
+                <img src={invoice.businessProfile.logo} alt="Shop Logo" className="h-16 w-16 object-cover rounded-xl border border-border print:border-black" />
+              )}
+              <div>
+                <h1 className="text-2xl font-black text-text print:text-black">
+                  {invoice.businessProfile?.businessName || 'INVENTORY PRO SUITE'}
+                </h1>
+                <p className="text-xs font-bold text-primary mt-0.5 print:text-cyan-700">
+                  {invoice.businessProfile?.ownerName ? `Proprietor: ${invoice.businessProfile.ownerName}` : 'COMMERCIAL BILLING'}
+                </p>
+                {invoice.businessProfile?.gstNumber && (
+                  <p className="text-xs font-semibold text-text mt-1 print:text-black">GSTIN: {invoice.businessProfile.gstNumber}</p>
+                )}
+                {invoice.businessProfile?.address && (
+                  <p className="text-xs text-text-muted mt-0.5">{invoice.businessProfile.address}</p>
+                )}
+                {(invoice.businessProfile?.phone || invoice.businessProfile?.email) && (
+                  <p className="text-xs text-text-muted mt-0.5">
+                    {[invoice.businessProfile?.phone, invoice.businessProfile?.email].filter(Boolean).join(' | ')}
+                  </p>
+                )}
+              </div>
             </div>
             <div className="sm:text-right">
               <h2 className="text-xl font-bold text-text print:text-black">{invoice.invoiceNumber}</h2>

@@ -19,6 +19,7 @@ import uploadRoutes from './routes/uploadRoutes.js';
 import invoiceRoutes from './routes/invoiceRoutes.js';
 import customerRoutes from './routes/customerRoutes.js';
 import expenseRoutes from './routes/expenseRoutes.js';
+import businessProfileRoutes from './routes/businessProfileRoutes.js';
 
 import errorHandler from './middleware/errorHandler.js';
 
@@ -101,6 +102,7 @@ app.use('/api/upload', uploadRoutes);
 app.use('/api/invoices', invoiceRoutes);
 app.use('/api/customers', customerRoutes);
 app.use('/api/expenses', expenseRoutes);
+app.use('/api/business-profile', businessProfileRoutes);
 
 app.use((req, res) => {
   res.status(404).json({

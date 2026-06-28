@@ -21,7 +21,9 @@ api.interceptors.response.use(
     if (error.response?.status === 401) {
       localStorage.removeItem('inventory-auth-token');
       localStorage.removeItem('inventory-user');
-      window.location.assign('/login');
+      if (window.location.pathname !== '/login' && window.location.pathname !== '/register') {
+        window.location.assign('/login');
+      }
     }
 
     return Promise.reject(error);

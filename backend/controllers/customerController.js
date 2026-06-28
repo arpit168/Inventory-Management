@@ -1,6 +1,34 @@
 import Customer from '../models/Customer.js';
 import LedgerEntry from '../models/LedgerEntry.js';
+import BusinessProfile from '../models/BusinessProfile.js';
 import { addNotification } from '../utils/notifications.js';
+import { sendEmail, generateLedgerEmailTemplate } from '../utils/email.js';
+
+const sendLedgerNotificationEmail = async (userId, customer, type, amount, previousBalance, updatedBalance, description) => {
+  if (!customer.email) return;
+  try {
+    const profile = await BusinessProfile.findOne({ createdBy: userId }).sort({ isDefault: -1, createdAt: -1 });
+    const businessName = profile?.businessName || 'Our Shop';
+
+    const html = generateLedgerEmailTemplate({
+      businessName,
+      customerName: customer.name,
+      transactionType: type,
+      amount,
+      previousBalance,
+      updatedBalance,
+      notes: description || '-',
+    });
+
+    sendEmail({
+      to: customer.email,
+      subject: `[${businessName}] Khatabook Ledger Update: ₹${Number(amount).toFixed(2)} (${type === 'credit' ? 'Due Recorded' : 'Payment Got'})`,
+      html,
+    }).catch(() => {});
+  } catch (err) {
+    console.error('Failed to trigger async ledger email:', err.message);
+  }
+};
 
 export const getCustomers = async (req, res, next) => {
   try {
@@ -71,6 +99,16 @@ export const createCustomer = async (req, res, next) => {
         description: 'Opening Balance',
         createdBy: req.user.id,
       });
+
+      sendLedgerNotificationEmail(
+        req.user.id,
+        customer,
+        openingNum > 0 ? 'credit' : 'debit',
+        Math.abs(openingNum),
+        0,
+        openingNum,
+        'Opening Balance'
+      );
     }
 
     await addNotification(
@@ -172,6 +210,8 @@ export const addLedgerEntry = async (req, res, next) => {
       createdBy: req.user.id,
     });
 
+    const previousBalance = customer.netBalance;
+
     if (type === 'credit') {
       customer.totalCredit += numAmount;
       customer.netBalance += numAmount;
@@ -181,6 +221,16 @@ export const addLedgerEntry = async (req, res, next) => {
     }
 
     await customer.save();
+
+    sendLedgerNotificationEmail(
+      req.user.id,
+      customer,
+      type,
+      numAmount,
+      previousBalance,
+      customer.netBalance,
+      description || (type === 'credit' ? 'Goods / Credit Given' : 'Payment Received')
+    );
 
     await addNotification(
       req.user.id,
