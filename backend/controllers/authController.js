@@ -4,6 +4,7 @@ import jwt from 'jsonwebtoken';
 
 import User from '../models/User.js';
 import { addNotification } from '../utils/notifications.js';
+import { sendEmail } from '../utils/email.js';
 
 const signToken = (userId) =>
   jwt.sign({ id: userId }, process.env.JWT_SECRET, {
@@ -139,8 +140,24 @@ export const forgotPassword = async (req, res, next) => {
       'account'
     );
 
+    await sendEmail({
+      to: user.email,
+      subject: 'Password Reset Request - Inventory Pro',
+      text: `You requested a password reset. Click the following link or copy the token:\n\nReset Link: ${resetUrl}\nReset Token: ${resetToken}\n\nIf you did not request this, ignore this email. This token expires in 15 minutes.`,
+      html: `<div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #eee; border-radius: 10px;">
+        <h2 style="color: #0891b2;">Password Reset Request</h2>
+        <p>Hello ${user.name},</p>
+        <p>We received a request to reset your password for your Inventory Pro account. Click the button below to reset it:</p>
+        <div style="text-align: center; margin: 30px 0;">
+          <a href="${resetUrl}" style="background-color: #0891b2; color: #fff; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: bold;">Reset Password</a>
+        </div>
+        <p>Or use this token directly on the reset page: <strong>${resetToken}</strong></p>
+        <p style="color: #666; font-size: 12px;">If you did not request a password reset, please ignore this email. This link expires in 15 minutes.</p>
+      </div>`,
+    });
+
     const response = {
-      message: 'If the account exists, a reset token has been generated.',
+      message: 'If the account exists, a reset token has been generated and sent to your email.',
     };
 
     if (process.env.NODE_ENV !== 'production') {
@@ -204,6 +221,30 @@ export const getProfile = async (req, res) => {
   return res.status(200).json({
     user: req.user,
   });
+};
+
+export const updateProfile = async (req, res, next) => {
+  try {
+    const { name, theme, avatar } = req.body;
+    const user = await User.findById(req.user._id);
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    if (name !== undefined) user.name = name;
+    if (theme !== undefined) user.theme = theme;
+    if (avatar !== undefined) user.avatar = avatar;
+
+    await user.save();
+
+    return res.status(200).json({
+      user,
+      message: 'Profile updated successfully',
+    });
+  } catch (error) {
+    return next(error);
+  }
 };
 
 export const changePassword = async (req, res, next) => {

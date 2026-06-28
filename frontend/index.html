@@ -8,8 +8,20 @@
       content="Premium inventory management dashboard for shopkeepers with stock tracking, profit and loss insights, and notifications."
     />
     <title>Inventory Pro</title>
+    <script>
+      (function() {
+        try {
+          var savedTheme = localStorage.getItem('inventory-theme');
+          if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+          } else {
+            document.documentElement.classList.remove('dark');
+          }
+        } catch (_) {}
+      })();
+    </script>
   </head>
-  <body>
+  <body class="bg-background text-text antialiased transition-colors duration-200">
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>

@@ -41,6 +41,17 @@ const productSchema = new mongoose.Schema(
       sparse: true,
     },
 
+    unit: {
+      type: String,
+      default: 'pcs',
+      trim: true,
+    },
+
+    image: {
+      type: String,
+      default: '',
+    },
+
     quantity: {
       type: Number,
 

@@ -6,6 +6,7 @@ import {
   forgotPassword,
   resetPassword,
   getProfile,
+  updateProfile,
   changePassword,
   logout,
 } from '../controllers/authController.js';
@@ -29,6 +30,7 @@ router.post(
 );
 
 router.get('/me', protect, getProfile);
+router.put('/profile', protect, updateProfile);
 
 router.put(
   '/change-password',

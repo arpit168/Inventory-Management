@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
+import { ShieldCheck, ArrowLeft, CheckCircle2 } from 'lucide-react';
 import api from '../services/api';
 import { useToast } from '../context/ToastContext';
 
@@ -16,13 +17,13 @@ const ResetPassword = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    if (!form.token) {
+    if (!form.token.trim()) {
       showToast('Enter your reset token.', 'warning');
       return;
     }
 
-    if (form.password.length < 8) {
-      showToast('Password must be at least 8 characters.', 'warning');
+    if (form.password.length < 6) {
+      showToast('Password must be at least 6 characters.', 'warning');
       return;
     }
 
@@ -34,7 +35,7 @@ const ResetPassword = () => {
     setLoading(true);
 
     try {
-      await api.post('/auth/reset-password', { token: form.token, password: form.password });
+      await api.post('/auth/reset-password', { token: form.token.trim(), password: form.password });
       setSuccess(true);
       showToast('Password reset successfully.', 'success');
     } catch (error) {
@@ -45,49 +46,79 @@ const ResetPassword = () => {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background: radial-gradient(circle at top, rgba(34,197,94,0.3), transparent 22%),
-            linear-gradient(135deg, #020617, #111827);
-               px-4 py-12">
-      <div className="w-full max-w-2xl rounded-[28px] border border-white/10 bg-slate-950/85 p-8 sm:p-10">
-        <h1 className="text-2xl font-semibold text-white">Reset password</h1>
-        <p className="mt-2 text-sm text-slate-300">
-          Use the reset token from the previous step or paste the link query token to change your password.
+    <div className="flex min-h-screen items-center justify-center bg-background px-4 py-12 animate-fade-in">
+      <div className="w-full max-w-lg rounded-3xl border border-border bg-surface p-8 sm:p-10 shadow-xl transition-all">
+        <div className="flex items-center gap-3">
+          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-success/15 text-success">
+            <ShieldCheck size={24} />
+          </div>
+          <div>
+            <p className="text-xs uppercase tracking-[0.25em] font-extrabold text-success">Security Center</p>
+            <h1 className="text-2xl font-black text-text tracking-tight">Reset Password</h1>
+          </div>
+        </div>
+
+        <p className="mt-4 text-sm text-text-muted leading-relaxed">
+          Paste the reset token generated from the forgot password portal and choose a new secure password.
         </p>
 
         {success ? (
-          <div className="mt-6 rounded-2xl border border-emerald-400/40 bg-emerald-500/10 px-4 py-4 text-sm text-emerald-50">
-            Your password has been reset. You can now <Link to="/login" className="font-semibold underline">sign in</Link>.
+          <div className="mt-6 rounded-2xl border border-success/30 bg-success/10 p-6 text-center space-y-4 animate-scale-up">
+            <CheckCircle2 size={48} className="mx-auto text-success animate-bounce" />
+            <h3 className="text-lg font-black text-text">Password Successfully Updated!</h3>
+            <p className="text-xs text-text-muted leading-relaxed">
+              Your account password has been reset. You can now sign in using your newly created credentials to access your shop workspace.
+            </p>
+            <div className="pt-2">
+              <Link
+                to="/login"
+                className="inline-block rounded-xl bg-success px-6 py-3 text-xs font-bold text-slate-950 shadow-md hover:bg-emerald-400 transition"
+              >
+                Sign In to Dashboard &rarr;
+              </Link>
+            </div>
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="mt-6 space-y-4">
             <div>
-              <label className="mb-1 block text-sm text-slate-200">Reset token</label>
+              <label className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-text-muted">
+                Reset Token *
+              </label>
               <input
+                required
                 value={form.token}
                 onChange={(event) => setForm((current) => ({ ...current, token: event.target.value }))}
-                className="w-full rounded-2xl border border-white/10 bg-slate-950 px-4 py-3 text-white outline-none focus:border-emerald-400"
-                placeholder="Paste the generated token"
+                className="w-full rounded-xl border border-border bg-background px-4 py-3 text-sm font-mono text-text focus:border-primary focus:outline-hidden transition shadow-xs"
+                placeholder="Paste your reset token here"
               />
             </div>
 
             <div>
-              <label className="mb-1 block text-sm text-slate-200">New password</label>
+              <label className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-text-muted">
+                New Password (6+ chars) *
+              </label>
               <input
                 type="password"
+                required
+                minLength={6}
                 value={form.password}
                 onChange={(event) => setForm((current) => ({ ...current, password: event.target.value }))}
-                className="w-full rounded-2xl border border-white/10 bg-slate-950 px-4 py-3 text-white outline-none focus:border-emerald-400"
+                className="w-full rounded-xl border border-border bg-background px-4 py-3 text-sm font-semibold text-text focus:border-primary focus:outline-hidden transition shadow-xs"
                 placeholder="••••••••"
               />
             </div>
 
             <div>
-              <label className="mb-1 block text-sm text-slate-200">Confirm password</label>
+              <label className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-text-muted">
+                Confirm New Password *
+              </label>
               <input
                 type="password"
+                required
+                minLength={6}
                 value={form.confirmPassword}
                 onChange={(event) => setForm((current) => ({ ...current, confirmPassword: event.target.value }))}
-                className="w-full rounded-2xl border border-white/10 bg-slate-950 px-4 py-3 text-white outline-none focus:border-emerald-400"
+                className="w-full rounded-xl border border-border bg-background px-4 py-3 text-sm font-semibold text-text focus:border-primary focus:outline-hidden transition shadow-xs"
                 placeholder="Repeat new password"
               />
             </div>
@@ -95,12 +126,21 @@ const ResetPassword = () => {
             <button
               type="submit"
               disabled={loading || !isReady}
-              className="rounded-2xl bg-emerald-400 px-4 py-3 font-semibold text-slate-950 transition hover:bg-emerald-300 disabled:opacity-60"
+              className="w-full rounded-xl bg-primary px-6 py-3.5 text-sm font-bold text-slate-950 shadow-md shadow-primary/20 hover:bg-primary-hover disabled:opacity-50 transition active:scale-98 mt-2"
             >
-              {loading ? 'Resetting...' : 'Reset password'}
+              <span>{loading ? 'Updating Credentials...' : 'Reset Password'}</span>
             </button>
           </form>
         )}
+
+        <div className="mt-8 border-t border-border pt-6 text-center">
+          <Link
+            to="/login"
+            className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-text-muted hover:text-primary transition"
+          >
+            <ArrowLeft size={16} /> Return to Sign In
+          </Link>
+        </div>
       </div>
     </div>
   );
