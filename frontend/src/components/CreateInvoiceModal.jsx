@@ -6,6 +6,8 @@ import { useToast } from '../context/ToastContext';
 const CreateInvoiceModal = ({ onClose, onSuccess }) => {
   const { showToast } = useToast();
   const [products, setProducts] = useState([]);
+  const [businessProfiles, setBusinessProfiles] = useState([]);
+  const [selectedProfileId, setSelectedProfileId] = useState('');
   const [loading, setLoading] = useState(false);
 
   const [customerName, setCustomerName] = useState('');
@@ -21,15 +23,24 @@ const CreateInvoiceModal = ({ onClose, onSuccess }) => {
   ]);
 
   useEffect(() => {
-    const fetchProducts = async () => {
+    const fetchData = async () => {
       try {
-        const res = await api.get('/products?limit=100');
-        setProducts(res.data.products || []);
+        const [prodRes, profRes] = await Promise.all([
+          api.get('/products?limit=100'),
+          api.get('/business-profile'),
+        ]);
+        setProducts(prodRes.data.products || []);
+        const profList = profRes.data.profiles || [];
+        setBusinessProfiles(profList);
+        if (profList.length > 0) {
+          const def = profList.find((p) => p.isDefault) || profList[0];
+          setSelectedProfileId(def._id);
+        }
       } catch {
         // ignore
       }
     };
-    fetchProducts();
+    fetchData();
   }, []);
 
   const handleAddItem = () => {
@@ -86,6 +97,7 @@ const CreateInvoiceModal = ({ onClose, onSuccess }) => {
         discount: Number(discount) || 0,
         status,
         notes,
+        businessProfileId: selectedProfileId || undefined,
       });
       showToast('Invoice generated successfully!', 'success');
       onSuccess();
@@ -114,6 +126,31 @@ const CreateInvoiceModal = ({ onClose, onSuccess }) => {
         {/* Scrollable Form Body */}
         <form onSubmit={handleSubmit} className="mt-6 space-y-6 overflow-y-auto pr-1 flex-1">
           
+          {/* Shop Profile Selector */}
+          {businessProfiles.length > 0 && (
+            <div className="rounded-2xl border border-primary/20 bg-primary/5 p-4">
+              <label className="block text-xs font-bold text-primary mb-1">Issuing Business / Shop Identity</label>
+              {businessProfiles.length === 1 ? (
+                <div className="text-sm font-bold text-text flex items-center justify-between">
+                  <span>🏢 {businessProfiles[0].businessName} ({businessProfiles[0].ownerName})</span>
+                  <span className="text-xs font-normal text-text-muted">Auto-selected</span>
+                </div>
+              ) : (
+                <select
+                  value={selectedProfileId}
+                  onChange={(e) => setSelectedProfileId(e.target.value)}
+                  className="w-full rounded-xl border border-border bg-surface px-3.5 py-2 text-sm font-semibold text-text focus:border-primary focus:outline-hidden transition mt-1"
+                >
+                  {businessProfiles.map((p) => (
+                    <option key={p._id} value={p._id}>
+                      🏢 {p.businessName} — {p.ownerName} {p.isDefault ? '(Default)' : ''}
+                    </option>
+                  ))}
+                </select>
+              )}
+            </div>
+          )}
+
           {/* Customer info */}
           <div className="grid gap-4 sm:grid-cols-2">
             <div>

@@ -14,6 +14,7 @@ import {
   Sun,
   Moon,
   X,
+  Building2,
 } from 'lucide-react';
 
 import { NavLink, Outlet, useLocation } from 'react-router-dom';
@@ -28,8 +29,9 @@ const links = [
   { to: '/expenses', label: 'Expenses', icon: Wallet },
   { to: '/out-of-stock', label: 'Out of Stock', icon: TriangleAlert },
   { to: '/reports', label: 'Reports', icon: BarChart3 },
+  { to: '/business-profile', label: 'Shop Profiles', icon: Building2 },
   { to: '/notifications', label: 'Notifications', icon: BellRing },
-  { to: '/profile', label: 'Profile', icon: Settings },
+  { to: '/profile', label: 'Account Profile', icon: Settings },
 ];
 
 const Layout = () => {
