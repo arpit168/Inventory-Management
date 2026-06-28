@@ -1,31 +1,64 @@
 @import "tailwindcss";
 
-/* Root Theme Variables */
-:root {
-  color-scheme: light;
-  font-family: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+@custom-variant dark (&:where(.dark, .dark *));
 
-  --bg-primary: #f8fafc;
-  --bg-secondary: #ffffff;
-  --text-primary: #1e293b;
-  --border-color: #e2e8f0;
-  --accent: #06b6d4;
-  --accent-hover: #22d3ee;
-  --scroll-thumb: rgba(148, 163, 184, 0.7);
-  --scroll-track: rgba(226, 232, 240, 0.5);
+@layer base {
+  :root {
+    --color-primary: #06b6d4;
+    --color-primary-hover: #0891b2;
+    --color-secondary: #64748b;
+    --color-secondary-hover: #475569;
+    --color-background: #f8fafc;
+    --color-surface: #ffffff;
+    --color-card: #ffffff;
+    --color-text: #0f172a;
+    --color-text-muted: #64748b;
+    --color-border: #e2e8f0;
+    --color-success: #10b981;
+    --color-warning: #f59e0b;
+    --color-danger: #ef4444;
+    --color-info: #3b82f6;
+
+    --scroll-thumb: rgba(148, 163, 184, 0.7);
+    --scroll-track: rgba(226, 232, 240, 0.5);
+  }
+
+  html.dark {
+    --color-primary: #22d3ee;
+    --color-primary-hover: #06b6d4;
+    --color-secondary: #94a3b8;
+    --color-secondary-hover: #cbd5e1;
+    --color-background: #020617;
+    --color-surface: #0f172a;
+    --color-card: #1e293b;
+    --color-text: #f8fafc;
+    --color-text-muted: #94a3b8;
+    --color-border: rgba(255, 255, 255, 0.1);
+    --color-success: #34d399;
+    --color-warning: #fbbf24;
+    --color-danger: #f87171;
+    --color-info: #60a5fa;
+
+    --scroll-thumb: rgba(34, 211, 238, 0.6);
+    --scroll-track: rgba(15, 23, 42, 0.9);
+  }
 }
 
-html.dark {
-  color-scheme: dark;
-
-  --bg-primary: #020617;
-  --bg-secondary: #0f172a;
-  --text-primary: #f8fafc;
-  --border-color: rgba(255, 255, 255, 0.1);
-  --accent: #22d3ee;
-  --accent-hover: #67e8f9;
-  --scroll-thumb: rgba(34, 211, 238, 0.6);
-  --scroll-track: rgba(15, 23, 42, 0.9);
+@theme {
+  --color-primary: var(--color-primary);
+  --color-primary-hover: var(--color-primary-hover);
+  --color-secondary: var(--color-secondary);
+  --color-secondary-hover: var(--color-secondary-hover);
+  --color-background: var(--color-background);
+  --color-surface: var(--color-surface);
+  --color-card: var(--color-card);
+  --color-text: var(--color-text);
+  --color-text-muted: var(--color-text-muted);
+  --color-border: var(--color-border);
+  --color-success: var(--color-success);
+  --color-warning: var(--color-warning);
+  --color-danger: var(--color-danger);
+  --color-info: var(--color-info);
 }
 
 /* Base Reset */
@@ -35,47 +68,33 @@ html.dark {
   box-sizing: border-box;
 }
 
-/* Smooth Scroll */
 html {
   scroll-behavior: smooth;
 }
 
-/* Body */
 body {
   margin: 0;
   min-height: 100vh;
-  background: linear-gradient(
-    135deg,
-    var(--bg-primary) 0%,
-    var(--bg-secondary) 100%
-  );
-  color: var(--text-primary);
-  transition:
-    background-color 0.3s ease,
-    color 0.3s ease,
-    border-color 0.3s ease;
+  background-color: var(--color-background);
+  color: var(--color-text);
 }
 
-/* Dark Background Effect */
 html.dark body {
   background:
-    radial-gradient(
-      circle at top,
-      rgba(34, 211, 238, 0.12),
-      transparent 18%
-    ),
-    linear-gradient(135deg, #020617, #111827);
+    radial-gradient(circle at top, rgba(34, 211, 238, 0.1), transparent 25%),
+    linear-gradient(135deg, #020617, #0f172a);
 }
 
-/* Root */
 #root {
   min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
-/* Scrollbar */
+/* Scrollbars */
 *::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
+  width: 8px;
+  height: 8px;
 }
 
 *::-webkit-scrollbar-track {
@@ -85,14 +104,13 @@ html.dark body {
 *::-webkit-scrollbar-thumb {
   background: var(--scroll-thumb);
   border-radius: 999px;
-  transition: background 0.3s ease;
 }
 
 *::-webkit-scrollbar-thumb:hover {
-  background: var(--accent);
+  background: var(--color-primary);
 }
 
-/* Form Elements */
+/* Form Elements Reset */
 input,
 select,
 textarea,
@@ -100,90 +118,7 @@ button {
   font: inherit;
 }
 
-/* Inputs */
-input,
-select,
-textarea {
-  width: 100%;
-  border-radius: 0.75rem;
-  border: 1px solid var(--border-color);
-  padding: 0.75rem 1rem;
-  background-color: var(--bg-secondary);
-  color: var(--text-primary);
-  transition:
-    background-color 0.3s ease,
-    color 0.3s ease,
-    border-color 0.3s ease,
-    box-shadow 0.3s ease;
-}
-
-/* Placeholder */
-input::placeholder,
-textarea::placeholder {
-  color: #94a3b8;
-}
-
-/* Focus States */
-input:focus,
-select:focus,
-textarea:focus {
-  outline: none;
-  border-color: var(--accent);
-  box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.2);
-}
-
-/* Buttons */
-button {
-  cursor: pointer;
-  border: none;
-  border-radius: 0.75rem;
-  padding: 0.7rem 1rem;
-  font-weight: 600;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  transition:
-    transform 0.2s ease,
-    background-color 0.3s ease,
-    color 0.3s ease,
-    opacity 0.2s ease;
-}
-
-button:hover {
-  transform: translateY(-1px);
-}
-
-button:active {
-  transform: scale(0.98);
-}
-
-/* Links */
-a {
-  color: var(--accent);
-  text-decoration: none;
-  transition: color 0.2s ease;
-}
-
-a:hover {
-  color: var(--accent-hover);
-}
-
-/* Images */
-img {
-  max-width: 100%;
-  display: block;
-}
-
-/* Selection */
 ::selection {
   background: rgba(34, 211, 238, 0.3);
   color: inherit;
-}
-
-/* Global Smooth Transition */
-* {
-  transition:
-    background-color 0.3s ease,
-    color 0.3s ease,
-    border-color 0.3s ease;
 }

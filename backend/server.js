@@ -15,6 +15,10 @@ import authRoutes from './routes/authRoutes.js';
 import productRoutes from './routes/productRoutes.js';
 import notificationRoutes from './routes/notificationRoutes.js';
 import reportRoutes from './routes/reportRoutes.js';
+import uploadRoutes from './routes/uploadRoutes.js';
+import invoiceRoutes from './routes/invoiceRoutes.js';
+import customerRoutes from './routes/customerRoutes.js';
+import expenseRoutes from './routes/expenseRoutes.js';
 
 import errorHandler from './middleware/errorHandler.js';
 
@@ -41,7 +45,7 @@ app.use(
 
 app.use(
   express.json({
-    limit: '1mb',
+    limit: '10mb',
   })
 );
 
@@ -53,11 +57,13 @@ if (process.env.NODE_ENV !== 'production') {
   app.use(morgan('combined'));
 }
 
+const isProd = process.env.NODE_ENV === 'production';
+
 app.use(
   '/api/',
   rateLimit({
     windowMs: 15 * 60 * 1000,
-    max: 200,
+    max: isProd ? 200 : 5000,
     standardHeaders: true,
     legacyHeaders: false,
   })
@@ -67,7 +73,7 @@ app.use(
   '/api/auth/',
   rateLimit({
     windowMs: 15 * 60 * 1000,
-    max: 30,
+    max: isProd ? 30 : 5000,
     standardHeaders: true,
     legacyHeaders: false,
   })
@@ -91,6 +97,10 @@ app.use(
 );
 
 app.use('/api/reports', reportRoutes);
+app.use('/api/upload', uploadRoutes);
+app.use('/api/invoices', invoiceRoutes);
+app.use('/api/customers', customerRoutes);
+app.use('/api/expenses', expenseRoutes);
 
 app.use((req, res) => {
   res.status(404).json({

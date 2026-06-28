@@ -15,6 +15,9 @@ import Profile from './pages/Profile';
 import Register from './pages/Register';
 import Reports from './pages/Reports';
 import ResetPassword from './pages/ResetPassword';
+import Invoices from './pages/Invoices';
+import CustomersLedger from './pages/CustomersLedger';
+import Expenses from './pages/Expenses';
 
 const App = () => (
   <AuthProvider>
@@ -37,6 +40,9 @@ const App = () => (
             <Route index element={<Navigate to="/dashboard" replace />} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/products" element={<Products />} />
+            <Route path="/invoices" element={<Invoices />} />
+            <Route path="/customers" element={<CustomersLedger />} />
+            <Route path="/expenses" element={<Expenses />} />
             <Route path="/out-of-stock" element={<OutOfStock />} />
             <Route path="/reports" element={<Reports />} />
             <Route path="/notifications" element={<Notifications />} />

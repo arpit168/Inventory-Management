@@ -103,6 +103,8 @@ export const createProduct = async (req, res, next) => {
       name,
       category,
       sku,
+      unit,
+      image,
       quantity,
       buyingPrice,
       sellingPrice,
@@ -131,6 +133,8 @@ export const createProduct = async (req, res, next) => {
       name,
       category: category || 'General',
       sku,
+      unit: unit || 'pcs',
+      image: image || '',
       quantity: Number(quantity),
       buyingPrice: Number(buyingPrice),
       sellingPrice: Number(sellingPrice),
@@ -190,6 +194,8 @@ export const updateProduct = async (req, res, next) => {
       name,
       category,
       sku,
+      unit,
+      image,
       quantity,
       buyingPrice,
       sellingPrice,
@@ -200,6 +206,8 @@ export const updateProduct = async (req, res, next) => {
     if (name !== undefined) product.name = name;
     if (category !== undefined) product.category = category;
     if (sku !== undefined) product.sku = sku;
+    if (unit !== undefined) product.unit = unit;
+    if (image !== undefined) product.image = image;
     if (description !== undefined) product.description = description;
     if (quantity !== undefined) product.quantity = Number(quantity);
     if (buyingPrice !== undefined) product.buyingPrice = Number(buyingPrice);

@@ -25,8 +25,10 @@ export const AuthProvider = ({ children }) => {
 
     try {
       const response = await api.get('/auth/me');
-      setUser(response.data.user);
-      localStorage.setItem('inventory-user', JSON.stringify(response.data.user));
+      const fetchedUser = response.data.user;
+      setUser(fetchedUser);
+      if (fetchedUser?.theme) setTheme(fetchedUser.theme);
+      localStorage.setItem('inventory-user', JSON.stringify(fetchedUser));
     } catch (err) {
       setError(err.response?.data?.message || 'Session expired');
       setToken('');
@@ -45,10 +47,12 @@ export const AuthProvider = ({ children }) => {
   const login = useCallback(async (credentials) => {
     const response = await api.post('/auth/login', credentials);
     const nextToken = response.data.token;
+    const loggedUser = response.data.user;
     localStorage.setItem('inventory-auth-token', nextToken);
-    localStorage.setItem('inventory-user', JSON.stringify(response.data.user));
+    localStorage.setItem('inventory-user', JSON.stringify(loggedUser));
     setToken(nextToken);
-    setUser(response.data.user);
+    setUser(loggedUser);
+    if (loggedUser?.theme) setTheme(loggedUser.theme);
     return response.data;
   }, []);
 
@@ -92,7 +96,24 @@ export const AuthProvider = ({ children }) => {
     return () => window.clearInterval(timer);
   }, [refreshNotifications]);
 
-  const toggleTheme = useCallback(() => setTheme((current) => (current === 'dark' ? 'light' : 'dark')), []);
+  const toggleTheme = useCallback(() => {
+    setTheme((current) => {
+      const next = current === 'dark' ? 'light' : 'dark';
+      if (token) {
+        api.put('/auth/profile', { theme: next }).catch(() => {});
+      }
+      return next;
+    });
+  }, [token]);
+
+  const updateUser = useCallback((updatedData) => {
+    setUser((prev) => {
+      const next = { ...prev, ...updatedData };
+      localStorage.setItem('inventory-user', JSON.stringify(next));
+      if (next.theme) setTheme(next.theme);
+      return next;
+    });
+  }, []);
 
   const value = useMemo(
     () => ({
@@ -107,10 +128,11 @@ export const AuthProvider = ({ children }) => {
       register,
       logout,
       toggleTheme,
+      updateUser,
       refreshNotifications,
       setNotifications,
     }),
-    [user, token, theme, notifications, loading, error, login, register, logout, toggleTheme, refreshNotifications]
+    [user, token, theme, notifications, loading, error, login, register, logout, toggleTheme, updateUser, refreshNotifications]
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
