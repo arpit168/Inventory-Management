@@ -364,7 +364,7 @@ const CustomersLedger = () => {
                 <input
                   type="text"
                   required
-                  placeholder="Ramesh Kumar"
+                  placeholder="john aleandro"
                   value={newCustName}
                   onChange={(e) => setNewCustName(e.target.value)}
                   className="w-full rounded-xl border border-border bg-background px-3.5 py-2.5 text-sm text-text focus:border-primary focus:outline-hidden transition"
