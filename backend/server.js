@@ -39,7 +39,7 @@ app.use(helmet());
 
 app.use(
   cors({
-    origin: process.env.CLIENT_URL || '*',
+    origin: process.env.CLIENT_URL || 'inventory-management-irw0o8393-arpit168s-projects.vercel.app'||"*",
     credentials: true,
   })
 );
