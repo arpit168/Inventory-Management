@@ -3,7 +3,7 @@ import { Plus, Search, UserPlus, Phone, ArrowUpRight, ArrowDownLeft, Trash2, X, 
 import api from '../services/api';
 import { useToast } from '../context/ToastContext';
 import { LoadingSkeleton } from '../components/LoadingSkeleton';
-import { formatCurrency } from '../utils/formatters';
+
 
 const CustomersLedger = () => {
   const { showToast } = useToast();
@@ -199,7 +199,7 @@ const CustomersLedger = () => {
             </button>
           </div>
 
-          <div className="space-y-2 flex-1 overflow-y-auto max-h-[600px] pr-1">
+          <div className="space-y-2 flex-1 overflow-y-auto max-h-150 pr-1">
             {loading ? (
               <LoadingSkeleton count={6} />
             ) : customers.length === 0 ? (
@@ -245,7 +245,7 @@ const CustomersLedger = () => {
         </div>
 
         {/* Right Side: Ledger Detail View */}
-        <div className="rounded-2xl border border-border bg-surface p-5 shadow-xs flex flex-col min-h-[500px]">
+        <div className="rounded-2xl border border-border bg-surface p-5 shadow-xs flex flex-col min-h-125">
           {!selectedCustomer ? (
             <div className="flex flex-1 flex-col items-center justify-center text-center p-12">
               <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-primary/10 text-primary mb-4">
@@ -306,7 +306,7 @@ const CustomersLedger = () => {
               </div>
 
               {/* Ledger Entries List */}
-              <div className="flex-1 overflow-y-auto space-y-3 pr-1 max-h-[420px]">
+              <div className="flex-1 overflow-y-auto space-y-3 pr-1 max-h-105">
                 {ledgerLoading ? (
                   <LoadingSkeleton count={4} />
                 ) : ledgerEntries.length === 0 ? (
