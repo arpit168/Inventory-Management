@@ -245,3 +245,56 @@ export const addLedgerEntry = async (req, res, next) => {
     return next(error);
   }
 };
+
+const recalculateCustomerBalance = async (customerId, userId) => {
+  const entries = await LedgerEntry.find({ customer: customerId });
+  let totalCredit = 0;
+  let totalDebit = 0;
+  entries.forEach(e => {
+    if (e.type === 'credit') totalCredit += e.amount;
+    else totalDebit += e.amount;
+  });
+  const netBalance = totalCredit - totalDebit;
+  await Customer.updateOne({ _id: customerId, createdBy: userId }, { totalCredit, totalDebit, netBalance });
+};
+
+export const updateLedgerEntry = async (req, res, next) => {
+  try {
+    const { amount, description, type, date } = req.body;
+    const entry = await LedgerEntry.findOne({ _id: req.params.entryId, customer: req.params.id, createdBy: req.user.id });
+    
+    if (!entry) {
+      return res.status(404).json({ message: 'Ledger entry not found' });
+    }
+
+    if (amount !== undefined) entry.amount = Number(amount);
+    if (description !== undefined) entry.description = description;
+    if (type !== undefined) entry.type = type;
+    if (date !== undefined) entry.date = date;
+
+    await entry.save();
+    
+    await recalculateCustomerBalance(req.params.id, req.user.id);
+    
+    return res.status(200).json({ entry, message: 'Transaction updated successfully' });
+  } catch (error) {
+    return next(error);
+  }
+};
+
+export const deleteLedgerEntry = async (req, res, next) => {
+  try {
+    const entry = await LedgerEntry.findOneAndDelete({ _id: req.params.entryId, customer: req.params.id, createdBy: req.user.id });
+    
+    if (!entry) {
+      return res.status(404).json({ message: 'Ledger entry not found' });
+    }
+
+    await recalculateCustomerBalance(req.params.id, req.user.id);
+    
+    return res.status(200).json({ message: 'Transaction deleted successfully' });
+  } catch (error) {
+    return next(error);
+  }
+};
+

@@ -5,23 +5,23 @@ import { useToast } from '../context/ToastContext';
 import { LoadingSkeleton } from '../components/LoadingSkeleton';
 
 
-const CustomersLedger = () => {
+const SuppliersLedger = () => {
   const { showToast } = useToast();
-  const [customers, setCustomers] = useState([]);
-  const [summary, setSummary] = useState({ totalCustomers: 0, totalReceivable: 0, totalAdvance: 0 });
+  const [suppliers, setSuppliers] = useState([]);
+  const [summary, setSummary] = useState({ totalSuppliers: 0, totalPayable: 0, totalAdvance: 0 });
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
 
-  const [selectedCustomer, setSelectedCustomer] = useState(null);
+  const [selectedSupplier, setSelectedSupplier] = useState(null);
   const [ledgerEntries, setLedgerEntries] = useState([]);
   const [ledgerLoading, setLedgerLoading] = useState(false);
 
-  const [isAddCustomerOpen, setIsAddCustomerOpen] = useState(false);
-  const [newCustName, setNewCustName] = useState('');
-  const [newCustPhone, setNewCustPhone] = useState('');
-  const [newCustEmail, setNewCustEmail] = useState('');
-  const [newCustAddress, setNewCustAddress] = useState('');
-  const [newCustBalance, setNewCustBalance] = useState(0);
+  const [isAddSupplierOpen, setIsAddSupplierOpen] = useState(false);
+  const [newSuppName, setNewSuppName] = useState('');
+  const [newSuppPhone, setNewSuppPhone] = useState('');
+  const [newSuppEmail, setNewSuppEmail] = useState('');
+  const [newSuppAddress, setNewSuppAddress] = useState('');
+  const [newSuppBalance, setNewSuppBalance] = useState(0);
 
   const [isEntryModalOpen, setIsEntryModalOpen] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
@@ -30,28 +30,28 @@ const CustomersLedger = () => {
   const [entryAmount, setEntryAmount] = useState('');
   const [entryDesc, setEntryDesc] = useState('');
 
-  const fetchCustomers = useCallback(async () => {
+  const fetchSuppliers = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await api.get('/customers', { params: search ? { search } : {} });
-      setCustomers(res.data.customers || []);
+      const res = await api.get('/suppliers', { params: search ? { search } : {} });
+      setSuppliers(res.data.suppliers || []);
       if (res.data.summary) setSummary(res.data.summary);
     } catch {
-      showToast('Failed to load customers', 'error');
+      showToast('Failed to load suppliers', 'error');
     } finally {
       setLoading(false);
     }
   }, [search, showToast]);
 
   useEffect(() => {
-    fetchCustomers();
-  }, [fetchCustomers]);
+    fetchSuppliers();
+  }, [fetchSuppliers]);
 
-  const fetchLedger = useCallback(async (customerId) => {
+  const fetchLedger = useCallback(async (supplierId) => {
     setLedgerLoading(true);
     try {
-      const res = await api.get(`/customers/${customerId}/ledger`);
-      setSelectedCustomer(res.data.customer);
+      const res = await api.get(`/suppliers/${supplierId}/ledger`);
+      setSelectedSupplier(res.data.supplier);
       setLedgerEntries(res.data.entries || []);
     } catch {
       showToast('Failed to load ledger entries', 'error');
@@ -60,31 +60,31 @@ const CustomersLedger = () => {
     }
   }, [showToast]);
 
-  const handleCreateCustomer = async (e) => {
+  const handleCreateSupplier = async (e) => {
     e.preventDefault();
-    if (!newCustName.trim() || !newCustPhone.trim()) {
+    if (!newSuppName.trim() || !newSuppPhone.trim()) {
       showToast('Name and Phone are required', 'warning');
       return;
     }
 
     try {
-      await api.post('/customers', {
-        name: newCustName,
-        phone: newCustPhone,
-        email: newCustEmail,
-        address: newCustAddress,
-        openingBalance: Number(newCustBalance) || 0,
+      await api.post('/suppliers', {
+        name: newSuppName,
+        phone: newSuppPhone,
+        email: newSuppEmail,
+        address: newSuppAddress,
+        openingBalance: Number(newSuppBalance) || 0,
       });
-      showToast('Customer added successfully', 'success');
-      setIsAddCustomerOpen(false);
-      setNewCustName('');
-      setNewCustPhone('');
-      setNewCustEmail('');
-      setNewCustAddress('');
-      setNewCustBalance(0);
-      fetchCustomers();
+      showToast('Supplier added successfully', 'success');
+      setIsAddSupplierOpen(false);
+      setNewSuppName('');
+      setNewSuppPhone('');
+      setNewSuppEmail('');
+      setNewSuppAddress('');
+      setNewSuppBalance(0);
+      fetchSuppliers();
     } catch (err) {
-      showToast(err.response?.data?.message || 'Failed to add customer', 'error');
+      showToast(err.response?.data?.message || 'Failed to add supplier', 'error');
     }
   };
 
@@ -97,14 +97,14 @@ const CustomersLedger = () => {
 
     try {
       if (isEditMode) {
-        await api.put(`/customers/${selectedCustomer._id}/ledger/${editingEntryId}`, {
+        await api.put(`/suppliers/${selectedSupplier._id}/ledger/${editingEntryId}`, {
           type: entryType,
           amount: Number(entryAmount),
           description: entryDesc,
         });
         showToast('Transaction updated', 'success');
       } else {
-        await api.post(`/customers/${selectedCustomer._id}/ledger`, {
+        await api.post(`/suppliers/${selectedSupplier._id}/ledger`, {
           type: entryType,
           amount: Number(entryAmount),
           description: entryDesc,
@@ -116,20 +116,20 @@ const CustomersLedger = () => {
       setEntryDesc('');
       setIsEditMode(false);
       setEditingEntryId(null);
-      fetchLedger(selectedCustomer._id);
-      fetchCustomers();
+      fetchLedger(selectedSupplier._id);
+      fetchSuppliers();
     } catch (err) {
       showToast(err.response?.data?.message || 'Failed to record entry', 'error');
     }
   };
 
   const handleDeleteEntry = async (entryId) => {
-    if (!window.confirm('Are you sure you want to delete this ledger entry? This will adjust the customer balance.')) return;
+    if (!window.confirm('Are you sure you want to delete this ledger entry? This will adjust the supplier balance.')) return;
     try {
-      await api.delete(`/customers/${selectedCustomer._id}/ledger/${entryId}`);
+      await api.delete(`/suppliers/${selectedSupplier._id}/ledger/${entryId}`);
       showToast('Transaction deleted', 'success');
-      fetchLedger(selectedCustomer._id);
-      fetchCustomers();
+      fetchLedger(selectedSupplier._id);
+      fetchSuppliers();
     } catch {
       showToast('Failed to delete entry', 'error');
     }
@@ -144,15 +144,15 @@ const CustomersLedger = () => {
     setIsEntryModalOpen(true);
   };
 
-  const handleDeleteCustomer = async (id, name) => {
+  const handleDeleteSupplier = async (id, name) => {
     if (!window.confirm(`Are you sure you want to delete ${name} and all their ledger history?`)) return;
     try {
-      await api.delete(`/customers/${id}`);
-      showToast('Customer deleted', 'success');
-      if (selectedCustomer?._id === id) setSelectedCustomer(null);
-      fetchCustomers();
+      await api.delete(`/suppliers/${id}`);
+      showToast('Supplier deleted', 'success');
+      if (selectedSupplier?._id === id) setSelectedSupplier(null);
+      fetchSuppliers();
     } catch {
-      showToast('Failed to delete customer', 'error');
+      showToast('Failed to delete supplier', 'error');
     }
   };
 
@@ -163,15 +163,15 @@ const CustomersLedger = () => {
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <p className="text-xs font-extrabold uppercase tracking-[0.25em] text-primary">Ledger Suite</p>
-          <h1 className="text-2xl sm:text-3xl font-black text-text tracking-tight">Khatabook Customer Ledger</h1>
+          <h1 className="text-2xl sm:text-3xl font-black text-text tracking-tight">Khatabook Supplier Ledger</h1>
         </div>
 
         <button
-          onClick={() => setIsAddCustomerOpen(true)}
+          onClick={() => setIsAddSupplierOpen(true)}
           className="inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-5 py-3 text-sm font-bold text-slate-950 shadow-md shadow-primary/20 hover:bg-primary-hover transition shrink-0 active:scale-98"
         >
           <UserPlus size={18} />
-          <span>Add New Customer</span>
+          <span>Add New Supplier</span>
         </button>
       </div>
 
@@ -179,8 +179,8 @@ const CustomersLedger = () => {
       <div className="grid gap-4 sm:grid-cols-3">
         <div className="rounded-2xl border border-border bg-surface p-5 shadow-xs flex items-center justify-between">
           <div>
-            <p className="text-xs uppercase tracking-wider font-bold text-text-muted">Total Customers</p>
-            <p className="mt-1 text-2xl font-black text-text">{summary.totalCustomers || 0}</p>
+            <p className="text-xs uppercase tracking-wider font-bold text-text-muted">Total Suppliers</p>
+            <p className="mt-1 text-2xl font-black text-text">{summary.totalSuppliers || 0}</p>
           </div>
           <div className="rounded-2xl bg-primary/10 p-3.5 text-primary">
             <BookOpen size={24} />
@@ -189,8 +189,8 @@ const CustomersLedger = () => {
 
         <div className="rounded-2xl border border-border bg-surface p-5 shadow-xs flex items-center justify-between">
           <div>
-            <p className="text-xs uppercase tracking-wider font-bold text-text-muted">Total Due (Receivable)</p>
-            <p className="mt-1 text-2xl font-black text-danger">₹{(summary.totalReceivable || 0).toFixed(2)}</p>
+            <p className="text-xs uppercase tracking-wider font-bold text-text-muted">Total Payable (We Owe)</p>
+            <p className="mt-1 text-2xl font-black text-danger">₹{(summary.totalPayable || 0).toFixed(2)}</p>
           </div>
           <div className="rounded-2xl bg-danger/10 p-3.5 text-danger">
             <ArrowUpRight size={24} />
@@ -199,7 +199,7 @@ const CustomersLedger = () => {
 
         <div className="rounded-2xl border border-border bg-surface p-5 shadow-xs flex items-center justify-between">
           <div>
-            <p className="text-xs uppercase tracking-wider font-bold text-text-muted">Total Advance Given</p>
+            <p className="text-xs uppercase tracking-wider font-bold text-text-muted">Total Advance (They Owe)</p>
             <p className="mt-1 text-2xl font-black text-success">₹{(summary.totalAdvance || 0).toFixed(2)}</p>
           </div>
           <div className="rounded-2xl bg-success/10 p-3.5 text-success">
@@ -211,21 +211,21 @@ const CustomersLedger = () => {
       {/* Main Content Layout */}
       <div className="grid gap-6 lg:grid-cols-[1fr_1.3fr]">
         
-        {/* Left Side: Customer List */}
+        {/* Left Side: Supplier List */}
         <div className="rounded-2xl border border-border bg-surface p-5 shadow-xs flex flex-col">
           <div className="flex items-center justify-between gap-3 mb-4">
             <div className="relative flex-1">
               <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-text-muted" />
               <input
                 type="text"
-                placeholder="Search customer name or phone..."
+                placeholder="Search supplier name or phone..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 className="w-full rounded-xl border border-border bg-background pl-9 pr-3 py-2 text-xs text-text placeholder:text-text-muted focus:border-primary focus:outline-hidden transition"
               />
             </div>
             <button
-              onClick={fetchCustomers}
+              onClick={fetchSuppliers}
               title="Refresh List"
               className="rounded-xl border border-border bg-background p-2 text-text hover:border-primary transition shrink-0 shadow-xs"
             >
@@ -236,11 +236,11 @@ const CustomersLedger = () => {
           <div className="space-y-2 flex-1 overflow-y-auto max-h-150 pr-1">
             {loading ? (
               <LoadingSkeleton count={6} />
-            ) : customers.length === 0 ? (
-              <p className="text-center text-xs text-text-muted py-12">No customers found.</p>
+            ) : suppliers.length === 0 ? (
+              <p className="text-center text-xs text-text-muted py-12">No suppliers found.</p>
             ) : (
-              customers.map((cust) => {
-                const isSelected = selectedCustomer?._id === cust._id;
+              suppliers.map((cust) => {
+                const isSelected = selectedSupplier?._id === cust._id;
                 const balance = cust.balance || 0;
                 const isDue = balance > 0;
                 const isAdvance = balance < 0;
@@ -280,28 +280,28 @@ const CustomersLedger = () => {
 
         {/* Right Side: Ledger Detail View */}
         <div className="rounded-2xl border border-border bg-surface p-5 shadow-xs flex flex-col min-h-125">
-          {!selectedCustomer ? (
+          {!selectedSupplier ? (
             <div className="flex flex-1 flex-col items-center justify-center text-center p-12">
               <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-primary/10 text-primary mb-4">
                 <BookOpen size={32} />
               </div>
-              <h3 className="text-lg font-bold text-text">Select a Customer</h3>
+              <h3 className="text-lg font-bold text-text">Select a Supplier</h3>
               <p className="mt-1 text-sm text-text-muted max-w-xs">
-                Click on any customer from the list on the left to view their detailed transaction ledger and record entries.
+                Click on any supplier from the list on the left to view their detailed transaction ledger and record entries.
               </p>
             </div>
           ) : (
             <div className="flex flex-col flex-1">
               
-              {/* Selected Customer Header */}
+              {/* Selected Supplier Header */}
               <div className="flex flex-wrap items-start justify-between gap-4 border-b border-border pb-4 mb-4">
                 <div>
-                  <h2 className="text-xl font-black text-text">{selectedCustomer.name}</h2>
+                  <h2 className="text-xl font-black text-text">{selectedSupplier.name}</h2>
                   <div className="flex flex-wrap gap-3 text-xs text-text-muted mt-1 font-medium">
-                    <span>📞 {selectedCustomer.phone}</span>
-                    {selectedCustomer.email && <span>✉️ {selectedCustomer.email}</span>}
+                    <span>📞 {selectedSupplier.phone}</span>
+                    {selectedSupplier.email && <span>✉️ {selectedSupplier.email}</span>}
                   </div>
-                  {selectedCustomer.address && <p className="text-xs text-text-muted mt-1">📍 {selectedCustomer.address}</p>}
+                  {selectedSupplier.address && <p className="text-xs text-text-muted mt-1">📍 {selectedSupplier.address}</p>}
                 </div>
 
                 <div className="flex items-center gap-2">
@@ -319,9 +319,9 @@ const CustomersLedger = () => {
                     <span>New Entry</span>
                   </button>
                   <button
-                    onClick={() => handleDeleteCustomer(selectedCustomer._id, selectedCustomer.name)}
+                    onClick={() => handleDeleteSupplier(selectedSupplier._id, selectedSupplier.name)}
                     className="rounded-xl border border-border bg-background p-2 text-danger hover:bg-danger hover:text-white transition shadow-xs"
-                    title="Delete Customer"
+                    title="Delete Supplier"
                   >
                     <Trash2 size={16} />
                   </button>
@@ -330,17 +330,17 @@ const CustomersLedger = () => {
 
               {/* Balance Summary Banner */}
               <div className={`rounded-2xl p-4 mb-6 flex items-center justify-between ${
-                selectedCustomer.balance > 0 ? 'bg-danger/10 border border-danger/20 text-danger' :
-                selectedCustomer.balance < 0 ? 'bg-success/10 border border-success/20 text-success' :
+                selectedSupplier.balance > 0 ? 'bg-danger/10 border border-danger/20 text-danger' :
+                selectedSupplier.balance < 0 ? 'bg-success/10 border border-success/20 text-success' :
                 'bg-background border border-border text-text'
               }`}>
                 <div>
                   <p className="text-xs font-bold uppercase tracking-wider opacity-80">Net Balance</p>
-                  <p className="text-xl font-black mt-0.5">₹{Math.abs(selectedCustomer.balance || 0).toFixed(2)}</p>
+                  <p className="text-xl font-black mt-0.5">₹{Math.abs(selectedSupplier.balance || 0).toFixed(2)}</p>
                 </div>
                 <div className="text-right">
                   <span className="rounded-full bg-surface px-3 py-1 text-xs font-extrabold shadow-xs">
-                    {selectedCustomer.balance > 0 ? 'YOU WILL GET (DUE)' : selectedCustomer.balance < 0 ? 'YOU WILL GIVE (ADVANCE)' : 'SETTLED'}
+                    {selectedSupplier.balance > 0 ? 'WE WILL GIVE (PAYABLE)' : selectedSupplier.balance < 0 ? 'WE WILL GET (ADVANCE)' : 'SETTLED'}
                   </span>
                 </div>
               </div>
@@ -364,7 +364,7 @@ const CustomersLedger = () => {
                             {isCredit ? <ArrowUpRight size={18} /> : <ArrowDownLeft size={18} />}
                           </div>
                           <div className="min-w-0">
-                            <p className="text-sm font-bold text-text truncate">{entry.description || (isCredit ? 'Credit Given' : 'Payment Received')}</p>
+                            <p className="text-sm font-bold text-text truncate">{entry.description || (isCredit ? 'Goods Received (We Owe)' : 'Payment Given (Advance)')}</p>
                             <p className="text-[11px] text-text-muted">{new Date(entry.createdAt).toLocaleString()}</p>
                           </div>
                         </div>
@@ -374,7 +374,7 @@ const CustomersLedger = () => {
                             {isCredit ? '+' : '-'} ₹{entry.amount.toFixed(2)}
                           </p>
                           <span className="text-[10px] font-bold uppercase tracking-wider text-text-muted">
-                            {isCredit ? 'Gave (Due)' : 'Got (Paid)'}
+                            {isCredit ? 'Got Goods (Payable)' : 'Gave Money (Advance)'}
                           </span>
                           <div className="flex gap-2 mt-2">
                             <button onClick={() => openEditEntry(entry)} className="text-xs text-primary hover:underline">Edit</button>
@@ -391,26 +391,26 @@ const CustomersLedger = () => {
         </div>
       </div>
 
-      {/* Add Customer Modal */}
-      {isAddCustomerOpen && (
+      {/* Add Supplier Modal */}
+      {isAddSupplierOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-xs animate-fade-in">
           <div className="w-full max-w-md rounded-3xl border border-border bg-surface p-6 shadow-2xl animate-scale-up">
             <div className="flex items-center justify-between border-b border-border pb-4">
-              <h3 className="text-lg font-black text-text">Add New Customer</h3>
-              <button onClick={() => setIsAddCustomerOpen(false)} className="rounded-xl p-2 text-text-muted hover:bg-background transition">
+              <h3 className="text-lg font-black text-text">Add New Supplier</h3>
+              <button onClick={() => setIsAddSupplierOpen(false)} className="rounded-xl p-2 text-text-muted hover:bg-background transition">
                 <X size={18} />
               </button>
             </div>
 
-            <form onSubmit={handleCreateCustomer} className="mt-5 space-y-4">
+            <form onSubmit={handleCreateSupplier} className="mt-5 space-y-4">
               <div>
-                <label className="block text-xs font-bold text-text-muted mb-1">Customer Name *</label>
+                <label className="block text-xs font-bold text-text-muted mb-1">Supplier Name *</label>
                 <input
                   type="text"
                   required
                   placeholder="john aleandro"
-                  value={newCustName}
-                  onChange={(e) => setNewCustName(e.target.value)}
+                  value={newSuppName}
+                  onChange={(e) => setNewSuppName(e.target.value)}
                   className="w-full rounded-xl border border-border bg-background px-3.5 py-2.5 text-sm text-text focus:border-primary focus:outline-hidden transition"
                 />
               </div>
@@ -421,8 +421,8 @@ const CustomersLedger = () => {
                   type="text"
                   required
                   placeholder="+91 9876543210"
-                  value={newCustPhone}
-                  onChange={(e) => setNewCustPhone(e.target.value)}
+                  value={newSuppPhone}
+                  onChange={(e) => setNewSuppPhone(e.target.value)}
                   className="w-full rounded-xl border border-border bg-background px-3.5 py-2.5 text-sm text-text focus:border-primary focus:outline-hidden transition"
                 />
               </div>
@@ -432,8 +432,8 @@ const CustomersLedger = () => {
                 <input
                   type="email"
                   placeholder="ramesh@example.com"
-                  value={newCustEmail}
-                  onChange={(e) => setNewCustEmail(e.target.value)}
+                  value={newSuppEmail}
+                  onChange={(e) => setNewSuppEmail(e.target.value)}
                   className="w-full rounded-xl border border-border bg-background px-3.5 py-2.5 text-sm text-text focus:border-primary focus:outline-hidden transition"
                 />
               </div>
@@ -443,8 +443,8 @@ const CustomersLedger = () => {
                 <input
                   type="text"
                   placeholder="Market Road, Shop #12"
-                  value={newCustAddress}
-                  onChange={(e) => setNewCustAddress(e.target.value)}
+                  value={newSuppAddress}
+                  onChange={(e) => setNewSuppAddress(e.target.value)}
                   className="w-full rounded-xl border border-border bg-background px-3.5 py-2.5 text-sm text-text focus:border-primary focus:outline-hidden transition"
                 />
               </div>
@@ -455,8 +455,8 @@ const CustomersLedger = () => {
                   type="number"
                   step="0.01"
                   placeholder="0.00"
-                  value={newCustBalance}
-                  onChange={(e) => setNewCustBalance(e.target.value)}
+                  value={newSuppBalance}
+                  onChange={(e) => setNewSuppBalance(e.target.value)}
                   className="w-full rounded-xl border border-border bg-background px-3.5 py-2.5 text-sm text-text focus:border-primary focus:outline-hidden transition"
                 />
                 <p className="text-[10px] text-text-muted mt-1">Enter positive for previous due, negative if advance received.</p>
@@ -465,7 +465,7 @@ const CustomersLedger = () => {
               <div className="flex justify-end gap-3 pt-4">
                 <button
                   type="button"
-                  onClick={() => setIsAddCustomerOpen(false)}
+                  onClick={() => setIsAddSupplierOpen(false)}
                   className="rounded-xl border border-border bg-background px-5 py-2.5 text-xs font-bold text-text hover:bg-surface transition"
                 >
                   Cancel
@@ -474,7 +474,7 @@ const CustomersLedger = () => {
                   type="submit"
                   className="rounded-xl bg-primary px-6 py-2.5 text-xs font-bold text-slate-950 shadow-md shadow-primary/20 hover:bg-primary-hover transition"
                 >
-                  Save Customer
+                  Save Supplier
                 </button>
               </div>
             </form>
@@ -483,13 +483,13 @@ const CustomersLedger = () => {
       )}
 
       {/* New Entry Modal */}
-      {isEntryModalOpen && selectedCustomer && (
+      {isEntryModalOpen && selectedSupplier && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-xs animate-fade-in">
           <div className="w-full max-w-md rounded-3xl border border-border bg-surface p-6 shadow-2xl animate-scale-up">
             <div className="flex items-center justify-between border-b border-border pb-4">
               <div>
                 <p className="text-[10px] font-extrabold uppercase text-primary">Record Transaction</p>
-                <h3 className="text-lg font-black text-text">{selectedCustomer.name}</h3>
+                <h3 className="text-lg font-black text-text">{selectedSupplier.name}</h3>
               </div>
               <button onClick={() => setIsEntryModalOpen(false)} className="rounded-xl p-2 text-text-muted hover:bg-background transition">
                 <X size={18} />
@@ -510,7 +510,7 @@ const CustomersLedger = () => {
                     }`}
                   >
                     <ArrowUpRight size={16} />
-                    <span>YOU GAVE (Due)</span>
+                    <span>WE GOT GOODS (Payable)</span>
                   </button>
 
                   <button
@@ -523,7 +523,7 @@ const CustomersLedger = () => {
                     }`}
                   >
                     <ArrowDownLeft size={16} />
-                    <span>YOU GOT (Paid)</span>
+                    <span>WE GAVE MONEY (Advance)</span>
                   </button>
                 </div>
               </div>
@@ -579,4 +579,4 @@ const CustomersLedger = () => {
   );
 };
 
-export default CustomersLedger;
+export default SuppliersLedger;

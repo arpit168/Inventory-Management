@@ -17,7 +17,6 @@ const invoiceSchema = new mongoose.Schema(
     invoiceNumber: {
       type: String,
       required: true,
-      unique: true,
     },
     customerName: {
       type: String,
@@ -88,6 +87,10 @@ const invoiceSchema = new mongoose.Schema(
     timestamps: true,
   }
 );
+
+invoiceSchema.index({ invoiceNumber: 1, createdBy: 1 }, { unique: true });
+invoiceSchema.index({ createdBy: 1 });
+invoiceSchema.index({ status: 1 });
 
 const Invoice = mongoose.model('Invoice', invoiceSchema);
 export default Invoice;

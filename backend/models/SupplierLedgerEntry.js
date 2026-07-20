@@ -1,15 +1,16 @@
 import mongoose from 'mongoose';
 
-const ledgerEntrySchema = new mongoose.Schema(
+const supplierLedgerEntrySchema = new mongoose.Schema(
   {
-    customer: {
+    supplier: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'Customer',
+      ref: 'Supplier',
       required: true,
     },
     type: {
       type: String,
-      enum: ['credit', 'debit'], // credit = Gave (customer owes), debit = Got (payment received)
+      enum: ['credit', 'debit'], 
+      // credit = We took goods (We Owe), debit = We Paid (Advance)
       required: true,
     },
     amount: {
@@ -28,9 +29,9 @@ const ledgerEntrySchema = new mongoose.Schema(
     dueDate: {
       type: Date,
     },
-    invoice: {
+    expense: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'Invoice',
+      ref: 'Expense',
     },
     createdBy: {
       type: mongoose.Schema.Types.ObjectId,
@@ -43,7 +44,7 @@ const ledgerEntrySchema = new mongoose.Schema(
   }
 );
 
-ledgerEntrySchema.index({ customer: 1, date: -1 });
+supplierLedgerEntrySchema.index({ supplier: 1, date: -1 });
 
-const LedgerEntry = mongoose.model('LedgerEntry', ledgerEntrySchema);
-export default LedgerEntry;
+const SupplierLedgerEntry = mongoose.model('SupplierLedgerEntry', supplierLedgerEntrySchema);
+export default SupplierLedgerEntry;

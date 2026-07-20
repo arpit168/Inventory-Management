@@ -1,10 +1,10 @@
 import mongoose from 'mongoose';
 
-const customerSchema = new mongoose.Schema(
+const supplierSchema = new mongoose.Schema(
   {
     name: {
       type: String,
-      required: [true, 'Customer name is required'],
+      required: [true, 'Supplier name is required'],
       trim: true,
     },
     phone: {
@@ -21,17 +21,18 @@ const customerSchema = new mongoose.Schema(
       type: String,
       trim: true,
     },
-    totalCredit: {
+    totalAdvance: {
       type: Number,
-      default: 0, // Total credit given (Gave)
+      default: 0,
     },
-    totalDebit: {
+    totalPayable: {
       type: Number,
-      default: 0, // Total payment received (Got)
+      default: 0,
     },
     netBalance: {
       type: Number,
-      default: 0, // Positive means customer owes money (Due), Negative means advance
+      default: 0,
+      // positive = we owe them (Payable), negative = they owe us (Advance)
     },
     createdBy: {
       type: mongoose.Schema.Types.ObjectId,
@@ -44,8 +45,7 @@ const customerSchema = new mongoose.Schema(
   }
 );
 
-customerSchema.index({ createdBy: 1 });
-customerSchema.index({ createdBy: 1, name: 1 });
+supplierSchema.index({ createdBy: 1 });
 
-const Customer = mongoose.model('Customer', customerSchema);
-export default Customer;
+const Supplier = mongoose.model('Supplier', supplierSchema);
+export default Supplier;
