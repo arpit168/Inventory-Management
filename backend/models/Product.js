@@ -146,6 +146,10 @@ const productSchema = new mongoose.Schema(
   }
 );
 
+productSchema.index({ createdBy: 1 });
+productSchema.index({ createdBy: 1, status: 1 });
+productSchema.index({ createdBy: 1, category: 1 });
+
 const Product = mongoose.model(
   'Product',
   productSchema

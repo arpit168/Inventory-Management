@@ -7,7 +7,9 @@ const CreateInvoiceModal = ({ onClose, onSuccess }) => {
   const { showToast } = useToast();
   const [products, setProducts] = useState([]);
   const [businessProfiles, setBusinessProfiles] = useState([]);
+  const [customers, setCustomers] = useState([]);
   const [selectedProfileId, setSelectedProfileId] = useState('');
+  const [selectedCustomerId, setSelectedCustomerId] = useState('');
   const [loading, setLoading] = useState(false);
 
   const [customerName, setCustomerName] = useState('');
@@ -25,11 +27,13 @@ const CreateInvoiceModal = ({ onClose, onSuccess }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [prodRes, profRes] = await Promise.all([
+        const [prodRes, profRes, custRes] = await Promise.all([
           api.get('/products?limit=100'),
           api.get('/business-profile'),
+          api.get('/customers'),
         ]);
         setProducts(prodRes.data.products || []);
+        setCustomers(custRes.data.customers || []);
         const profList = profRes.data.profiles || [];
         setBusinessProfiles(profList);
         if (profList.length > 0) {
@@ -42,6 +46,25 @@ const CreateInvoiceModal = ({ onClose, onSuccess }) => {
     };
     fetchData();
   }, []);
+
+  const handleCustomerSelect = (e) => {
+    const id = e.target.value;
+    setSelectedCustomerId(id);
+    if (id) {
+      const cust = customers.find(c => c._id === id);
+      if (cust) {
+        setCustomerName(cust.name);
+        setCustomerPhone(cust.phone);
+        setCustomerEmail(cust.email || '');
+        setCustomerAddress(cust.address || '');
+      }
+    } else {
+      setCustomerName('');
+      setCustomerPhone('');
+      setCustomerEmail('');
+      setCustomerAddress('');
+    }
+  };
 
   const handleAddItem = () => {
     setItems((prev) => [...prev, { product: '', name: '', quantity: 1, unitPrice: 0, taxRate: 18 }]);
@@ -89,6 +112,7 @@ const CreateInvoiceModal = ({ onClose, onSuccess }) => {
     setLoading(true);
     try {
       await api.post('/invoices', {
+        customerId: selectedCustomerId || undefined,
         customerName,
         customerEmail,
         customerPhone,
@@ -152,6 +176,24 @@ const CreateInvoiceModal = ({ onClose, onSuccess }) => {
           )}
 
           {/* Customer info */}
+          {customers.length > 0 && (
+            <div className="mb-4">
+              <label className="block text-xs font-bold text-primary mb-1">Select Existing Customer (Links to Ledger)</label>
+              <select
+                value={selectedCustomerId}
+                onChange={handleCustomerSelect}
+                className="w-full rounded-xl border border-border bg-surface px-3.5 py-2 text-sm font-semibold text-text focus:border-primary focus:outline-hidden transition"
+              >
+                <option value="">-- Walk-in / New Customer (No Ledger Link) --</option>
+                {customers.map((c) => (
+                  <option key={c._id} value={c._id}>
+                    {c.name} ({c.phone})
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
+
           <div className="grid gap-4 sm:grid-cols-2">
             <div>
               <label className="block text-xs font-bold text-text-muted mb-1.5">Customer Name *</label>

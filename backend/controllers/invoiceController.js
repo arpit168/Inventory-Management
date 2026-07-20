@@ -1,5 +1,8 @@
 import Invoice from '../models/Invoice.js';
 import BusinessProfile from '../models/BusinessProfile.js';
+import Counter from '../models/Counter.js';
+import Customer from '../models/Customer.js';
+import LedgerEntry from '../models/LedgerEntry.js';
 import { addNotification } from '../utils/notifications.js';
 import { sendEmail, generateInvoiceEmailTemplate } from '../utils/email.js';
 
@@ -42,6 +45,7 @@ export const getInvoiceById = async (req, res, next) => {
 export const createInvoice = async (req, res, next) => {
   try {
     const {
+      customerId,
       customerName,
       customerEmail,
       customerPhone,
@@ -86,8 +90,13 @@ export const createInvoice = async (req, res, next) => {
     const grandTotal = Math.max(0, subTotal + taxTotal - discountNum);
 
     // Generate unique invoice number e.g. INV-2026-XXXX
-    const count = await Invoice.countDocuments({ createdBy: req.user.id });
-    const invoiceNumber = `INV-${new Date().getFullYear()}-${String(count + 101).padStart(4, '0')}`;
+    const counter = await Counter.findOneAndUpdate(
+      { id: 'invoiceNumber', user: req.user.id },
+      { $inc: { seq: 1 } },
+      { new: true, upsert: true }
+    );
+    const invoiceNumber = `INV-${new Date().getFullYear()}-${String(counter.seq + 100).padStart(4, '0')}`;
+
 
     let profileSnapshot = null;
     if (businessProfileId) {
@@ -142,6 +151,23 @@ export const createInvoice = async (req, res, next) => {
       notes,
       createdBy: req.user.id,
     });
+
+    if (customerId) {
+      const customer = await Customer.findOne({ _id: customerId, createdBy: req.user.id });
+      if (customer) {
+        await LedgerEntry.create({
+          customer: customer._id,
+          type: 'credit',
+          amount: grandTotal,
+          description: `Invoice ${invoiceNumber} generated`,
+          invoice: invoice._id,
+          createdBy: req.user.id,
+        });
+        customer.totalCredit += grandTotal;
+        customer.netBalance += grandTotal;
+        await customer.save();
+      }
+    }
 
     await addNotification(
       req.user.id,

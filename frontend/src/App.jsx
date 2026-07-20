@@ -18,6 +18,7 @@ import Reports from './pages/Reports';
 import ResetPassword from './pages/ResetPassword';
 import Invoices from './pages/Invoices';
 import CustomersLedger from './pages/CustomersLedger';
+import SuppliersLedger from './pages/SuppliersLedger';
 import Expenses from './pages/Expenses';
 import BusinessProfile from './pages/BusinessProfile';
 
@@ -45,6 +46,7 @@ const App = () => (
             <Route path="/products" element={<Products />} />
             <Route path="/invoices" element={<Invoices />} />
             <Route path="/customers" element={<CustomersLedger />} />
+            <Route path="/suppliers" element={<SuppliersLedger />} />
             <Route path="/expenses" element={<Expenses />} />
             <Route path="/out-of-stock" element={<OutOfStock />} />
             <Route path="/reports" element={<Reports />} />

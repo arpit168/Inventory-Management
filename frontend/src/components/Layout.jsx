@@ -15,6 +15,7 @@ import {
   Moon,
   X,
   Building2,
+  Truck,
 } from 'lucide-react';
 
 import { NavLink, Outlet, useLocation } from 'react-router-dom';
@@ -24,7 +25,8 @@ import { useState } from 'react';
 const links = [
   { to: '/dashboard', label: 'Dashboard', icon: Home },
   { to: '/invoices', label: 'Billing / Invoices', icon: ReceiptText },
-  { to: '/customers', label: 'Khatabook Ledger', icon: Users },
+  { to: '/customers', label: 'Customer Ledger', icon: Users },
+  { to: '/suppliers', label: 'Supplier Ledger', icon: Truck },
   { to: '/products', label: 'Products', icon: Boxes },
   { to: '/expenses', label: 'Expenses', icon: Wallet },
   { to: '/out-of-stock', label: 'Out of Stock', icon: TriangleAlert },
