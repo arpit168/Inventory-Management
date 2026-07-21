@@ -38,12 +38,18 @@ const PORT = process.env.PORT || 5000;
 
 app.use(helmet());
 
+
 app.use(
   cors({
-    origin: "inventory-management-git-main-arpit168s-projects.vercel.app",
+    origin: function (origin, callback) {
+      if (!origin) return callback(null, true);
+      return callback(null, origin);
+    },
     credentials: true,
+    maxAge: 86400, // 24 hours
   })
 );
+
 
 app.use(
   express.json({
