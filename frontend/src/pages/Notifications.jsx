@@ -92,22 +92,29 @@ const Notifications = () => {
       
       {/* Header Banner */}
       <div className="rounded-2xl border border-border bg-surface p-6 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-        <div className="flex items-center gap-3.5 min-w-0">
-          <div className="rounded-2xl bg-primary/10 p-3 text-primary shrink-0">
-            <BellRing size={24} />
-          </div>
-          <div className="min-w-0">
-            <div className="flex items-center gap-2">
-              <p className="text-xs uppercase tracking-[0.25em] font-extrabold text-primary">Notification Center</p>
-              {unreadCount > 0 && (
-                <span className="rounded-full bg-danger/15 px-2 py-0.5 text-[10px] font-bold text-danger">
-                  {unreadCount} unread
-                </span>
-              )}
-            </div>
-            <h1 className="mt-1 text-2xl font-black text-text tracking-tight truncate">Real-time System Alerts</h1>
-          </div>
-        </div>
+       <div className="flex flex-wrap sm:flex-nowrap items-start sm:items-center gap-3 sm:gap-4 min-w-0">
+  <div className="rounded-2xl bg-primary/10 p-2.5 sm:p-3 text-primary shrink-0">
+    <BellRing size={20} className="sm:w-6 sm:h-6" />
+  </div>
+
+  <div className="min-w-0 flex-1">
+    <div className="flex flex-wrap items-center gap-2">
+      <p className="text-[10px] sm:text-xs uppercase tracking-[0.18em] sm:tracking-[0.25em] font-extrabold text-primary">
+        Notification Center
+      </p>
+
+      {unreadCount > 0 && (
+        <span className="rounded-full bg-danger/15 px-2 py-0.5 text-[10px] font-bold text-danger whitespace-nowrap">
+          {unreadCount} unread
+        </span>
+      )}
+    </div>
+
+    <h1 className="mt-1 text-lg sm:text-xl md:text-2xl lg:text-3xl font-black text-text tracking-tight break-words">
+      Real-time System Alerts
+    </h1>
+  </div>
+</div>
 
         <div className="flex items-center gap-3 w-full sm:w-auto justify-end shrink-0">
           <button
