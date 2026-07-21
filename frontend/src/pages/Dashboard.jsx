@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, CircleDollarSign, Package, Truck, Warehouse, BookOpen, Wallet, TrendingUp } from 'lucide-react';
-import { Bar, BarChart, CartesianGrid, Cell, Pie, PieChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
+import { Bar, BarChart, CartesianGrid, Cell, Legend, Pie, PieChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 import api from '../services/api';
 import { LoadingSkeleton } from '../components/LoadingSkeleton';
 import { formatCurrency, formatNumber } from '../utils/formatters';
@@ -85,7 +85,7 @@ const Dashboard = () => {
       </div>
 
       {/* Commercial Financial Snapshot */}
-      <div className="rounded-3xl border border-border bg-linear-to-r from-slate-900 via-slate-800 to-slate-900 p-6 sm:p-8 text-white shadow-xl">
+      <div className="rounded-3xl border border-border bg-linear-to-r from-slate-900 via-slate-950 to-slate-900 p-6 sm:p-8 text-white shadow-xl">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-6">
           <div>
             <p className="text-[10px] sm:text-xs uppercase tracking-[0.3em] font-extrabold text-primary">Commercial Insights</p>
@@ -168,14 +168,16 @@ const Dashboard = () => {
 
           <div className="mt-6 h-72 w-full">
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={salesTrend}>
+              <BarChart data={analytics.charts?.profitLossData || []}>
                 <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" opacity={0.5} />
-                <XAxis dataKey="date" stroke="var(--color-text-muted)" fontSize={12} />
+                <XAxis dataKey="name" stroke="var(--color-text-muted)" fontSize={12} />
                 <YAxis stroke="var(--color-text-muted)" fontSize={12} />
                 <Tooltip
                   contentStyle={{ backgroundColor: 'var(--color-surface)', borderRadius: 12, border: '1px solid var(--color-border)', color: 'var(--color-text)' }}
                 />
-                <Bar dataKey="sold" radius={[8, 8, 0, 0]} fill="var(--color-primary)" />
+                <Legend wrapperStyle={{ paddingTop: '10px' }} />
+                <Bar dataKey="profit" name="Profit" radius={[8, 8, 0, 0]} fill="var(--color-success)" />
+                <Bar dataKey="loss" name="Loss" radius={[8, 8, 0, 0]} fill="var(--color-danger)" />
               </BarChart>
             </ResponsiveContainer>
           </div>

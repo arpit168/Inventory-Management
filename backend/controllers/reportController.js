@@ -17,27 +17,34 @@ export const getSalesReport = async (
             log.action === 'decreased' ||
             log.action === 'sold'
         )
-        .map((log) => ({
-          name: product.name,
+        .map((log) => {
+          const sold = Math.abs(Number(log.quantityDelta) || 0);
+          const buyingPrice = Number(product.buyingPrice) || 0;
+          const sellingPrice = Number(product.sellingPrice) || 0;
+          
+          const profit = Math.max(0, (sellingPrice - buyingPrice) * sold);
+          const loss = Math.max(0, (buyingPrice - sellingPrice) * sold);
 
-          date: log.createdAt
-            ? new Date(log.createdAt)
-                .toISOString()
-                .slice(0, 10)
-            : new Date()
-                .toISOString()
-                .slice(0, 10),
-
-          sold: Math.abs(
-            Number(log.quantityDelta) || 0
-          ),
-        }))
+          return {
+            name: product.name,
+            date: log.createdAt
+              ? new Date(log.createdAt).toISOString().slice(0, 10)
+              : new Date().toISOString().slice(0, 10),
+            sold,
+            profit,
+            loss,
+          };
+        })
     );
 
     const grouped = chartData.reduce(
       (acc, item) => {
-        acc[item.date] =
-          (acc[item.date] || 0) + item.sold;
+        if (!acc[item.date]) {
+          acc[item.date] = { sold: 0, profit: 0, loss: 0 };
+        }
+        acc[item.date].sold += item.sold;
+        acc[item.date].profit += item.profit;
+        acc[item.date].loss += item.loss;
 
         return acc;
       },
@@ -45,9 +52,11 @@ export const getSalesReport = async (
     );
 
     const salesTrend = Object.entries(grouped).map(
-      ([date, sold]) => ({
+      ([date, data]) => ({
         date,
-        sold,
+        sold: data.sold,
+        profit: data.profit,
+        loss: data.loss,
       })
     );
 
