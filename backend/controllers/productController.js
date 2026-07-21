@@ -517,6 +517,16 @@ export const getAnalytics = async (req, res, next) => {
       {}
     );
 
+    const profitLossData = Object.values(
+      enriched.reduce((acc, product) => {
+        const key = product.category || 'General';
+        if (!acc[key]) acc[key] = { name: key, profit: 0, loss: 0 };
+        acc[key].profit += product.profit || 0;
+        acc[key].loss += product.loss || 0;
+        return acc;
+      }, {})
+    );
+
     const recentActivity = products
       .flatMap((product) =>
         (product.activityLogs || []).map((log) => ({
@@ -548,6 +558,7 @@ export const getAnalytics = async (req, res, next) => {
         statusData,
         categoryData,
         salesData,
+        profitLossData,
       },
 
       recentActivity,
