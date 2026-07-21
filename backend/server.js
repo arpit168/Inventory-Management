@@ -40,7 +40,7 @@ app.use(helmet());
 
 app.use(
   cors({
-    origin: process.env.CLIENT_URL,
+    origin: "inventory-management-git-main-arpit168s-projects.vercel.app",
     credentials: true,
   })
 );

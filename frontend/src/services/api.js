@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL ,
+  baseURL: import.meta.env.VITE_API_URL || "https://inventory-management-7oq4.onrender.com" ,
   timeout: 20000,
 });
 
