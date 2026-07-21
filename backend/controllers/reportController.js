@@ -51,14 +51,14 @@ export const getSalesReport = async (
       {}
     );
 
-    const salesTrend = Object.entries(grouped).map(
-      ([date, data]) => ({
+    const salesTrend = Object.entries(grouped)
+      .map(([date, data]) => ({
         date,
         sold: data.sold,
         profit: data.profit,
         loss: data.loss,
-      })
-    );
+      }))
+      .sort((a, b) => new Date(a.date) - new Date(b.date));
 
     return res.status(200).json({
       salesTrend,

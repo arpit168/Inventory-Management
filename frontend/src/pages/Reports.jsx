@@ -92,23 +92,31 @@ const Reports = () => {
         </div>
 
         <div className="h-80 w-full">
-          <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={salesTrend}>
-              <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" opacity={0.6} />
-              <XAxis dataKey="date" stroke="var(--color-text-muted)" fontSize={12} tickLine={false} />
-              <YAxis stroke="var(--color-text-muted)" fontSize={12} tickLine={false} axisLine={false} />
-              <Tooltip 
-                contentStyle={{ 
-                  backgroundColor: 'var(--color-surface)', 
-                  borderRadius: '12px', 
-                  border: '1px solid var(--color-border)',
-                  color: 'var(--color-text)',
-                  boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)'
-                }} 
-              />
-              <Bar radius={[8, 8, 0, 0]} dataKey="sold" fill="var(--color-primary)" />
-            </BarChart>
-          </ResponsiveContainer>
+          {salesTrend && salesTrend.length > 0 ? (
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={salesTrend}>
+                <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" opacity={0.6} />
+                <XAxis dataKey="date" stroke="var(--color-text-muted)" fontSize={12} tickLine={false} />
+                <YAxis stroke="var(--color-text-muted)" fontSize={12} tickLine={false} axisLine={false} />
+                <Tooltip 
+                  contentStyle={{ 
+                    backgroundColor: 'var(--color-surface)', 
+                    borderRadius: '12px', 
+                    border: '1px solid var(--color-border)',
+                    color: 'var(--color-text)',
+                    boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)'
+                  }} 
+                />
+                <Bar radius={[8, 8, 0, 0]} dataKey="sold" fill="var(--color-primary)" />
+              </BarChart>
+            </ResponsiveContainer>
+          ) : (
+            <div className="flex h-full flex-col items-center justify-center text-center">
+              <BarChart3 size={48} className="text-text-muted mb-4 opacity-20" />
+              <p className="text-sm font-bold text-text-muted">No sales data available yet</p>
+              <p className="text-xs text-text-muted mt-1">Record a sale to see the trends here.</p>
+            </div>
+          )}
         </div>
       </div>
 
