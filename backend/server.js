@@ -87,18 +87,11 @@ app.use(
   })
 );
 
-// app.get('/api/health', (_req, res) => {
-//   res.json({
-//     status: 'ok',
-//     message: 'Inventory API is healthy',
-//     timestamp: new Date().toISOString(),
-//   });
-// });
-
-app.get("/", (req, res) => {
-  res.status(200).json({
-    success: true,
-    message: "Inventory Management API is running"
+app.get('/api/health', (_req, res) => {
+  res.json({
+    status: 'ok',
+    message: 'Inventory API is healthy',
+    timestamp: new Date().toISOString(),
   });
 });
 
