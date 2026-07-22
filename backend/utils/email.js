@@ -10,7 +10,7 @@ export const sendEmail = async ({ to, subject, html, text }) => {
   const user = process.env.EMAIL_USER || process.env.SMTP_USER;
   const pass = process.env.EMAIL_PASS || process.env.SMTP_PASS;
   const port = Number(process.env.EMAIL_PORT || process.env.SMTP_PORT || 587);
-const from =process.env.EMAIL_FROM || process.env.SMTP_FROM || process.env.FROM_EMAIL;
+const from = process.env.EMAIL_FROM || process.env.SMTP_FROM || process.env.FROM_EMAIL;
   if (host && user && pass && user !== 'your_email@gmail.com') {
     try {
       const transporter = nodemailer.createTransport({
