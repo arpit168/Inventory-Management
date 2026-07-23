@@ -33,6 +33,8 @@ for (const key of requiredEnvVars) {
 }
 
 const app = express();
+app.set("trust proxy", 1);
+app.use(limiter);
 
 const PORT = process.env.PORT || 5000;
 
