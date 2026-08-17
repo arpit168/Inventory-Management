@@ -5,7 +5,6 @@ import {
   Home,
   LogOut,
   Settings,
-  ShoppingCart,
   TriangleAlert,
   Menu,
   ReceiptText,
@@ -20,20 +19,21 @@ import {
 
 import { NavLink, Outlet, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const links = [
-  { to: '/dashboard', label: 'Dashboard', icon: Home },
-  { to: '/invoices', label: 'Billing / Invoices', icon: ReceiptText },
+  { to: '/dashboard', label: 'Dashboard', icon: Home, inBottomBar: true },
+  { to: '/invoices', label: 'Billing / Invoices', icon: ReceiptText, inBottomBar: true },
   { to: '/customers', label: 'Customer Ledger', icon: Users },
   { to: '/suppliers', label: 'Supplier Ledger', icon: Truck },
   { to: '/products', label: 'Products', icon: Boxes },
-  { to: '/expenses', label: 'Expenses', icon: Wallet },
+  { to: '/expenses', label: 'Expenses', icon: Wallet, inBottomBar: true },
   { to: '/out-of-stock', label: 'Out of Stock', icon: TriangleAlert },
   { to: '/reports', label: 'Reports', icon: BarChart3 },
   { to: '/business-profile', label: 'Shop Profiles', icon: Building2 },
   { to: '/notifications', label: 'Notifications', icon: BellRing },
-  { to: '/profile', label: 'Account Profile', icon: Settings },
+  { to: '/profile', label: 'Account Profile', icon: Settings, inBottomBar: true },
 ];
 
 const Layout = () => {
@@ -41,6 +41,25 @@ const Layout = () => {
   const location = useLocation();
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  
+  // Scroll detection for Bottom Bar
+  const [isScrollingDown, setIsScrollingDown] = useState(false);
+  const [lastScrollY, setLastScrollY] = useState(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+      if (currentScrollY > lastScrollY && currentScrollY > 50) {
+        setIsScrollingDown(true);
+      } else {
+        setIsScrollingDown(false);
+      }
+      setLastScrollY(currentScrollY);
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [lastScrollY]);
 
   const unreadCount = notifications.filter((item) => !item.read).length;
 
@@ -99,15 +118,18 @@ const Layout = () => {
 
         {/* Nav Links Section (Independently Scrollable) */}
         <nav className="flex-1 overflow-y-auto px-4 py-4 space-y-1.5">
-          {links.map(({ to, label, icon: Icon }) => {
+          {links.map(({ to, label, icon: Icon, inBottomBar }) => {
             const active = location.pathname === to;
+            
+            // Hide bottom bar items in mobile sidebar to avoid duplication
+            const hiddenOnMobile = inBottomBar ? 'hidden lg:flex' : 'flex';
 
             return (
               <NavLink
                 key={to}
                 to={to}
                 onClick={() => setSidebarOpen(false)}
-                className={`group flex items-center justify-between rounded-xl px-3.5 py-3 text-sm font-semibold transition-all duration-200 ${
+                className={`group ${hiddenOnMobile} items-center justify-between rounded-xl px-3.5 py-3 text-sm font-semibold transition-all duration-200 ${
                   active
                     ? 'bg-primary text-slate-950 shadow-md shadow-primary/20 font-bold'
                     : 'text-text-muted hover:bg-background hover:text-text'
@@ -148,24 +170,24 @@ const Layout = () => {
       <div className="flex flex-1 flex-col lg:ml-72 min-h-screen overflow-x-hidden">
         
         {/* ================= TOPBAR ================= */}
-        <header className="sticky top-0 z-30 border-b border-border bg-surface/85 px-4 py-3.5 backdrop-blur-xl sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between gap-4">
+        <header className="fixed top-0 left-0 right-0 lg:left-72 z-30 border-b border-border bg-surface/85 px-3 py-2.5 sm:px-6 lg:px-8 backdrop-blur-xl transition-all duration-300">
+          <div className="flex items-center justify-between gap-2 sm:gap-4">
             
             {/* Left */}
-            <div className="flex items-center gap-3 sm:gap-4 min-w-0">
+            <div className="flex items-center gap-2 sm:gap-4 min-w-0">
               <button
                 onClick={() => setSidebarOpen(true)}
-                className="lg:hidden p-2.5 rounded-xl border border-border bg-background text-text hover:bg-surface transition shrink-0 shadow-xs"
+                className="lg:hidden p-2 sm:p-2.5 rounded-xl border border-border bg-background text-text hover:bg-surface transition shrink-0 shadow-xs"
                 aria-label="Open Sidebar Navigation"
               >
-                <Menu size={20} />
+                <Menu className="w-5 h-5 sm:w-6 sm:h-6" />
               </button>
 
-              <div className="min-w-0">
-                <p className="text-[10px] sm:text-xs uppercase tracking-[0.25em] font-extrabold text-primary truncate">
-                  Welcome, {user?.name || 'Shopkeeper'}
+              <div className="min-w-0 flex flex-col justify-center">
+                <p className="text-[9px] sm:text-xs uppercase tracking-widest sm:tracking-[0.25em] font-extrabold text-primary truncate">
+                  Welcome, {user?.name?.split(' ')[0] || 'User'}
                 </p>
-                <h2 className="text-lg sm:text-2xl font-black text-text truncate">
+                <h2 className="text-sm sm:text-2xl font-black text-text truncate">
                   {location.pathname === '/dashboard' ? 'Command Center' : 
                    links.find(l => l.to === location.pathname)?.label || 'Inventory Pro'}
                 </h2>
@@ -173,23 +195,23 @@ const Layout = () => {
             </div>
 
             {/* Right Alerts & Theme Toggle */}
-            <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+            <div className="flex items-center gap-1.5 sm:gap-3 shrink-0">
               <button
                 onClick={toggleTheme}
                 title="Toggle Theme"
-                className="flex h-11 w-11 items-center justify-center rounded-xl border border-border bg-background text-text hover:border-primary transition shadow-xs active:scale-95"
+                className="flex h-9 w-9 sm:h-11 sm:w-11 items-center justify-center rounded-xl border border-border bg-background text-text hover:border-primary transition shadow-xs active:scale-95 shrink-0"
               >
-                {theme === 'dark' ? <Sun size={18} className="text-warning animate-spin-slow" /> : <Moon size={18} className="text-primary" />}
+                {theme === 'dark' ? <Sun className="w-4 h-4 sm:w-[18px] sm:h-[18px] text-warning animate-spin-slow" /> : <Moon className="w-4 h-4 sm:w-[18px] sm:h-[18px] text-primary" />}
               </button>
 
               <NavLink
                 to="/notifications"
-                className="flex items-center gap-2.5 rounded-xl border border-border bg-background px-3.5 py-2 hover:border-primary transition shadow-xs"
+                className="flex items-center gap-2 sm:gap-2.5 rounded-xl border border-border bg-background px-2.5 py-1.5 sm:px-3.5 sm:py-2 hover:border-primary transition shadow-xs shrink-0"
               >
-                <div className="relative">
-                  <ShoppingCart size={18} className="text-primary" />
+                <div className="relative flex items-center justify-center">
+                  <BellRing className="w-4 h-4 sm:w-[18px] sm:h-[18px] text-primary" />
                   {unreadCount > 0 && (
-                    <span className="absolute -top-1 -right-1 h-2 w-2 rounded-full bg-danger animate-ping" />
+                    <span className="absolute -top-1 -right-1 h-2 w-2 rounded-full bg-danger animate-pulse border border-background" />
                   )}
                 </div>
                 <div className="hidden sm:block text-left">
@@ -204,12 +226,52 @@ const Layout = () => {
         </header>
 
         {/* ================= PAGE CONTENT ================= */}
-        <main className="flex-1 p-4 sm:p-6 lg:p-8">
+        <main className="flex-1 p-4 pt-20 sm:p-6 sm:pt-24 lg:p-8 lg:pt-24 pb-24 lg:pb-8 relative">
           <div className="mx-auto max-w-7xl">
-            <Outlet />
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={location.pathname}
+                initial={{ opacity: 0, y: 15 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -15 }}
+                transition={{ duration: 0.25, ease: 'easeOut' }}
+              >
+                <Outlet />
+              </motion.div>
+            </AnimatePresence>
           </div>
         </main>
       </div>
+
+      {/* ================= BOTTOM BAR (MOBILE ONLY) ================= */}
+      <div 
+        className={`
+          lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-surface/90 backdrop-blur-xl border-t border-border shadow-[0_-4px_20px_-10px_rgba(0,0,0,0.2)]
+          transition-transform duration-300 ease-in-out px-2 py-1.5 flex items-center justify-around
+          ${isScrollingDown ? 'translate-y-full' : 'translate-y-0'}
+        `}
+      >
+        {links.filter(l => l.inBottomBar).map(({ to, label, icon: Icon }) => {
+          const active = location.pathname === to;
+          return (
+            <NavLink
+              key={to}
+              to={to}
+              className={`flex flex-col items-center gap-1 p-2 rounded-xl min-w-[64px] transition-all duration-200 ${
+                active ? 'text-primary' : 'text-text-muted hover:text-text hover:bg-background'
+              }`}
+            >
+              <div className={`p-1.5 rounded-xl transition-all duration-200 ${active ? 'bg-primary/10' : ''}`}>
+                <Icon size={20} className={active ? 'fill-primary/20' : ''} />
+              </div>
+              <span className={`text-[10px] font-bold ${active ? 'text-primary' : ''}`}>
+                {label.split(' ')[0]}
+              </span>
+            </NavLink>
+          );
+        })}
+      </div>
+
     </div>
   );
 };
