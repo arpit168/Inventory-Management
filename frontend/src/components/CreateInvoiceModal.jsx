@@ -18,7 +18,7 @@ const CreateInvoiceModal = ({ onClose, onSuccess }) => {
   const [customerAddress, setCustomerAddress] = useState('');
   const [discount, setDiscount] = useState(0);
   const [status, setStatus] = useState('unpaid');
-  const [notes, setNotes] = useState('Thank you for your business!');
+  const [notes] = useState('Thank you for your business!');
 
   const [items, setItems] = useState([
     { product: '', name: '', quantity: 1, unitPrice: 0, taxRate: 18 },

@@ -41,7 +41,7 @@ export const AuthProvider = ({ children }) => {
   }, [token]);
 
   useEffect(() => {
-    fetchProfile(); // eslint-disable-line react-hooks/set-state-in-effect
+    fetchProfile();  
   }, [fetchProfile]);
 
   const login = useCallback(async (credentials) => {
@@ -91,7 +91,7 @@ export const AuthProvider = ({ children }) => {
   }, [token]);
 
   useEffect(() => {
-    refreshNotifications(); // eslint-disable-line react-hooks/set-state-in-effect
+    refreshNotifications();  
     const timer = window.setInterval(refreshNotifications, 30000);
     return () => window.clearInterval(timer);
   }, [refreshNotifications]);

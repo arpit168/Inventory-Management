@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback } from 'react';
-import { Building2, Plus, Edit2, Trash2, CheckCircle, Camera, Phone, Mail, MapPin, FileText, Globe } from 'lucide-react';
+import { Building2, Plus, Edit2, Trash2, CheckCircle, Camera, Phone, Mail, MapPin, FileText } from 'lucide-react';
 import { useToast } from '../context/ToastContext';
 import api from '../services/api';
 
@@ -148,7 +148,7 @@ const BusinessProfile = () => {
       await api.put(`/business-profile/${profile._id}`, { ...profile, isDefault: true });
       showToast(`${profile.businessName} set as default shop`, 'success');
       fetchProfiles();
-    } catch (err) {
+    } catch {
       showToast('Failed to update default status', 'error');
     }
   };
