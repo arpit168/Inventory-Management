@@ -1,5 +1,6 @@
 import { useEffect, useState, useCallback } from 'react';
 import { BellRing, CheckCheck, Trash2, AlertTriangle, RefreshCw } from 'lucide-react';
+import { useScrollLock } from '../hooks/useScrollLock';
 import api from '../services/api';
 import { LoadingSkeleton } from '../components/LoadingSkeleton';
 import { useToast } from '../context/ToastContext';
@@ -14,6 +15,8 @@ const Notifications = () => {
   const [deletingId, setDeletingId] = useState(null);
   const [showClearConfirm, setShowClearConfirm] = useState(false);
   const [clearingAll, setClearingAll] = useState(false);
+
+  useScrollLock(showClearConfirm);
 
   const loadNotifications = useCallback(async () => {
     try {
