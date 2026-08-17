@@ -1,6 +1,5 @@
 import Supplier from '../models/Supplier.js';
 import SupplierLedgerEntry from '../models/SupplierLedgerEntry.js';
-import BusinessProfile from '../models/BusinessProfile.js';
 import { addNotification } from '../utils/notifications.js';
 
 export const getSuppliers = async (req, res, next) => {

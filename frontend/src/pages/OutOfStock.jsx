@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import api from '../services/api';
 import { LoadingSkeleton } from '../components/LoadingSkeleton';
@@ -12,7 +12,6 @@ import {
   Search,
   Filter,
   ShoppingCart,
-  DollarSign,
   Tag,
   RefreshCw
 } from 'lucide-react';
@@ -27,7 +26,7 @@ const OutOfStock = () => {
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [restoringId, setRestoringId] = useState(null);
 
-  const loadProducts = async () => {
+  const loadProducts = useCallback(async () => {
     setLoading(true);
     try {
       const response = await api.get('/products/out-of-stock');
@@ -37,11 +36,11 @@ const OutOfStock = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [showToast]);
 
   useEffect(() => {
     loadProducts();
-  }, []);
+  }, [loadProducts]);
 
   const categories = [...new Set(products.map(p => p.category))];
 

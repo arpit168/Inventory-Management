@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { BellRing, CheckCheck, Trash2, AlertTriangle, RefreshCw } from 'lucide-react';
 import api from '../services/api';
 import { LoadingSkeleton } from '../components/LoadingSkeleton';
@@ -8,14 +8,14 @@ import { formatDate } from '../utils/formatters';
 
 const Notifications = () => {
   const { showToast } = useToast();
-  const { refreshNotifications, setNotifications: setGlobalNotifications } = useAuth();
+  const { setNotifications: setGlobalNotifications } = useAuth();
   const [notifications, setNotifications] = useState([]);
   const [loading, setLoading] = useState(true);
   const [deletingId, setDeletingId] = useState(null);
   const [showClearConfirm, setShowClearConfirm] = useState(false);
   const [clearingAll, setClearingAll] = useState(false);
 
-  const loadNotifications = async () => {
+  const loadNotifications = useCallback(async () => {
     try {
       setLoading(true);
       const response = await api.get('/notifications');
@@ -27,11 +27,11 @@ const Notifications = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [setGlobalNotifications, showToast]);
 
   useEffect(() => {
     loadNotifications();
-  }, []);
+  }, [loadNotifications]);
 
   const handleMarkRead = async (id) => {
     try {

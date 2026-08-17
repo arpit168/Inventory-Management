@@ -16,13 +16,12 @@ const statCards = [
 const Dashboard = () => {
   const [loading, setLoading] = useState(true);
   const [analytics, setAnalytics] = useState({ totals: {}, charts: {}, recentActivity: [] });
-  const [salesTrend, setSalesTrend] = useState([]);
   const [financials, setFinancials] = useState({ ledger: {}, expenses: {} });
 
   useEffect(() => {
     const load = async () => {
       try {
-        const [analyticsResponse, salesResponse, customersResponse, expensesResponse] = await Promise.all([
+        const [analyticsResponse, , customersResponse, expensesResponse] = await Promise.all([
           api.get('/products/analytics'),
           api.get('/reports/sales'),
           api.get('/customers').catch(() => ({ data: { summary: {} } })),
@@ -30,7 +29,6 @@ const Dashboard = () => {
         ]);
 
         setAnalytics(analyticsResponse.data);
-        setSalesTrend(salesResponse.data.salesTrend || []);
         setFinancials({
           ledger: customersResponse.data?.summary || {},
           expenses: expensesResponse.data?.summary || {},
