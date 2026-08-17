@@ -21,6 +21,7 @@ import { NavLink, Outlet, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useScrollLock } from '../hooks/useScrollLock';
 
 const links = [
   { to: '/dashboard', label: 'Dashboard', icon: Home, inBottomBar: true },
@@ -41,6 +42,7 @@ const Layout = () => {
   const location = useLocation();
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  useScrollLock(sidebarOpen);
   
   // Scroll detection for Bottom Bar
   const [isScrollingDown, setIsScrollingDown] = useState(false);

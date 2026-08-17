@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { Plus, Search, Eye, Trash2, CheckCircle2, AlertCircle, FileText, RefreshCw } from 'lucide-react';
 import api from '../services/api';
 import { useToast } from '../context/ToastContext';
+import { useScrollLock } from '../hooks/useScrollLock';
 import CreateInvoiceModal from '../components/CreateInvoiceModal';
 import InvoicePrintView from '../components/InvoicePrintView';
 import { LoadingSkeleton } from '../components/LoadingSkeleton';
@@ -15,6 +16,8 @@ const Invoices = () => {
 
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [selectedInvoice, setSelectedInvoice] = useState(null);
+
+  useScrollLock(isCreateOpen || !!selectedInvoice);
 
   const fetchInvoices = useCallback(async () => {
     setLoading(true);

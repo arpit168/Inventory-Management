@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { Plus, Search, Wallet, Trash2, X, PieChart, Calendar, RefreshCw } from 'lucide-react';
 import api from '../services/api';
 import { useToast } from '../context/ToastContext';
+import { useScrollLock } from '../hooks/useScrollLock';
 import { LoadingSkeleton } from '../components/LoadingSkeleton';
 
 const CATEGORIES = ['All', 'Rent', 'Utilities', 'Salary', 'Supplies', 'Maintenance', 'Marketing', 'Other'];
@@ -20,6 +21,8 @@ const Expenses = () => {
   const [amount, setAmount] = useState('');
   const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
   const [desc, setDesc] = useState('');
+
+  useScrollLock(isAddOpen);
 
   const fetchExpenses = useCallback(async () => {
     setLoading(true);

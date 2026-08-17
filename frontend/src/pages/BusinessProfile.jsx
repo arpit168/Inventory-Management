@@ -1,5 +1,6 @@
 import { useEffect, useState, useCallback } from 'react';
 import { Building2, Plus, Edit2, Trash2, CheckCircle, Camera, Phone, Mail, MapPin, FileText } from 'lucide-react';
+import { useScrollLock } from '../hooks/useScrollLock';
 import { useToast } from '../context/ToastContext';
 import api from '../services/api';
 
@@ -11,6 +12,8 @@ const BusinessProfile = () => {
   const [editingProfile, setEditingProfile] = useState(null);
   const [submitting, setSubmitting] = useState(false);
   const [logoUploading, setLogoUploading] = useState(false);
+
+  useScrollLock(modalOpen);
 
   const [formData, setFormData] = useState({
     businessName: '',

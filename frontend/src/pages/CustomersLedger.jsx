@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { Plus, Search, UserPlus, Phone, ArrowUpRight, ArrowDownLeft, Trash2, X, BookOpen, RefreshCw } from 'lucide-react';
 import api from '../services/api';
 import { useToast } from '../context/ToastContext';
+import { useScrollLock } from '../hooks/useScrollLock';
 import { LoadingSkeleton } from '../components/LoadingSkeleton';
 
 const CustomersLedger = () => {
@@ -25,9 +26,11 @@ const CustomersLedger = () => {
   const [isEntryModalOpen, setIsEntryModalOpen] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
   const [editingEntryId, setEditingEntryId] = useState(null);
-  const [entryType, setEntryType] = useState('credit');
+  const [entryType, setEntryType] = useState('credit'); // credit = gave to customer, debit = got from customer
   const [entryAmount, setEntryAmount] = useState('');
   const [entryDesc, setEntryDesc] = useState('');
+
+  useScrollLock(isAddCustomerOpen || isEntryModalOpen);
 
   const fetchCustomers = useCallback(async () => {
     setLoading(true);

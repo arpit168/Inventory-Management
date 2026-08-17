@@ -8,6 +8,7 @@ import { LoadingSkeleton } from '../components/LoadingSkeleton';
 import { useToast } from '../context/ToastContext';
 import { formatCurrency, formatNumber } from '../utils/formatters';
 import { useDebounce } from '../hooks/useDebounce';
+import { useScrollLock } from '../hooks/useScrollLock';
 
 const initialForm = {
   name: '',
@@ -37,6 +38,8 @@ const Products = () => {
   const [editingId, setEditingId] = useState(null);
   const [form, setForm] = useState(initialForm);
   const [uploadingImage, setUploadingImage] = useState(false);
+
+  useScrollLock(showModal);
   const debouncedSearch = useDebounce(search, 300);
 
   const handleProductImageUpload = async (e) => {
