@@ -1,15 +1,12 @@
 import { Navigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import LoadingScreen from './LoadingScreen';
 
 const PublicRoute = ({ children }) => {
   const { token, loading } = useAuth();
 
   if (loading) {
-    return (
-      <div className="flex min-h-screen items-center justify-center bg-background text-text font-bold">
-        Checking session...
-      </div>
-    );
+    return <LoadingScreen message="Checking session..." />;
   }
 
   if (token) {
