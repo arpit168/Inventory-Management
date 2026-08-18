@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { Camera, Check, User, Lock, Moon, Sun, ShieldCheck } from 'lucide-react';
+import { useState, useRef, useEffect } from 'react';
+import { Camera, Check, User, Lock, Moon, Sun, ShieldCheck, Upload, Trash2, X } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
 import api from '../services/api';
@@ -12,6 +12,19 @@ const Profile = () => {
   const [nameLoading, setNameLoading] = useState(false);
 
   const [avatarLoading, setAvatarLoading] = useState(false);
+  const [photoMenuOpen, setPhotoMenuOpen] = useState(false);
+  const [showWebcam, setShowWebcam] = useState(false);
+  const videoRef = useRef(null);
+  const streamRef = useRef(null);
+  const fileInputRef = useRef(null);
+
+  useEffect(() => {
+    return () => {
+      if (streamRef.current) {
+        streamRef.current.getTracks().forEach(track => track.stop());
+      }
+    };
+  }, []);
 
   const [passwordForm, setPasswordForm] = useState({ currentPassword: '', newPassword: '', confirmPassword: '' });
   const [pwdLoading, setPwdLoading] = useState(false);
@@ -31,10 +44,7 @@ const Profile = () => {
     }
   };
 
-  const handleAvatarChange = async (e) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
+  const uploadFile = async (file) => {
     if (file.size > 5 * 1024 * 1024) {
       showToast('Image file size must be under 5MB', 'warning');
       return;
@@ -59,6 +69,67 @@ const Profile = () => {
     } finally {
       setAvatarLoading(false);
     }
+  };
+
+  const handleAvatarChange = (e) => {
+    const file = e.target.files?.[0];
+    if (file) uploadFile(file);
+    setPhotoMenuOpen(false);
+    if (fileInputRef.current) fileInputRef.current.value = '';
+  };
+
+  const handleRemovePhoto = async () => {
+    setPhotoMenuOpen(false);
+    setAvatarLoading(true);
+    try {
+      const profileRes = await api.put('/auth/profile', { avatar: '' });
+      updateUser(profileRes.data.user);
+      showToast('Profile picture removed', 'success');
+    } catch (err) {
+      showToast(err.response?.data?.message || 'Failed to remove photo', 'error');
+    } finally {
+      setAvatarLoading(false);
+    }
+  };
+
+  const startCamera = async () => {
+    setPhotoMenuOpen(false);
+    setShowWebcam(true);
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+      if (videoRef.current) videoRef.current.srcObject = stream;
+      streamRef.current = stream;
+    } catch (err) {
+      console.error('Camera error:', err);
+      showToast('Camera access denied or unavailable.', 'error');
+      setShowWebcam(false);
+    }
+  };
+
+  const stopCamera = () => {
+    if (streamRef.current) {
+      streamRef.current.getTracks().forEach(track => track.stop());
+      streamRef.current = null;
+    }
+    setShowWebcam(false);
+  };
+
+  const capturePhoto = () => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    const canvas = document.createElement('canvas');
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+    
+    canvas.toBlob((blob) => {
+      stopCamera();
+      if (!blob) return;
+      const file = new File([blob], "camera-capture.jpg", { type: "image/jpeg" });
+      uploadFile(file);
+    }, 'image/jpeg');
   };
 
   const handleChangePassword = async (event) => {
@@ -101,8 +172,8 @@ const Profile = () => {
         {/* Left Column: Avatar & Overview */}
         <div className="lg:col-span-5 space-y-6">
           <div className="rounded-2xl border border-border bg-surface p-6 sm:p-8 shadow-xs text-center flex flex-col items-center">
-            <div className="relative group">
-              <div className="h-28 w-28 sm:h-32 sm:w-32 rounded-full overflow-hidden border-4 border-primary shadow-lg mx-auto bg-primary/20 flex items-center justify-center text-4xl font-black text-primary">
+            <div className="relative group w-fit mx-auto">
+              <div className="h-28 w-28 sm:h-32 sm:w-32 rounded-full overflow-hidden border-4 border-primary shadow-lg bg-primary/20 flex items-center justify-center text-4xl font-black text-primary">
                 {user?.avatar ? (
                   <img src={user.avatar} alt={user.name} className="h-full w-full object-cover" />
                 ) : (
@@ -110,10 +181,46 @@ const Profile = () => {
                 )}
               </div>
 
-              <label className="absolute bottom-1 right-1 flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg-primary text-slate-950 shadow-md transition hover:scale-110 hover:bg-primary-hover active:scale-95">
+              <button 
+                type="button"
+                onClick={() => setPhotoMenuOpen(!photoMenuOpen)}
+                disabled={avatarLoading}
+                className="absolute bottom-1 right-1 flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg-primary text-slate-950 shadow-md transition hover:scale-110 hover:bg-primary-hover active:scale-95"
+              >
                 <Camera size={18} />
-                <input type="file" accept="image/*" onChange={handleAvatarChange} disabled={avatarLoading} className="hidden" />
-              </label>
+              </button>
+
+              {photoMenuOpen && (
+                <>
+                  <div className="fixed inset-0 z-10" onClick={() => setPhotoMenuOpen(false)}></div>
+                  <div className="absolute top-[105%] left-1/2 -translate-x-1/2 sm:left-auto sm:-translate-x-0 sm:right-[-20px] mt-2 w-56 bg-surface border border-border rounded-xl shadow-xl z-20 overflow-hidden text-sm animate-fade-in text-left">
+                    <button 
+                      type="button"
+                      onClick={() => fileInputRef.current?.click()}
+                      className="w-full flex items-center gap-3 px-4 py-3 hover:bg-background transition text-left text-text font-medium"
+                    >
+                      <Upload size={16} className="text-primary" /> Upload from Files
+                    </button>
+                    <button 
+                      type="button"
+                      onClick={startCamera}
+                      className="w-full flex items-center gap-3 px-4 py-3 hover:bg-background transition text-left text-text font-medium border-t border-border"
+                    >
+                      <Camera size={16} className="text-primary" /> Capture from Camera
+                    </button>
+                    {user?.avatar && (
+                      <button 
+                        type="button"
+                        onClick={handleRemovePhoto}
+                        className="w-full flex items-center gap-3 px-4 py-3 hover:bg-red-500/10 transition text-left text-red-500 font-medium border-t border-border"
+                      >
+                        <Trash2 size={16} /> Remove Photo
+                      </button>
+                    )}
+                  </div>
+                </>
+              )}
+              <input ref={fileInputRef} type="file" accept="image/*" onChange={handleAvatarChange} className="hidden" />
             </div>
 
             {avatarLoading && <p className="text-xs font-bold text-primary mt-3 animate-pulse">Uploading profile photo...</p>}
@@ -231,6 +338,33 @@ const Profile = () => {
           </div>
         </div>
       </div>
+
+      {/* Webcam Modal */}
+      {showWebcam && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-sm animate-fade-in p-4">
+          <div className="bg-surface p-4 rounded-2xl w-full max-w-lg border border-border shadow-2xl relative">
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-lg font-bold text-text flex items-center gap-2">
+                <Camera size={20} className="text-primary" /> Capture Photo
+              </h3>
+              <button onClick={stopCamera} className="text-text-muted hover:text-text transition bg-background p-1.5 rounded-lg border border-border hover:border-text-muted">
+                <X size={20} />
+              </button>
+            </div>
+            <div className="relative rounded-xl overflow-hidden bg-black aspect-video flex items-center justify-center border border-border">
+              <video ref={videoRef} autoPlay playsInline className="w-full h-full object-cover"></video>
+            </div>
+            <div className="mt-6 flex justify-center">
+              <button 
+                onClick={capturePhoto}
+                className="h-16 w-16 rounded-full bg-primary flex items-center justify-center shadow-lg hover:scale-105 active:scale-95 transition border-4 border-primary/30"
+              >
+                <Camera size={24} className="text-slate-950" />
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

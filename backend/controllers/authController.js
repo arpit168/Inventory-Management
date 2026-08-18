@@ -129,7 +129,7 @@ export const forgotPassword = async (req, res, next) => {
     await user.save();
 
     const resetUrl = `${
-      process.env.CLIENT_URL || 'http://localhost:5173'
+      process.env.FRONTEND_URL || process.env.CLIENT_URL || 'http://localhost:5173'
     }/reset-password?token=${resetToken}`;
 
     await addNotification(
