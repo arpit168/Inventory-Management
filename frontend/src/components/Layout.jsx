@@ -205,7 +205,7 @@ const Layout = () => {
       <div className={`flex flex-1 flex-col min-h-screen overflow-x-hidden transition-all duration-300 ${sidebarCollapsed ? 'lg:ml-20' : 'lg:ml-72'}`}>
         
         {/* ================= TOPBAR ================= */}
-        <header className={`fixed top-0 left-0 right-0 z-30 border-b border-border bg-surface/85 px-3 py-2.5 sm:px-6 lg:px-8 backdrop-blur-xl transition-all duration-300 ${sidebarCollapsed ? 'lg:left-20' : 'lg:left-72'}`}>
+        <header className={`mobile-force-dark fixed top-0 left-0 right-0 z-30 border-b border-border bg-background/95 px-3 py-2.5 sm:px-6 lg:px-8 backdrop-blur-xl transition-transform duration-300 shadow-sm ${sidebarCollapsed ? 'lg:left-20' : 'lg:left-72'} ${isScrollingDown ? '-translate-y-full' : 'translate-y-0'}`}>
           <div className="flex items-center justify-between gap-2 sm:gap-4">
             
             {/* Left */}
@@ -293,8 +293,8 @@ const Layout = () => {
       {/* ================= BOTTOM BAR (MOBILE ONLY) ================= */}
       <div 
         className={`
-          lg:hidden fixed bottom-4 left-4 right-4 z-40 bg-surface/90 backdrop-blur-xl border border-border shadow-[0_8px_30px_rgb(0,0,0,0.12)]
-          transition-transform duration-300 ease-in-out px-2 py-1.5 flex items-center justify-between rounded-full mx-auto max-w-md
+          mobile-force-dark lg:hidden fixed bottom-4 left-4 right-4 z-40 bg-background/95 backdrop-blur-xl border border-border shadow-[0_8px_30px_rgb(0,0,0,0.12)]
+          transition-transform duration-300 ease-in-out px-2 py-1.5 flex items-center justify-between rounded-[2rem] mx-auto max-w-md
           ${isScrollingDown ? 'translate-y-[calc(100%+24px)]' : 'translate-y-0'}
         `}
       >
