@@ -83,11 +83,11 @@ const Dashboard = () => {
       </div>
 
       {/* Commercial Financial Snapshot */}
-      <div className="rounded-3xl border border-border bg-linear-to-r from-slate-900 via-slate-950 to-slate-900 p-6 sm:p-8 text-white shadow-xl">
+      <div className="rounded-3xl border border-border bg-surface  p-6 sm:p-8 text-white shadow-xl">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-6">
           <div>
-            <p className="text-[10px] sm:text-xs uppercase tracking-[0.3em] font-extrabold text-primary">Commercial Insights</p>
-            <h2 className="text-xl sm:text-2xl font-black mt-1">Financial & Ledger Overview</h2>
+            <p className="text-[10px] sm:text-xs uppercase tracking-[0.3em] font-extrabold text-cyan-800">Commercial Insights</p>
+            <h2 className="text-xl sm:text-2xl text-cyan-500 font-black mt-1">Financial & Ledger Overview</h2>
           </div>
           <div className="flex flex-wrap gap-3">
             <Link to="/invoices" className="rounded-xl bg-primary px-4 py-2.5 text-xs font-bold text-slate-950 hover:bg-primary-hover transition shadow-sm">
@@ -106,7 +106,7 @@ const Dashboard = () => {
                 <BookOpen size={22} />
               </div>
               <div className="min-w-0">
-                <p className="text-xs text-slate-300 font-semibold truncate">Total Due (Receivable)</p>
+                <p className="text-xs text-yellow-400 font-semibold truncate">Total Due (Receivable)</p>
                 <p className="text-xl sm:text-2xl font-black text-danger mt-0.5 truncate">₹{financials.ledger.totalReceivable?.toFixed(2) || '0.00'}</p>
               </div>
             </div>
@@ -118,7 +118,7 @@ const Dashboard = () => {
                 <Wallet size={22} />
               </div>
               <div className="min-w-0">
-                <p className="text-xs text-slate-300 font-semibold truncate">Total Shop Expenses</p>
+                <p className="text-xs text-red-600 font-semibold truncate">Total Shop Expenses</p>
                 <p className="text-xl sm:text-2xl font-black text-warning mt-0.5 truncate">₹{financials.expenses.totalAmount?.toFixed(2) || '0.00'}</p>
               </div>
             </div>
@@ -130,7 +130,7 @@ const Dashboard = () => {
                 <TrendingUp size={22} />
               </div>
               <div className="min-w-0">
-                <p className="text-xs text-slate-300 font-semibold truncate">Customer Advance Given</p>
+                <p className="text-xs text-blue-500 font-semibold truncate">Customer Advance Given</p>
                 <p className="text-xl sm:text-2xl font-black text-success mt-0.5 truncate">₹{financials.ledger.totalAdvance?.toFixed(2) || '0.00'}</p>
               </div>
             </div>
