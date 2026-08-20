@@ -551,7 +551,7 @@ const Products = () => {
       {/* Modal */}
      {showModal && (
   <div 
-    className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-3 sm:p-4 backdrop-blur-sm animate-fade-in overflow-y-auto"
+    className="fixed inset-0 z-50 flex items-start sm:items-center justify-center bg-black/60 p-3 sm:p-4 backdrop-blur-sm animate-fade-in overflow-y-auto"
     onClick={(e) => {
       if (e.target === e.currentTarget) setShowModal(false);
     }}
@@ -559,7 +559,7 @@ const Products = () => {
     aria-modal="true"
     aria-labelledby="modal-title"
   >
-    <div className="w-full max-w-2xl rounded-3xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-4 sm:p-6 shadow-2xl my-4 sm:my-8 animate-scale-up max-h-[95vh] sm:max-h-[90vh] overflow-y-auto">
+    <div className="w-full max-w-2xl rounded-3xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-4 sm:p-6 shadow-2xl my-8 sm:my-0 animate-scale-up max-h-none sm:max-h-[90vh] overflow-visible sm:overflow-y-auto flex flex-col">
       
       {/* Modal Header */}
       <div className="flex items-start justify-between gap-3 border-b border-gray-200 dark:border-gray-700 pb-3 sm:pb-4">
@@ -793,7 +793,7 @@ const Products = () => {
               value={form.description}
               onChange={(event) => setForm((current) => ({ ...current, description: event.target.value }))}
               className="w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 px-3 sm:px-3.5 py-2.5 sm:py-2.5 text-sm sm:text-sm text-gray-900 dark:text-white focus:border-blue-500 dark:focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20 dark:focus:ring-blue-400/20 outline-none transition resize-none"
-              rows="2 sm:rows-3"
+              rows={3}
               placeholder="Add optional product details..."
             />
           </div>

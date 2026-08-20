@@ -396,8 +396,8 @@ const CustomersLedger = () => {
 
       {/* Add Customer Modal */}
       {isAddCustomerOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-3 sm:p-4 backdrop-blur-sm animate-fade-in overflow-y-auto">
-          <div className="w-full max-w-md rounded-3xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-4 sm:p-6 shadow-2xl animate-scale-up my-4">
+        <div className="fixed inset-0 z-50 flex items-start sm:items-center justify-center bg-black/60 p-3 sm:p-4 backdrop-blur-sm animate-fade-in overflow-y-auto">
+          <div className="w-full max-w-md rounded-3xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-4 sm:p-6 shadow-2xl animate-scale-up my-8 sm:my-0">
             <div className="flex items-center justify-between border-b border-gray-200 dark:border-gray-700 pb-3 sm:pb-4">
               <h3 className="text-base sm:text-lg font-black text-gray-900 dark:text-white">Add New Customer</h3>
               <button onClick={() => setIsAddCustomerOpen(false)} className="rounded-xl p-1.5 sm:p-2 text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 transition">
@@ -487,8 +487,8 @@ const CustomersLedger = () => {
 
       {/* New Entry Modal */}
       {isEntryModalOpen && selectedCustomer && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-3 sm:p-4 backdrop-blur-sm animate-fade-in overflow-y-auto">
-          <div className="w-full max-w-md rounded-3xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-4 sm:p-6 shadow-2xl animate-scale-up my-4">
+        <div className="fixed inset-0 z-50 flex items-start sm:items-center justify-center bg-black/60 p-3 sm:p-4 backdrop-blur-sm animate-fade-in overflow-y-auto">
+          <div className="w-full max-w-md rounded-3xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-4 sm:p-6 shadow-2xl animate-scale-up my-8 sm:my-0">
             <div className="flex items-center justify-between border-b border-gray-200 dark:border-gray-700 pb-3 sm:pb-4">
               <div>
                 <p className="text-[8px] sm:text-[10px] font-extrabold uppercase text-blue-600 dark:text-blue-400">Record Transaction</p>

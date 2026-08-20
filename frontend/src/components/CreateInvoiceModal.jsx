@@ -133,8 +133,8 @@ const CreateInvoiceModal = ({ onClose, onSuccess }) => {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-xs animate-fade-in">
-      <div className="relative w-full max-w-4xl rounded-3xl border border-border bg-surface p-6 shadow-2xl max-h-[90vh] flex flex-col animate-scale-up">
+    <div className="fixed inset-0 z-50 flex items-start sm:items-center justify-center bg-black/60 p-3 sm:p-4 backdrop-blur-xs animate-fade-in overflow-y-auto">
+      <div className="relative w-full max-w-4xl rounded-3xl border border-border bg-surface p-4 sm:p-6 shadow-2xl max-h-none sm:max-h-[90vh] flex flex-col animate-scale-up my-8 sm:my-0">
         
         {/* Header */}
         <div className="flex items-center justify-between border-b border-border pb-4 shrink-0">
@@ -148,7 +148,7 @@ const CreateInvoiceModal = ({ onClose, onSuccess }) => {
         </div>
 
         {/* Scrollable Form Body */}
-        <form onSubmit={handleSubmit} className="mt-6 space-y-6 overflow-y-auto pr-1 flex-1">
+        <form onSubmit={handleSubmit} className="mt-4 sm:mt-6 space-y-4 sm:space-y-6 overflow-visible sm:overflow-y-auto pr-1 flex-1">
           
           {/* Shop Profile Selector */}
           {businessProfiles.length > 0 && (
@@ -381,18 +381,18 @@ const CreateInvoiceModal = ({ onClose, onSuccess }) => {
             </div>
           </div>
 
-          <div className="flex justify-end gap-3 pt-4 shrink-0">
+          <div className="flex flex-col-reverse sm:flex-row justify-end gap-3 pt-4 shrink-0">
             <button
               type="button"
               onClick={onClose}
-              className="rounded-xl border border-border bg-background px-5 py-2.5 text-sm font-bold text-text hover:bg-surface transition"
+              className="w-full sm:w-auto rounded-xl border border-border bg-background px-5 py-2.5 text-sm font-bold text-text hover:bg-surface transition"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={loading}
-              className="rounded-xl bg-primary px-6 py-2.5 text-sm font-bold text-slate-950 shadow-md shadow-primary/20 hover:bg-primary-hover transition disabled:opacity-50"
+              className="w-full sm:w-auto rounded-xl bg-primary px-6 py-2.5 text-sm font-bold text-slate-950 shadow-md shadow-primary/20 hover:bg-primary-hover transition disabled:opacity-50"
             >
               {loading ? 'Generating...' : 'Generate Invoice'}
             </button>

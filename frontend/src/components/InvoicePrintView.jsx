@@ -101,29 +101,34 @@ const InvoicePrintView = ({ invoice, onClose }) => {
       <div className="relative w-full max-w-3xl rounded-3xl border border-border bg-surface p-6 sm:p-8 shadow-2xl text-text max-h-[90vh] overflow-y-auto print:max-w-none print:border-none print:shadow-none print:bg-white print:text-black print:p-0 animate-scale-up">
         
         {/* Actions bar (Hidden when printing) */}
-        <div className="flex flex-wrap items-center justify-between border-b border-border pb-4 gap-3 print:hidden shrink-0">
-          <h3 className="text-lg font-black text-text">Invoice Preview</h3>
-          <div className="flex items-center gap-2.5">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-border pb-4 gap-3 print:hidden shrink-0">
+          <div className="flex items-center justify-between w-full sm:w-auto">
+            <h3 className="text-lg font-black text-text">Invoice Preview</h3>
+            <button onClick={onClose} className="sm:hidden rounded-xl p-2 text-text-muted hover:bg-background hover:text-text transition">
+              <X size={18} />
+            </button>
+          </div>
+          <div className="flex flex-wrap items-center gap-2 sm:gap-2.5">
             <button
               onClick={handleEmail}
               disabled={emailing}
-              className="inline-flex items-center gap-1.5 rounded-xl bg-success px-4 py-2 text-xs font-bold text-white shadow-md hover:bg-success/90 transition disabled:opacity-50"
+              className="flex-1 sm:flex-none inline-flex justify-center items-center gap-1.5 rounded-xl bg-success px-3 sm:px-4 py-2 text-[10px] sm:text-xs font-bold text-white shadow-md hover:bg-success/90 transition disabled:opacity-50 whitespace-nowrap"
             >
-              <Mail size={14} /> {emailing ? 'Sending...' : 'Email Invoice'}
+              <Mail size={14} className="hidden sm:block" /> {emailing ? 'Sending...' : 'Email'}
             </button>
             <button
               onClick={handleDownloadPDF}
-              className="inline-flex items-center gap-1.5 rounded-xl bg-primary px-4 py-2 text-xs font-bold text-slate-950 shadow-md shadow-primary/20 hover:bg-primary-hover transition"
+              className="flex-1 sm:flex-none inline-flex justify-center items-center gap-1.5 rounded-xl bg-primary px-3 sm:px-4 py-2 text-[10px] sm:text-xs font-bold text-slate-950 shadow-md shadow-primary/20 hover:bg-primary-hover transition whitespace-nowrap"
             >
-              <Download size={14} /> Download PDF
+              <Download size={14} className="hidden sm:block" /> PDF
             </button>
             <button
               onClick={handlePrint}
-              className="inline-flex items-center gap-1.5 rounded-xl border border-border bg-background px-4 py-2 text-xs font-bold text-text hover:border-primary transition shadow-xs"
+              className="flex-1 sm:flex-none inline-flex justify-center items-center gap-1.5 rounded-xl border border-border bg-background px-3 sm:px-4 py-2 text-[10px] sm:text-xs font-bold text-text hover:border-primary transition shadow-xs whitespace-nowrap"
             >
-              <Printer size={14} /> Print
+              <Printer size={14} className="hidden sm:block" /> Print
             </button>
-            <button onClick={onClose} className="rounded-xl p-2 text-text-muted hover:bg-background hover:text-text transition">
+            <button onClick={onClose} className="hidden sm:block rounded-xl p-2 text-text-muted hover:bg-background hover:text-text transition">
               <X size={18} />
             </button>
           </div>
@@ -134,15 +139,15 @@ const InvoicePrintView = ({ invoice, onClose }) => {
           
           {/* Header */}
           <div className="flex flex-col sm:flex-row justify-between items-start gap-4 border-b border-border pb-6 print:border-black">
-            <div className="flex items-center gap-4">
+            <div className="flex items-start sm:items-center gap-3 sm:gap-4 min-w-0 w-full sm:w-auto">
               {invoice.businessProfile?.logo && (
-                <img src={invoice.businessProfile.logo} alt="Shop Logo" className="h-16 w-16 object-cover rounded-xl border border-border print:border-black" />
+                <img src={invoice.businessProfile.logo} alt="Shop Logo" className="h-12 w-12 sm:h-16 sm:w-16 object-cover rounded-xl border border-border print:border-black shrink-0" />
               )}
-              <div>
-                <h1 className="text-2xl font-black text-text print:text-black">
+              <div className="min-w-0 flex-1">
+                <h1 className="text-xl sm:text-2xl font-black text-text print:text-black truncate">
                   {invoice.businessProfile?.businessName || 'INVENTORY PRO SUITE'}
                 </h1>
-                <p className="text-xs font-bold text-primary mt-0.5 print:text-cyan-700">
+                <p className="text-[10px] sm:text-xs font-bold text-primary mt-0.5 print:text-cyan-700 truncate">
                   {invoice.businessProfile?.ownerName ? `Proprietor: ${invoice.businessProfile.ownerName}` : 'COMMERCIAL BILLING'}
                 </p>
                 {invoice.businessProfile?.gstNumber && (
@@ -158,15 +163,17 @@ const InvoicePrintView = ({ invoice, onClose }) => {
                 )}
               </div>
             </div>
-            <div className="sm:text-right">
-              <h2 className="text-xl font-bold text-text print:text-black">{invoice.invoiceNumber}</h2>
-              <span className={`inline-block mt-1 px-3 py-1 rounded-full text-xs font-extrabold uppercase ${
+            <div className="w-full sm:w-auto sm:text-right flex flex-row sm:flex-col items-center justify-between sm:items-end">
+              <div className="flex items-center gap-2 sm:gap-0 sm:flex-col sm:items-end">
+                <h2 className="text-lg sm:text-xl font-bold text-text print:text-black">{invoice.invoiceNumber}</h2>
+                <span className={`inline-block sm:mt-1 px-2 sm:px-3 py-0.5 sm:py-1 rounded-full text-[10px] sm:text-xs font-extrabold uppercase ${
                 invoice.status === 'paid' ? 'bg-success/15 text-success print:text-emerald-700' : 'bg-danger/15 text-danger print:text-rose-700'
               }`}>
                 {invoice.status}
               </span>
+              </div>
               {invoice.dueDate && (
-                <p className="text-xs text-text-muted mt-1">Due: {new Date(invoice.dueDate).toLocaleDateString()}</p>
+                <p className="text-[10px] sm:text-xs text-text-muted sm:mt-1">Due: {new Date(invoice.dueDate).toLocaleDateString()}</p>
               )}
             </div>
           </div>
@@ -182,7 +189,32 @@ const InvoicePrintView = ({ invoice, onClose }) => {
 
           {/* Items Table */}
           <div className="overflow-x-auto">
-            <table className="w-full text-left border-collapse text-sm whitespace-nowrap">
+            {/* Mobile Card View */}
+            <div className="block sm:hidden space-y-4 print:hidden">
+              {(invoice.items || []).map((item, idx) => (
+                <div key={idx} className="rounded-xl border border-border bg-background p-4 shadow-sm flex flex-col gap-2">
+                  <div className="flex justify-between items-start border-b border-border pb-2">
+                    <span className="font-bold text-text">{item.name}</span>
+                    <span className="text-xs font-semibold bg-primary/10 text-primary px-2 py-0.5 rounded">Qty: {item.quantity}</span>
+                  </div>
+                  <div className="flex justify-between items-center text-sm">
+                    <span className="text-text-muted">Unit Price</span>
+                    <span className="font-medium text-text">₹{item.unitPrice.toFixed(2)}</span>
+                  </div>
+                  <div className="flex justify-between items-center text-sm">
+                    <span className="text-text-muted">GST</span>
+                    <span className="font-medium text-text">{item.taxRate}%</span>
+                  </div>
+                  <div className="flex justify-between items-center pt-2 border-t border-border">
+                    <span className="text-sm font-bold text-text-muted">Total</span>
+                    <span className="font-black text-text">₹{item.total.toFixed(2)}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Desktop Table View */}
+            <table className="hidden sm:table print:table w-full text-left border-collapse text-sm whitespace-nowrap">
               <thead>
                 <tr className="border-b-2 border-border print:border-black text-xs uppercase tracking-wider text-text-muted">
                   <th className="py-3 px-3 font-bold">Item Description</th>
