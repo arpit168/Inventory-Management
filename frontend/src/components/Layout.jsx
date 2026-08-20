@@ -15,6 +15,8 @@ import {
   X,
   Building2,
   Truck,
+  ChevronLeft,
+  ChevronRight,
 } from 'lucide-react';
 
 import { NavLink, Outlet, useLocation } from 'react-router-dom';
@@ -22,6 +24,7 @@ import { useAuth } from '../context/AuthContext';
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useScrollLock } from '../hooks/useScrollLock';
+import LoadingScreen from './LoadingScreen';
 
 const links = [
   { to: '/dashboard', label: 'Dashboard', icon: Home, inBottomBar: true },
@@ -42,8 +45,18 @@ const Layout = () => {
   const location = useLocation();
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   useScrollLock(sidebarOpen);
   
+  // Page transition loading state
+  const [isPageLoading, setIsPageLoading] = useState(false);
+
+  useEffect(() => {
+    setIsPageLoading(true);
+    const timer = setTimeout(() => setIsPageLoading(false), 400);
+    return () => clearTimeout(timer);
+  }, [location.pathname]);
+
   // Scroll detection for Bottom Bar
   const [isScrollingDown, setIsScrollingDown] = useState(false);
   const [lastScrollY, setLastScrollY] = useState(0);
@@ -79,15 +92,15 @@ const Layout = () => {
       {/* ================= SIDEBAR ================= */}
       <aside
         className={`
-          fixed left-0 top-0 z-50 flex flex-col h-screen w-72 border-r border-border
-          bg-surface shadow-2xl transition-transform duration-300 ease-in-out
+          fixed left-0 top-0 z-50 flex flex-col h-screen border-r border-border
+          bg-surface shadow-2xl transition-all duration-300 ease-in-out
           ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}
-          lg:translate-x-0
+          lg:translate-x-0 ${sidebarCollapsed ? 'lg:w-20 w-72' : 'w-72'}
         `}
       >
         {/* Header Section */}
-        <div className="shrink-0 p-5 pb-4 border-b border-border flex items-center justify-between">
-          <div>
+        <div className={`shrink-0 p-5 pb-4 border-b border-border flex items-center ${sidebarCollapsed ? 'lg:justify-center lg:px-2 justify-between' : 'justify-between'}`}>
+          <div className={`transition-all duration-300 overflow-hidden whitespace-nowrap ${sidebarCollapsed ? 'max-w-0 opacity-0' : 'max-w-[200px] opacity-100'}`}>
             <p className="text-[10px] uppercase tracking-[0.3em] font-extrabold text-primary">
               Inventory Pro
             </p>
@@ -95,6 +108,13 @@ const Layout = () => {
               Shopkeeper Suite
             </h1>
           </div>
+          <button
+            onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
+            className="hidden lg:flex p-2 rounded-xl text-text-muted hover:text-text hover:bg-background transition"
+            title={sidebarCollapsed ? "Expand Sidebar" : "Collapse Sidebar"}
+          >
+            {sidebarCollapsed ? <ChevronRight size={18} /> : <ChevronLeft size={18} />}
+          </button>
           <button
             onClick={() => setSidebarOpen(false)}
             className="lg:hidden p-2 rounded-xl text-text-muted hover:text-text hover:bg-background transition"
@@ -104,7 +124,7 @@ const Layout = () => {
         </div>
 
         {/* User Card */}
-        <div className="shrink-0 mx-4 mt-4 flex items-center gap-3 rounded-2xl border border-primary/20 bg-primary/10 p-3.5 shadow-xs">
+        <div className={`shrink-0 mt-4 flex items-center gap-3 rounded-2xl border border-primary/20 bg-primary/10 p-3.5 shadow-xs transition-all duration-300 ${sidebarCollapsed ? 'mx-2 lg:justify-center' : 'mx-4'}`}>
           {user?.avatar ? (
             <img src={user.avatar} alt={user.name} className="h-11 w-11 rounded-xl object-cover border-2 border-primary shrink-0" />
           ) : (
@@ -112,7 +132,7 @@ const Layout = () => {
               {user?.name?.charAt(0)?.toUpperCase() || 'S'}
             </div>
           )}
-          <div className="min-w-0 flex-1">
+          <div className={`min-w-0 transition-all duration-300 overflow-hidden whitespace-nowrap ${sidebarCollapsed ? 'max-w-0 opacity-0' : 'max-w-[200px] opacity-100 flex-1'}`}>
             <p className="text-[11px] font-medium text-text-muted">Active Session</p>
             <p className="truncate text-sm font-bold text-text">{user?.name || 'Shopkeeper'}</p>
           </div>
@@ -131,25 +151,35 @@ const Layout = () => {
                 key={to}
                 to={to}
                 onClick={() => setSidebarOpen(false)}
-                className={`group ${hiddenOnMobile} items-center justify-between rounded-xl px-3.5 py-3 text-sm font-semibold transition-all duration-200 ${
+                className={`group ${hiddenOnMobile} relative flex items-center rounded-xl py-3 text-sm font-semibold transition-all duration-300 ${
+                  sidebarCollapsed ? 'lg:justify-center px-3.5' : 'px-3.5'
+                } ${
                   active
                     ? 'bg-primary text-slate-950 shadow-md shadow-primary/20 font-bold'
                     : 'text-text-muted hover:bg-background hover:text-text'
                 }`}
+                title={sidebarCollapsed ? label : ''}
               >
-                <div className="flex items-center gap-3">
+                <div className="flex items-center">
                   <Icon
                     size={18}
-                    className={`transition-transform duration-200 group-hover:scale-110 ${active ? 'text-slate-950' : 'text-primary'}`}
+                    className={`transition-transform duration-300 group-hover:scale-110 shrink-0 ${active ? 'text-slate-950' : 'text-primary'}`}
                   />
-                  <span>{label}</span>
+                  <span className={`transition-all duration-300 overflow-hidden whitespace-nowrap ${sidebarCollapsed ? 'max-w-0 opacity-0 ml-0' : 'max-w-[200px] opacity-100 ml-3'}`}>{label}</span>
                 </div>
                 {to === '/notifications' && unreadCount > 0 && (
-                  <span className={`inline-flex items-center justify-center rounded-full px-2 py-0.5 text-[10px] font-bold ${
-                    active ? 'bg-slate-950 text-white' : 'bg-danger text-white animate-pulse'
-                  }`}>
-                    {unreadCount}
-                  </span>
+                  <>
+                    <div className={`ml-auto transition-all duration-300 overflow-hidden ${sidebarCollapsed ? 'max-w-0 opacity-0' : 'max-w-[40px] opacity-100'}`}>
+                      <span className={`inline-flex items-center justify-center rounded-full px-2 py-0.5 text-[10px] font-bold ${
+                        active ? 'bg-slate-950 text-white' : 'bg-danger text-white animate-pulse'
+                      }`}>
+                        {unreadCount}
+                      </span>
+                    </div>
+                    {sidebarCollapsed && (
+                      <span className="hidden lg:block absolute top-2 right-2 h-2 w-2 rounded-full bg-danger animate-pulse border border-background" />
+                    )}
+                  </>
                 )}
               </NavLink>
             );
@@ -160,19 +190,22 @@ const Layout = () => {
         <div className="shrink-0 p-4 border-t border-border bg-surface">
           <button
             onClick={logout}
-            className="flex w-full items-center justify-center gap-2 rounded-xl border border-danger/30 bg-danger/10 px-4 py-3 text-sm font-bold text-danger transition-all duration-200 hover:bg-danger hover:text-white shadow-xs active:scale-[0.98]"
+            className={`flex w-full items-center justify-center rounded-xl border border-danger/30 bg-danger/10 py-3 text-sm font-bold text-danger transition-all duration-300 hover:bg-danger hover:text-white shadow-xs active:scale-[0.98] ${
+              sidebarCollapsed ? 'lg:px-0 px-4' : 'px-4'
+            }`}
+            title={sidebarCollapsed ? 'Sign Out' : ''}
           >
-            <LogOut size={16} />
-            <span>Sign Out</span>
+            <LogOut size={16} className="shrink-0" />
+            <span className={`transition-all duration-300 overflow-hidden whitespace-nowrap ${sidebarCollapsed ? 'max-w-0 opacity-0 ml-0' : 'max-w-[200px] opacity-100 ml-2'}`}>Sign Out</span>
           </button>
         </div>
       </aside>
 
       {/* ================= MAIN CONTENT AREA ================= */}
-      <div className="flex flex-1 flex-col lg:ml-72 min-h-screen overflow-x-hidden">
+      <div className={`flex flex-1 flex-col min-h-screen overflow-x-hidden transition-all duration-300 ${sidebarCollapsed ? 'lg:ml-20' : 'lg:ml-72'}`}>
         
         {/* ================= TOPBAR ================= */}
-        <header className="fixed top-0 left-0 right-0 lg:left-72 z-30 border-b border-border bg-surface/85 px-3 py-2.5 sm:px-6 lg:px-8 backdrop-blur-xl transition-all duration-300">
+        <header className={`fixed top-0 left-0 right-0 z-30 border-b border-border bg-surface/85 px-3 py-2.5 sm:px-6 lg:px-8 backdrop-blur-xl transition-all duration-300 ${sidebarCollapsed ? 'lg:left-20' : 'lg:left-72'}`}>
           <div className="flex items-center justify-between gap-2 sm:gap-4">
             
             {/* Left */}
@@ -231,15 +264,27 @@ const Layout = () => {
         <main className="flex-1 p-4 pt-20 sm:p-6 sm:pt-24 lg:p-8 lg:pt-24 pb-24 lg:pb-8 relative">
           <div className="mx-auto max-w-7xl">
             <AnimatePresence mode="wait">
-              <motion.div
-                key={location.pathname}
-                initial={{ opacity: 0, y: 15 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -15 }}
-                transition={{ duration: 0.25, ease: 'easeOut' }}
-              >
-                <Outlet />
-              </motion.div>
+              {isPageLoading ? (
+                <motion.div
+                  key="page-loading"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <LoadingScreen fullScreen={false} message="Loading..." />
+                </motion.div>
+              ) : (
+                <motion.div
+                  key={location.pathname}
+                  initial={{ opacity: 0, y: 15 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -15 }}
+                  transition={{ duration: 0.25, ease: 'easeOut' }}
+                >
+                  <Outlet />
+                </motion.div>
+              )}
             </AnimatePresence>
           </div>
         </main>
@@ -248,9 +293,9 @@ const Layout = () => {
       {/* ================= BOTTOM BAR (MOBILE ONLY) ================= */}
       <div 
         className={`
-          lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-surface/90 backdrop-blur-xl border-t border-border shadow-[0_-4px_20px_-10px_rgba(0,0,0,0.2)]
-          transition-transform duration-300 ease-in-out px-2 py-1.5 flex items-center justify-around
-          ${isScrollingDown ? 'translate-y-full' : 'translate-y-0'}
+          lg:hidden fixed bottom-4 left-4 right-4 z-40 bg-surface/90 backdrop-blur-xl border border-border shadow-[0_8px_30px_rgb(0,0,0,0.12)]
+          transition-transform duration-300 ease-in-out px-2 py-1.5 flex items-center justify-between rounded-full mx-auto max-w-md
+          ${isScrollingDown ? 'translate-y-[calc(100%+24px)]' : 'translate-y-0'}
         `}
       >
         {links.filter(l => l.inBottomBar).map(({ to, label, icon: Icon }) => {
@@ -259,14 +304,14 @@ const Layout = () => {
             <NavLink
               key={to}
               to={to}
-              className={`flex flex-col items-center gap-1 p-2 rounded-xl min-w-[64px] transition-all duration-200 ${
-                active ? 'text-primary' : 'text-text-muted hover:text-text hover:bg-background'
+              className={`flex flex-1 flex-col items-center gap-0.5 py-1 px-1 rounded-full min-w-0 transition-all duration-200 ${
+                active ? 'text-primary' : 'text-text-muted hover:text-text'
               }`}
             >
-              <div className={`p-1.5 rounded-xl transition-all duration-200 ${active ? 'bg-primary/10' : ''}`}>
-                <Icon size={20} className={active ? 'fill-primary/20' : ''} />
+              <div className={`p-1 rounded-full transition-all duration-200 ${active ? 'bg-primary/10 scale-110' : ''}`}>
+                <Icon size={16} className={active ? 'fill-primary/20' : ''} />
               </div>
-              <span className={`text-[10px] font-bold ${active ? 'text-primary' : ''}`}>
+              <span className={`text-[9px] font-bold truncate w-full text-center px-1 ${active ? 'text-primary' : ''}`}>
                 {label.split(' ')[0]}
               </span>
             </NavLink>

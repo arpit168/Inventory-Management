@@ -1,9 +1,9 @@
 import { Package } from 'lucide-react';
 import { motion } from 'framer-motion';
 
-const LoadingScreen = ({ message = "Loading..." }) => {
+const LoadingScreen = ({ message = "Loading...", fullScreen = true }) => {
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-background text-text z-50">
+    <div className={`${fullScreen ? 'fixed inset-0 z-50' : 'w-full h-[60vh]'} flex items-center justify-center bg-background text-text`}>
       <motion.div 
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
