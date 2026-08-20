@@ -396,8 +396,8 @@ const SuppliersLedger = () => {
 
       {/* Add Supplier Modal */}
       {isAddSupplierOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-xs animate-fade-in">
-          <div className="w-full max-w-md rounded-3xl border border-border bg-surface p-6 shadow-2xl animate-scale-up">
+        <div className="fixed inset-0 z-50 flex items-start sm:items-center justify-center bg-black/60 p-3 sm:p-4 backdrop-blur-sm animate-fade-in overflow-y-auto">
+          <div className="w-full max-w-md rounded-3xl border border-border bg-surface p-4 sm:p-6 shadow-2xl animate-scale-up my-8 sm:my-0">
             <div className="flex items-center justify-between border-b border-border pb-4">
               <h3 className="text-lg font-black text-text">Add New Supplier</h3>
               <button onClick={() => setIsAddSupplierOpen(false)} className="rounded-xl p-2 text-text-muted hover:bg-background transition">
@@ -465,17 +465,17 @@ const SuppliersLedger = () => {
                 <p className="text-[10px] text-text-muted mt-1">Enter positive for previous due, negative if advance received.</p>
               </div>
 
-              <div className="flex justify-end gap-3 pt-4">
+              <div className="flex flex-col sm:flex-row justify-end gap-2 sm:gap-3 pt-3 sm:pt-4">
                 <button
                   type="button"
                   onClick={() => setIsAddSupplierOpen(false)}
-                  className="rounded-xl border border-border bg-background px-5 py-2.5 text-xs font-bold text-text hover:bg-surface transition"
+                  className="rounded-xl border border-border bg-background px-4 sm:px-5 py-2 sm:py-2.5 text-xs sm:text-sm font-bold text-text hover:bg-surface transition w-full sm:w-auto"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="rounded-xl bg-primary px-6 py-2.5 text-xs font-bold text-slate-950 shadow-md shadow-primary/20 hover:bg-primary-hover transition"
+                  className="rounded-xl bg-primary px-4 sm:px-6 py-2 sm:py-2.5 text-xs sm:text-sm font-bold text-slate-950 shadow-md shadow-primary/20 hover:bg-primary-hover transition w-full sm:w-auto"
                 >
                   Save Supplier
                 </button>
@@ -487,8 +487,8 @@ const SuppliersLedger = () => {
 
       {/* New Entry Modal */}
       {isEntryModalOpen && selectedSupplier && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-xs animate-fade-in">
-          <div className="w-full max-w-md rounded-3xl border border-border bg-surface p-6 shadow-2xl animate-scale-up">
+        <div className="fixed inset-0 z-50 flex items-start sm:items-center justify-center bg-black/60 p-3 sm:p-4 backdrop-blur-sm animate-fade-in overflow-y-auto">
+          <div className="w-full max-w-md rounded-3xl border border-border bg-surface p-4 sm:p-6 shadow-2xl animate-scale-up my-8 sm:my-0">
             <div className="flex items-center justify-between border-b border-border pb-4">
               <div>
                 <p className="text-[10px] font-extrabold uppercase text-primary">Record Transaction</p>
@@ -556,17 +556,17 @@ const SuppliersLedger = () => {
                 />
               </div>
 
-              <div className="flex justify-end gap-3 pt-4">
+              <div className="flex flex-col sm:flex-row justify-end gap-2 sm:gap-3 pt-3 sm:pt-4">
                 <button
                   type="button"
                   onClick={() => setIsEntryModalOpen(false)}
-                  className="rounded-xl border border-border bg-background px-5 py-2.5 text-xs font-bold text-text hover:bg-surface transition"
+                  className="rounded-xl border border-border bg-background px-4 sm:px-5 py-2 sm:py-2.5 text-xs sm:text-sm font-bold text-text hover:bg-surface transition w-full sm:w-auto"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className={`rounded-xl px-6 py-2.5 text-xs font-bold text-white shadow-md transition ${
+                  className={`rounded-xl px-4 sm:px-6 py-2 sm:py-2.5 text-xs sm:text-sm font-bold text-white shadow-md transition w-full sm:w-auto ${
                     entryType === 'credit' ? 'bg-danger hover:bg-red-600 shadow-danger/20' : 'bg-success hover:bg-emerald-600 shadow-success/20'
                   }`}
                 >

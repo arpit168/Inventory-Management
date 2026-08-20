@@ -192,8 +192,10 @@ const Expenses = () => {
             <p className="mt-1 text-sm text-text-muted">Try switching category filter or record a new expense.</p>
           </div>
         ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-sm whitespace-nowrap">
+          <div className="w-full">
+            {/* Desktop Table */}
+            <div className="hidden sm:block overflow-x-auto">
+              <table className="w-full text-left text-sm whitespace-nowrap">
               <thead className="border-b border-border bg-background/70 text-xs uppercase tracking-wider font-bold text-text-muted">
                 <tr>
                   <th className="py-3.5 px-5">Title</th>
@@ -231,15 +233,51 @@ const Expenses = () => {
                   </tr>
                 ))}
               </tbody>
-            </table>
+              </table>
+            </div>
+
+            {/* Mobile Cards */}
+            <div className="block sm:hidden divide-y divide-border">
+              {expenses.map((exp) => (
+                <div key={exp._id} className="p-4 hover:bg-background/50 transition-colors flex flex-col gap-3">
+                  <div className="flex justify-between items-start gap-2">
+                    <div>
+                      <h4 className="font-bold text-text">{exp.title}</h4>
+                      {exp.description && <p className="text-xs font-normal text-text-muted mt-0.5">{exp.description}</p>}
+                    </div>
+                    <div className="text-right shrink-0">
+                      <p className="font-black text-danger text-lg">₹{Number(exp.amount).toFixed(2)}</p>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <span className="rounded-full bg-primary/10 px-3 py-1 text-[10px] font-extrabold text-primary uppercase tracking-wider">
+                        {exp.category}
+                      </span>
+                      <span className="text-xs text-text-muted font-medium flex items-center gap-1">
+                        <Calendar size={12} /> {new Date(exp.date).toLocaleDateString()}
+                      </span>
+                    </div>
+                    <button
+                      onClick={() => handleDelete(exp._id, exp.title)}
+                      title="Delete Expense"
+                      className="rounded-xl p-2 text-danger bg-danger/10 hover:bg-danger/20 transition"
+                    >
+                      <Trash2 size={16} />
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         )}
       </div>
 
       {/* Record Expense Modal */}
       {isAddOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-xs animate-fade-in">
-          <div className="w-full max-w-md rounded-3xl border border-border bg-surface p-6 shadow-2xl animate-scale-up">
+        <div className="fixed inset-0 z-50 flex items-start sm:items-center justify-center bg-black/60 p-3 sm:p-4 backdrop-blur-sm animate-fade-in overflow-y-auto">
+          <div className="w-full max-w-md rounded-3xl border border-border bg-surface p-4 sm:p-6 shadow-2xl animate-scale-up my-8 sm:my-0">
             <div className="flex items-center justify-between border-b border-border pb-4">
               <div>
                 <p className="text-[10px] font-extrabold uppercase tracking-widest text-primary">Financial Log</p>
@@ -311,15 +349,15 @@ const Expenses = () => {
                 />
               </div>
 
-              <div className="flex justify-end gap-3 pt-4 border-t border-border">
+              <div className="flex flex-col sm:flex-row justify-end gap-2 sm:gap-3 pt-4 border-t border-border">
                 <button
                   type="button"
                   onClick={() => setIsAddOpen(false)}
-                  className="rounded-xl border border-border bg-background px-5 py-2.5 text-xs font-bold text-text hover:bg-surface transition"
+                  className="rounded-xl border border-border bg-background px-4 sm:px-5 py-2 sm:py-2.5 text-xs sm:text-sm font-bold text-text hover:bg-surface transition w-full sm:w-auto"
                 >
                   Cancel
                 </button>
-                <button type="submit" className="rounded-xl bg-primary px-6 py-2.5 text-xs font-bold text-slate-950 shadow-md shadow-primary/20 hover:bg-primary-hover transition">
+                <button type="submit" className="rounded-xl bg-primary px-4 sm:px-6 py-2 sm:py-2.5 text-xs sm:text-sm font-bold text-slate-950 shadow-md shadow-primary/20 hover:bg-primary-hover transition w-full sm:w-auto">
                   Save Expense
                 </button>
               </div>

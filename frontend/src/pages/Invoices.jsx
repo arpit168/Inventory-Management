@@ -158,7 +158,58 @@ const Invoices = () => {
           </div>
         ) : (
           <div className="overflow-x-auto">
-            <table className="w-full text-left text-sm whitespace-nowrap">
+            {/* Mobile Card View */}
+            <div className="block sm:hidden space-y-4 p-4">
+              {invoices.map((inv) => {
+                const isPaid = inv.status === 'paid';
+                return (
+                  <div key={inv._id} className="rounded-xl border border-border bg-background p-4 shadow-sm flex flex-col gap-3">
+                    <div className="flex justify-between items-start border-b border-border pb-3">
+                      <div>
+                        <span className="font-black text-primary block">{inv.invoiceNumber}</span>
+                        <span className="text-xs text-text-muted mt-1 block">{new Date(inv.createdAt).toLocaleDateString()}</span>
+                      </div>
+                      <button
+                        onClick={() => handleStatusToggle(inv)}
+                        className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[10px] font-extrabold transition shadow-xs ${
+                          isPaid
+                            ? 'bg-success/15 text-success hover:bg-success hover:text-white'
+                            : 'bg-warning/15 text-warning hover:bg-warning hover:text-white'
+                        }`}
+                      >
+                        {isPaid ? <CheckCircle2 size={12} /> : <AlertCircle size={12} />}
+                        <span>{isPaid ? 'PAID' : 'UNPAID'}</span>
+                      </button>
+                    </div>
+                    
+                    <div className="flex justify-between items-center">
+                      <span className="font-bold text-text truncate max-w-[60%]">{inv.customerName || 'Walk-in Customer'}</span>
+                      <span className="font-black text-text">₹{(inv.grandTotal || 0).toFixed(2)}</span>
+                    </div>
+
+                    <div className="flex items-center justify-end gap-2 pt-2 border-t border-border mt-1">
+                      <button
+                        onClick={() => setSelectedInvoice(inv)}
+                        className="rounded-xl border border-border bg-background p-2 text-text hover:border-primary hover:text-primary transition shadow-xs"
+                        title="Print / View Invoice"
+                      >
+                        <Eye size={16} />
+                      </button>
+                      <button
+                        onClick={() => handleDelete(inv._id)}
+                        className="rounded-xl border border-border bg-background p-2 text-danger hover:border-danger hover:bg-danger hover:text-white transition shadow-xs"
+                        title="Delete Invoice"
+                      >
+                        <Trash2 size={16} />
+                      </button>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Desktop Table View */}
+            <table className="hidden sm:table w-full text-left text-sm whitespace-nowrap">
               <thead className="border-b border-border bg-background/70 text-xs uppercase tracking-wider font-bold text-text-muted">
                 <tr>
                   <th className="px-5 py-3.5">Invoice #</th>
