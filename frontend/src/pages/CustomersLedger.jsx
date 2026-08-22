@@ -160,7 +160,7 @@ const CustomersLedger = () => {
 
   return (
     <div className="space-y-4 sm:space-y-6 px-3 sm:px-4 md:px-6 max-w-full overflow-x-hidden animate-fade-in">
-      
+
       {/* Header */}
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
@@ -212,7 +212,7 @@ const CustomersLedger = () => {
 
       {/* Main Content Layout */}
       <div className="grid gap-4 sm:gap-6 lg:grid-cols-[1fr_1.3fr]">
-        
+
         {/* Left Side: Customer List */}
         <div className="rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-3 sm:p-5 shadow-sm flex flex-col">
           <div className="flex items-center justify-between gap-3 mb-4">
@@ -251,11 +251,10 @@ const CustomersLedger = () => {
                   <div
                     key={cust._id}
                     onClick={() => fetchLedger(cust._id)}
-                    className={`cursor-pointer rounded-xl border p-3 sm:p-4 transition-all duration-200 flex items-center justify-between gap-2 sm:gap-3 ${
-                      isSelected
+                    className={`cursor-pointer rounded-xl border p-3 sm:p-4 transition-all duration-200 flex items-center justify-between gap-2 sm:gap-3 ${isSelected
                         ? 'border-blue-500 dark:border-blue-400 bg-blue-500/10 shadow-sm font-semibold'
                         : 'border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 hover:border-gray-400 dark:hover:border-gray-500'
-                    }`}
+                      }`}
                   >
                     <div className="min-w-0 flex-1">
                       <p className="text-xs sm:text-sm font-bold text-gray-900 dark:text-white truncate">{cust.name}</p>
@@ -294,7 +293,7 @@ const CustomersLedger = () => {
             </div>
           ) : (
             <div className="flex flex-col flex-1">
-              
+
               {/* Selected Customer Header */}
               <div className="flex flex-wrap items-start justify-between gap-3 border-b border-gray-200 dark:border-gray-700 pb-3 sm:pb-4 mb-3 sm:mb-4">
                 <div>
@@ -332,11 +331,10 @@ const CustomersLedger = () => {
               </div>
 
               {/* Balance Summary Banner */}
-              <div className={`rounded-2xl p-3 sm:p-4 mb-4 sm:mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 ${
-                selectedCustomer.balance > 0 ? 'bg-red-500/10 border border-red-500/20 text-red-600 dark:text-red-400' :
-                selectedCustomer.balance < 0 ? 'bg-green-500/10 border border-green-500/20 text-green-600 dark:text-green-400' :
-                'bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white'
-              }`}>
+              <div className={`rounded-2xl p-3 sm:p-4 mb-4 sm:mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 ${selectedCustomer.balance > 0 ? 'bg-red-500/10 border border-red-500/20 text-red-600 dark:text-red-400' :
+                  selectedCustomer.balance < 0 ? 'bg-green-500/10 border border-green-500/20 text-green-600 dark:text-green-400' :
+                    'bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white'
+                }`}>
                 <div>
                   <p className="text-[10px] font-bold uppercase tracking-wider opacity-80">Net Balance</p>
                   <p className="text-lg sm:text-xl font-black mt-0.5">₹{Math.abs(selectedCustomer.balance || 0).toFixed(2)}</p>
@@ -506,11 +504,10 @@ const CustomersLedger = () => {
                   <button
                     type="button"
                     onClick={() => setEntryType('credit')}
-                    className={`rounded-xl border px-3 sm:px-4 py-2 sm:py-3 text-[10px] sm:text-xs font-bold flex items-center justify-center gap-1.5 transition ${
-                      entryType === 'credit'
+                    className={`rounded-xl border px-3 sm:px-4 py-2 sm:py-3 text-[10px] sm:text-xs font-bold flex items-center justify-center gap-1.5 transition ${entryType === 'credit'
                         ? 'border-red-500 bg-red-500/15 text-red-600 dark:text-red-400 shadow-xs'
                         : 'border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
-                    }`}
+                      }`}
                   >
                     <ArrowUpRight size={14} className="sm:w-4 sm:h-4" />
                     <span>You Gave</span>
@@ -519,11 +516,10 @@ const CustomersLedger = () => {
                   <button
                     type="button"
                     onClick={() => setEntryType('debit')}
-                    className={`rounded-xl border px-3 sm:px-4 py-2 sm:py-3 text-[10px] sm:text-xs font-bold flex items-center justify-center gap-1.5 transition ${
-                      entryType === 'debit'
+                    className={`rounded-xl border px-3 sm:px-4 py-2 sm:py-3 text-[10px] sm:text-xs font-bold flex items-center justify-center gap-1.5 transition ${entryType === 'debit'
                         ? 'border-green-500 bg-green-500/15 text-green-600 dark:text-green-400 shadow-xs'
                         : 'border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
-                    }`}
+                      }`}
                   >
                     <ArrowDownLeft size={14} className="sm:w-4 sm:h-4" />
                     <span>You Got</span>
@@ -566,9 +562,8 @@ const CustomersLedger = () => {
                 </button>
                 <button
                   type="submit"
-                  className={`rounded-xl px-4 sm:px-6 py-2 sm:py-2.5 text-xs sm:text-sm font-bold text-white shadow-md transition w-full sm:w-auto ${
-                    entryType === 'credit' ? 'bg-red-600 hover:bg-red-700 dark:bg-red-500 dark:hover:bg-red-600 shadow-red-500/20' : 'bg-green-600 hover:bg-green-700 dark:bg-green-500 dark:hover:bg-green-600 shadow-green-500/20'
-                  }`}
+                  className={`rounded-xl px-4 sm:px-6 py-2 sm:py-2.5 text-xs sm:text-sm font-bold text-white shadow-md transition w-full sm:w-auto ${entryType === 'credit' ? 'bg-red-600 hover:bg-red-700 dark:bg-red-500 dark:hover:bg-red-600 shadow-red-500/20' : 'bg-green-600 hover:bg-green-700 dark:bg-green-500 dark:hover:bg-green-600 shadow-green-500/20'
+                    }`}
                 >
                   {isEditMode ? 'Update Entry' : 'Record Entry'}
                 </button>
