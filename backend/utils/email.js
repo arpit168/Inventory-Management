@@ -14,11 +14,15 @@ export const sendEmail = async ({ to, subject, html, text }) => {
 
   if (host && user && pass && user !== 'your_email@gmail.com') {
     try {
+      console.log(`Attempting to send email via ${host}:${port} as ${user}...`);
       const transporter = nodemailer.createTransport({
         host,
         port,
-        secure: port === 465,
+        secure: port === 465, // true for 465, false for other ports
         auth: { user, pass },
+        tls: {
+          rejectUnauthorized: false // Helps in some deployment environments
+        }
       });
 
       const info = await transporter.sendMail({
@@ -32,6 +36,7 @@ export const sendEmail = async ({ to, subject, html, text }) => {
       return true;
     } catch (err) {
       console.error('❌ Failed to send SMTP email:', err.message);
+      console.error('Check your SMTP_HOST, SMTP_PORT, and ensure your App Password is correct. If using Gmail, try changing SMTP_PORT to 465 in your deployment environment.');
     }
   } else if (process.env.NODE_ENV === 'production') {
     console.error('❌ SMTP credentials missing or incomplete in production environment variables.');
