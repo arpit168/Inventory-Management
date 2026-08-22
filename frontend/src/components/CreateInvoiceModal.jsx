@@ -251,10 +251,21 @@ const CreateInvoiceModal = ({ onClose, onSuccess }) => {
               </button>
             </div>
 
-            <div className="space-y-3 overflow-x-auto pb-1">
+            <div className="space-y-3 pb-1">
               {items.map((item, index) => (
-                <div key={index} className="flex min-w-[650px] items-center gap-3 rounded-2xl border border-border bg-background/60 p-3">
-                  <div className="w-1/4">
+                <div key={index} className="relative flex flex-col sm:flex-row items-stretch sm:items-center gap-3 rounded-2xl border border-border bg-background/60 p-3 pt-8 sm:pt-3">
+                  {/* Remove button */}
+                  <button
+                    type="button"
+                    onClick={() => handleRemoveItem(index)}
+                    className="absolute top-2 right-2 sm:static sm:top-auto sm:right-auto p-1.5 sm:p-2 text-danger hover:bg-danger/15 rounded-xl transition"
+                    title="Remove item"
+                  >
+                    <Trash2 size={16} />
+                  </button>
+
+                  <div className="w-full sm:w-1/4">
+                    <label className="block text-[10px] font-bold text-text-muted mb-1 sm:hidden">Select Product</label>
                     <select
                       value={item.product}
                       onChange={(e) => handleItemChange(index, 'product', e.target.value)}
@@ -269,7 +280,8 @@ const CreateInvoiceModal = ({ onClose, onSuccess }) => {
                     </select>
                   </div>
 
-                  <div className="flex-1">
+                  <div className="w-full sm:flex-1">
+                    <label className="block text-[10px] font-bold text-text-muted mb-1 sm:hidden">Item Name</label>
                     <input
                       type="text"
                       placeholder="Item name"
@@ -280,53 +292,49 @@ const CreateInvoiceModal = ({ onClose, onSuccess }) => {
                     />
                   </div>
 
-                  <div className="w-20">
-                    <input
-                      type="number"
-                      min="1"
-                      required
-                      placeholder="Qty"
-                      value={item.quantity}
-                      onChange={(e) => handleItemChange(index, 'quantity', e.target.value)}
-                      className="w-full rounded-xl border border-border bg-surface px-2 py-2 text-xs font-semibold text-text focus:border-primary focus:outline-hidden transition text-center"
-                    />
-                  </div>
+                  <div className="flex items-center gap-2 sm:gap-3 w-full sm:w-auto">
+                    <div className="flex-1 sm:w-20">
+                      <label className="block text-[10px] font-bold text-text-muted mb-1 sm:hidden">Qty</label>
+                      <input
+                        type="number"
+                        min="1"
+                        required
+                        placeholder="Qty"
+                        value={item.quantity}
+                        onChange={(e) => handleItemChange(index, 'quantity', e.target.value)}
+                        className="w-full rounded-xl border border-border bg-surface px-2 py-2 text-xs font-semibold text-text focus:border-primary focus:outline-hidden transition sm:text-center"
+                      />
+                    </div>
 
-                  <div className="w-24">
-                    <input
-                      type="number"
-                      min="0"
-                      step="0.01"
-                      required
-                      placeholder="Price"
-                      value={item.unitPrice}
-                      onChange={(e) => handleItemChange(index, 'unitPrice', e.target.value)}
-                      className="w-full rounded-xl border border-border bg-surface px-2 py-2 text-xs font-semibold text-text focus:border-primary focus:outline-hidden transition text-right"
-                    />
-                  </div>
+                    <div className="flex-1 sm:w-24">
+                      <label className="block text-[10px] font-bold text-text-muted mb-1 sm:hidden">Price (₹)</label>
+                      <input
+                        type="number"
+                        min="0"
+                        step="0.01"
+                        required
+                        placeholder="Price"
+                        value={item.unitPrice}
+                        onChange={(e) => handleItemChange(index, 'unitPrice', e.target.value)}
+                        className="w-full rounded-xl border border-border bg-surface px-2 py-2 text-xs font-semibold text-text focus:border-primary focus:outline-hidden transition sm:text-right"
+                      />
+                    </div>
 
-                  <div className="w-24">
-                    <select
-                      value={item.taxRate}
-                      onChange={(e) => handleItemChange(index, 'taxRate', e.target.value)}
-                      className="w-full rounded-xl border border-border bg-surface px-2 py-2 text-xs font-semibold text-text focus:border-primary focus:outline-hidden transition"
-                    >
-                      <option value="0">0% GST</option>
-                      <option value="5">5% GST</option>
-                      <option value="12">12% GST</option>
-                      <option value="18">18% GST</option>
-                      <option value="28">28% GST</option>
-                    </select>
+                    <div className="flex-1 sm:w-24">
+                      <label className="block text-[10px] font-bold text-text-muted mb-1 sm:hidden">Tax</label>
+                      <select
+                        value={item.taxRate}
+                        onChange={(e) => handleItemChange(index, 'taxRate', e.target.value)}
+                        className="w-full rounded-xl border border-border bg-surface px-2 py-2 text-xs font-semibold text-text focus:border-primary focus:outline-hidden transition"
+                      >
+                        <option value="0">0% GST</option>
+                        <option value="5">5% GST</option>
+                        <option value="12">12% GST</option>
+                        <option value="18">18% GST</option>
+                        <option value="28">28% GST</option>
+                      </select>
+                    </div>
                   </div>
-
-                  <button
-                    type="button"
-                    onClick={() => handleRemoveItem(index)}
-                    className="p-2 text-danger hover:bg-danger/15 rounded-xl transition"
-                    title="Remove item"
-                  >
-                    <Trash2 size={16} />
-                  </button>
                 </div>
               ))}
             </div>
