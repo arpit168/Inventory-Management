@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
 const activityLogSchema = new mongoose.Schema(
   {
@@ -14,23 +14,20 @@ const activityLogSchema = new mongoose.Schema(
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 const productSchema = new mongoose.Schema(
   {
     name: {
       type: String,
-      required: [
-        true,
-        'Product name is required',
-      ],
+      required: [true, "Product name is required"],
       trim: true,
     },
 
     category: {
       type: String,
-      default: 'General',
+      default: "General",
       trim: true,
     },
 
@@ -43,27 +40,21 @@ const productSchema = new mongoose.Schema(
 
     unit: {
       type: String,
-      default: 'pcs',
+      default: "pcs",
       trim: true,
     },
 
     image: {
       type: String,
-      default: '',
+      default: "",
     },
 
     quantity: {
       type: Number,
 
-      required: [
-        true,
-        'Quantity is required',
-      ],
+      required: [true, "Quantity is required"],
 
-      min: [
-        0,
-        'Quantity cannot be negative',
-      ],
+      min: [0, "Quantity cannot be negative"],
 
       default: 0,
     },
@@ -71,29 +62,17 @@ const productSchema = new mongoose.Schema(
     buyingPrice: {
       type: Number,
 
-      required: [
-        true,
-        'Buying price is required',
-      ],
+      required: [true, "Buying price is required"],
 
-      min: [
-        0,
-        'Buying price must be positive',
-      ],
+      min: [0, "Buying price must be positive"],
     },
 
     sellingPrice: {
       type: Number,
 
-      required: [
-        true,
-        'Selling price is required',
-      ],
+      required: [true, "Selling price is required"],
 
-      min: [
-        0,
-        'Selling price must be positive',
-      ],
+      min: [0, "Selling price must be positive"],
     },
 
     lowStockThreshold: {
@@ -101,31 +80,25 @@ const productSchema = new mongoose.Schema(
 
       default: 5,
 
-      min: [
-        0,
-        'Low stock threshold must be positive',
-      ],
+      min: [0, "Low stock threshold must be positive"],
     },
 
     description: {
       type: String,
-      default: '',
+      default: "",
     },
 
     status: {
       type: String,
 
-      enum: [
-        'in_stock',
-        'out_of_stock',
-      ],
+      enum: ["in_stock", "out_of_stock"],
 
-      default: 'in_stock',
+      default: "in_stock",
     },
 
     createdBy: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'User',
+      ref: "User",
       required: true,
     },
 
@@ -143,16 +116,13 @@ const productSchema = new mongoose.Schema(
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 productSchema.index({ createdBy: 1 });
 productSchema.index({ createdBy: 1, status: 1 });
 productSchema.index({ createdBy: 1, category: 1 });
 
-const Product = mongoose.model(
-  'Product',
-  productSchema
-);
+const Product = mongoose.model("Product", productSchema);
 
 export default Product;

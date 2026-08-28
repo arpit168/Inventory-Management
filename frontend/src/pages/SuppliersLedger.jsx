@@ -1,46 +1,62 @@
-import { useState, useEffect, useCallback } from 'react';
-import { Plus, Search, UserPlus, Phone, ArrowUpRight, ArrowDownLeft, Trash2, X, BookOpen, RefreshCw } from 'lucide-react';
-import api from '../services/api';
-import { useToast } from '../context/ToastContext';
-import { useScrollLock } from '../hooks/useScrollLock';
-import { LoadingSkeleton } from '../components/LoadingSkeleton';
-
+import { useState, useEffect, useCallback } from "react";
+import {
+  Plus,
+  Search,
+  UserPlus,
+  Phone,
+  ArrowUpRight,
+  ArrowDownLeft,
+  Trash2,
+  X,
+  BookOpen,
+  RefreshCw,
+} from "lucide-react";
+import api from "../services/api";
+import { useToast } from "../context/ToastContext";
+import { useScrollLock } from "../hooks/useScrollLock";
+import { LoadingSkeleton } from "../components/LoadingSkeleton";
 
 const SuppliersLedger = () => {
   const { showToast } = useToast();
   const [suppliers, setSuppliers] = useState([]);
-  const [summary, setSummary] = useState({ totalSuppliers: 0, totalPayable: 0, totalAdvance: 0 });
+  const [summary, setSummary] = useState({
+    totalSuppliers: 0,
+    totalPayable: 0,
+    totalAdvance: 0,
+  });
   const [loading, setLoading] = useState(true);
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useState("");
 
   const [selectedSupplier, setSelectedSupplier] = useState(null);
   const [ledgerEntries, setLedgerEntries] = useState([]);
   const [ledgerLoading, setLedgerLoading] = useState(false);
 
   const [isAddSupplierOpen, setIsAddSupplierOpen] = useState(false);
-  const [newSuppName, setNewSuppName] = useState('');
-  const [newSuppPhone, setNewSuppPhone] = useState('');
-  const [newSuppEmail, setNewSuppEmail] = useState('');
-  const [newSuppAddress, setNewSuppAddress] = useState('');
+  const [newSuppName, setNewSuppName] = useState("");
+  const [newSuppPhone, setNewSuppPhone] = useState("");
+  const [newSuppEmail, setNewSuppEmail] = useState("");
+  const [newSuppAddress, setNewSuppAddress] = useState("");
   const [newSuppBalance, setNewSuppBalance] = useState(0);
 
   const [isEntryModalOpen, setIsEntryModalOpen] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
   const [editingEntryId, setEditingEntryId] = useState(null);
-  const [entryType, setEntryType] = useState('credit'); // credit = Gave, debit = Got
-  const [entryAmount, setEntryAmount] = useState('');
-  const [entryDesc, setEntryDesc] = useState('');
+  const [entryType, setEntryType] = useState("credit"); // credit = Gave, debit = Got
+  const [entryAmount, setEntryAmount] = useState("");
+  const [entryDesc, setEntryDesc] = useState("");
 
   useScrollLock(isAddSupplierOpen || isEntryModalOpen);
 
   const fetchSuppliers = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await api.get('/suppliers', { params: search ? { search } : {} });
+      const res = await api.get("/suppliers", {
+        params: search ? { search } : {},
+      });
       setSuppliers(res.data.suppliers || []);
       if (res.data.summary) setSummary(res.data.summary);
     } catch {
-      showToast('Failed to load suppliers', 'error');
+      showToast("Failed to load suppliers", "error");
     } finally {
       setLoading(false);
     }
@@ -50,91 +66,108 @@ const SuppliersLedger = () => {
     fetchSuppliers();
   }, [fetchSuppliers]);
 
-  const fetchLedger = useCallback(async (supplierId) => {
-    setLedgerLoading(true);
-    try {
-      const res = await api.get(`/suppliers/${supplierId}/ledger`);
-      setSelectedSupplier(res.data.supplier);
-      setLedgerEntries(res.data.entries || []);
-    } catch {
-      showToast('Failed to load ledger entries', 'error');
-    } finally {
-      setLedgerLoading(false);
-    }
-  }, [showToast]);
+  const fetchLedger = useCallback(
+    async (supplierId) => {
+      setLedgerLoading(true);
+      try {
+        const res = await api.get(`/suppliers/${supplierId}/ledger`);
+        setSelectedSupplier(res.data.supplier);
+        setLedgerEntries(res.data.entries || []);
+      } catch {
+        showToast("Failed to load ledger entries", "error");
+      } finally {
+        setLedgerLoading(false);
+      }
+    },
+    [showToast],
+  );
 
   const handleCreateSupplier = async (e) => {
     e.preventDefault();
     if (!newSuppName.trim() || !newSuppPhone.trim()) {
-      showToast('Name and Phone are required', 'warning');
+      showToast("Name and Phone are required", "warning");
       return;
     }
 
     try {
-      await api.post('/suppliers', {
+      await api.post("/suppliers", {
         name: newSuppName,
         phone: newSuppPhone,
         email: newSuppEmail,
         address: newSuppAddress,
         openingBalance: Number(newSuppBalance) || 0,
       });
-      showToast('Supplier added successfully', 'success');
+      showToast("Supplier added successfully", "success");
       setIsAddSupplierOpen(false);
-      setNewSuppName('');
-      setNewSuppPhone('');
-      setNewSuppEmail('');
-      setNewSuppAddress('');
+      setNewSuppName("");
+      setNewSuppPhone("");
+      setNewSuppEmail("");
+      setNewSuppAddress("");
       setNewSuppBalance(0);
       fetchSuppliers();
     } catch (err) {
-      showToast(err.response?.data?.message || 'Failed to add supplier', 'error');
+      showToast(
+        err.response?.data?.message || "Failed to add supplier",
+        "error",
+      );
     }
   };
 
   const handleAddOrEditEntry = async (e) => {
     e.preventDefault();
     if (!entryAmount || Number(entryAmount) <= 0) {
-      showToast('Enter a positive amount', 'warning');
+      showToast("Enter a positive amount", "warning");
       return;
     }
 
     try {
       if (isEditMode) {
-        await api.put(`/suppliers/${selectedSupplier._id}/ledger/${editingEntryId}`, {
-          type: entryType,
-          amount: Number(entryAmount),
-          description: entryDesc,
-        });
-        showToast('Transaction updated', 'success');
+        await api.put(
+          `/suppliers/${selectedSupplier._id}/ledger/${editingEntryId}`,
+          {
+            type: entryType,
+            amount: Number(entryAmount),
+            description: entryDesc,
+          },
+        );
+        showToast("Transaction updated", "success");
       } else {
         await api.post(`/suppliers/${selectedSupplier._id}/ledger`, {
           type: entryType,
           amount: Number(entryAmount),
           description: entryDesc,
         });
-        showToast('Transaction recorded', 'success');
+        showToast("Transaction recorded", "success");
       }
       setIsEntryModalOpen(false);
-      setEntryAmount('');
-      setEntryDesc('');
+      setEntryAmount("");
+      setEntryDesc("");
       setIsEditMode(false);
       setEditingEntryId(null);
       fetchLedger(selectedSupplier._id);
       fetchSuppliers();
     } catch (err) {
-      showToast(err.response?.data?.message || 'Failed to record entry', 'error');
+      showToast(
+        err.response?.data?.message || "Failed to record entry",
+        "error",
+      );
     }
   };
 
   const handleDeleteEntry = async (entryId) => {
-    if (!window.confirm('Are you sure you want to delete this ledger entry? This will adjust the supplier balance.')) return;
+    if (
+      !window.confirm(
+        "Are you sure you want to delete this ledger entry? This will adjust the supplier balance.",
+      )
+    )
+      return;
     try {
       await api.delete(`/suppliers/${selectedSupplier._id}/ledger/${entryId}`);
-      showToast('Transaction deleted', 'success');
+      showToast("Transaction deleted", "success");
       fetchLedger(selectedSupplier._id);
       fetchSuppliers();
     } catch {
-      showToast('Failed to delete entry', 'error');
+      showToast("Failed to delete entry", "error");
     }
   };
 
@@ -148,25 +181,33 @@ const SuppliersLedger = () => {
   };
 
   const handleDeleteSupplier = async (id, name) => {
-    if (!window.confirm(`Are you sure you want to delete ${name} and all their ledger history?`)) return;
+    if (
+      !window.confirm(
+        `Are you sure you want to delete ${name} and all their ledger history?`,
+      )
+    )
+      return;
     try {
       await api.delete(`/suppliers/${id}`);
-      showToast('Supplier deleted', 'success');
+      showToast("Supplier deleted", "success");
       if (selectedSupplier?._id === id) setSelectedSupplier(null);
       fetchSuppliers();
     } catch {
-      showToast('Failed to delete supplier', 'error');
+      showToast("Failed to delete supplier", "error");
     }
   };
 
   return (
     <div className="space-y-6 animate-fade-in">
-      
       {/* Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <p className="text-xs font-extrabold uppercase tracking-[0.25em] text-primary">Ledger Suite</p>
-          <h1 className="text-2xl sm:text-3xl font-black text-text tracking-tight">Khatabook Supplier Ledger</h1>
+          <p className="text-xs font-extrabold uppercase tracking-[0.25em] text-primary">
+            Ledger Suite
+          </p>
+          <h1 className="text-2xl sm:text-3xl font-black text-text tracking-tight">
+            Khatabook Supplier Ledger
+          </h1>
         </div>
 
         <button
@@ -182,8 +223,12 @@ const SuppliersLedger = () => {
       <div className="grid gap-4 sm:grid-cols-3">
         <div className="rounded-2xl border border-border bg-surface p-5 shadow-xs flex items-center justify-between">
           <div>
-            <p className="text-xs uppercase tracking-wider font-bold text-text-muted">Total Suppliers</p>
-            <p className="mt-1 text-2xl font-black text-text">{summary.totalSuppliers || 0}</p>
+            <p className="text-xs uppercase tracking-wider font-bold text-text-muted">
+              Total Suppliers
+            </p>
+            <p className="mt-1 text-2xl font-black text-text">
+              {summary.totalSuppliers || 0}
+            </p>
           </div>
           <div className="rounded-2xl bg-primary/10 p-3.5 text-primary">
             <BookOpen size={24} />
@@ -192,8 +237,12 @@ const SuppliersLedger = () => {
 
         <div className="rounded-2xl border border-border bg-surface p-5 shadow-xs flex items-center justify-between">
           <div>
-            <p className="text-xs uppercase tracking-wider font-bold text-text-muted">Total Payable (We Owe)</p>
-            <p className="mt-1 text-2xl font-black text-danger">₹{(summary.totalPayable || 0).toFixed(2)}</p>
+            <p className="text-xs uppercase tracking-wider font-bold text-text-muted">
+              Total Payable (We Owe)
+            </p>
+            <p className="mt-1 text-2xl font-black text-danger">
+              ₹{(summary.totalPayable || 0).toFixed(2)}
+            </p>
           </div>
           <div className="rounded-2xl bg-danger/10 p-3.5 text-danger">
             <ArrowUpRight size={24} />
@@ -202,8 +251,12 @@ const SuppliersLedger = () => {
 
         <div className="rounded-2xl border border-border bg-surface p-5 shadow-xs flex items-center justify-between">
           <div>
-            <p className="text-xs uppercase tracking-wider font-bold text-text-muted">Total Advance (They Owe)</p>
-            <p className="mt-1 text-2xl font-black text-success">₹{(summary.totalAdvance || 0).toFixed(2)}</p>
+            <p className="text-xs uppercase tracking-wider font-bold text-text-muted">
+              Total Advance (They Owe)
+            </p>
+            <p className="mt-1 text-2xl font-black text-success">
+              ₹{(summary.totalAdvance || 0).toFixed(2)}
+            </p>
           </div>
           <div className="rounded-2xl bg-success/10 p-3.5 text-success">
             <ArrowDownLeft size={24} />
@@ -213,12 +266,14 @@ const SuppliersLedger = () => {
 
       {/* Main Content Layout */}
       <div className="grid gap-6 lg:grid-cols-[1fr_1.3fr]">
-        
         {/* Left Side: Supplier List */}
         <div className="rounded-2xl border border-border bg-surface p-5 shadow-xs flex flex-col">
           <div className="flex items-center justify-between gap-3 mb-4">
             <div className="relative flex-1">
-              <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-text-muted" />
+              <Search
+                size={16}
+                className="absolute left-3.5 top-1/2 -translate-y-1/2 text-text-muted"
+              />
               <input
                 type="text"
                 placeholder="Search supplier name or phone..."
@@ -240,7 +295,9 @@ const SuppliersLedger = () => {
             {loading ? (
               <LoadingSkeleton count={6} />
             ) : suppliers.length === 0 ? (
-              <p className="text-center text-xs text-text-muted py-12">No suppliers found.</p>
+              <p className="text-center text-xs text-text-muted py-12">
+                No suppliers found.
+              </p>
             ) : (
               suppliers.map((cust) => {
                 const isSelected = selectedSupplier?._id === cust._id;
@@ -254,12 +311,14 @@ const SuppliersLedger = () => {
                     onClick={() => fetchLedger(cust._id)}
                     className={`cursor-pointer rounded-xl border p-4 transition-all duration-200 flex items-center justify-between gap-3 ${
                       isSelected
-                        ? 'border-primary bg-primary/10 shadow-sm font-semibold'
-                        : 'border-border bg-background hover:border-text-muted/40'
+                        ? "border-primary bg-primary/10 shadow-sm font-semibold"
+                        : "border-border bg-background hover:border-text-muted/40"
                     }`}
                   >
                     <div className="min-w-0 flex-1">
-                      <p className="text-sm font-bold text-text truncate">{cust.name}</p>
+                      <p className="text-sm font-bold text-text truncate">
+                        {cust.name}
+                      </p>
                       <div className="flex items-center gap-1.5 text-xs text-text-muted mt-0.5">
                         <Phone size={12} />
                         <span>{cust.phone}</span>
@@ -267,11 +326,13 @@ const SuppliersLedger = () => {
                     </div>
 
                     <div className="text-right shrink-0">
-                      <p className={`text-sm font-black ${isDue ? 'text-danger' : isAdvance ? 'text-success' : 'text-text-muted'}`}>
+                      <p
+                        className={`text-sm font-black ${isDue ? "text-danger" : isAdvance ? "text-success" : "text-text-muted"}`}
+                      >
                         ₹{Math.abs(balance).toFixed(2)}
                       </p>
                       <span className="text-[10px] font-bold uppercase tracking-wider text-text-muted">
-                        {isDue ? 'Due' : isAdvance ? 'Advance' : 'Settled'}
+                        {isDue ? "Due" : isAdvance ? "Advance" : "Settled"}
                       </span>
                     </div>
                   </div>
@@ -290,21 +351,29 @@ const SuppliersLedger = () => {
               </div>
               <h3 className="text-lg font-bold text-text">Select a Supplier</h3>
               <p className="mt-1 text-sm text-text-muted max-w-xs">
-                Click on any supplier from the list on the left to view their detailed transaction ledger and record entries.
+                Click on any supplier from the list on the left to view their
+                detailed transaction ledger and record entries.
               </p>
             </div>
           ) : (
             <div className="flex flex-col flex-1">
-              
               {/* Selected Supplier Header */}
               <div className="flex flex-wrap items-start justify-between gap-4 border-b border-border pb-4 mb-4">
                 <div>
-                  <h2 className="text-xl font-black text-text">{selectedSupplier.name}</h2>
+                  <h2 className="text-xl font-black text-text">
+                    {selectedSupplier.name}
+                  </h2>
                   <div className="flex flex-wrap gap-3 text-xs text-text-muted mt-1 font-medium">
                     <span>📞 {selectedSupplier.phone}</span>
-                    {selectedSupplier.email && <span>✉️ {selectedSupplier.email}</span>}
+                    {selectedSupplier.email && (
+                      <span>✉️ {selectedSupplier.email}</span>
+                    )}
                   </div>
-                  {selectedSupplier.address && <p className="text-xs text-text-muted mt-1">📍 {selectedSupplier.address}</p>}
+                  {selectedSupplier.address && (
+                    <p className="text-xs text-text-muted mt-1">
+                      📍 {selectedSupplier.address}
+                    </p>
+                  )}
                 </div>
 
                 <div className="flex items-center gap-2">
@@ -312,8 +381,8 @@ const SuppliersLedger = () => {
                     onClick={() => {
                       setIsEditMode(false);
                       setEditingEntryId(null);
-                      setEntryAmount('');
-                      setEntryDesc('');
+                      setEntryAmount("");
+                      setEntryDesc("");
                       setIsEntryModalOpen(true);
                     }}
                     className="inline-flex items-center gap-1.5 rounded-xl bg-primary px-4 py-2 text-xs font-bold text-slate-950 shadow-sm hover:bg-primary-hover transition"
@@ -322,7 +391,12 @@ const SuppliersLedger = () => {
                     <span>New Entry</span>
                   </button>
                   <button
-                    onClick={() => handleDeleteSupplier(selectedSupplier._id, selectedSupplier.name)}
+                    onClick={() =>
+                      handleDeleteSupplier(
+                        selectedSupplier._id,
+                        selectedSupplier.name,
+                      )
+                    }
                     className="rounded-xl border border-border bg-background p-2 text-danger hover:bg-danger hover:text-white transition shadow-xs"
                     title="Delete Supplier"
                   >
@@ -332,18 +406,30 @@ const SuppliersLedger = () => {
               </div>
 
               {/* Balance Summary Banner */}
-              <div className={`rounded-2xl p-4 mb-6 flex items-center justify-between ${
-                selectedSupplier.balance > 0 ? 'bg-danger/10 border border-danger/20 text-danger' :
-                selectedSupplier.balance < 0 ? 'bg-success/10 border border-success/20 text-success' :
-                'bg-background border border-border text-text'
-              }`}>
+              <div
+                className={`rounded-2xl p-4 mb-6 flex items-center justify-between ${
+                  selectedSupplier.balance > 0
+                    ? "bg-danger/10 border border-danger/20 text-danger"
+                    : selectedSupplier.balance < 0
+                      ? "bg-success/10 border border-success/20 text-success"
+                      : "bg-background border border-border text-text"
+                }`}
+              >
                 <div>
-                  <p className="text-xs font-bold uppercase tracking-wider opacity-80">Net Balance</p>
-                  <p className="text-xl font-black mt-0.5">₹{Math.abs(selectedSupplier.balance || 0).toFixed(2)}</p>
+                  <p className="text-xs font-bold uppercase tracking-wider opacity-80">
+                    Net Balance
+                  </p>
+                  <p className="text-xl font-black mt-0.5">
+                    ₹{Math.abs(selectedSupplier.balance || 0).toFixed(2)}
+                  </p>
                 </div>
                 <div className="text-right">
                   <span className="rounded-full bg-surface px-3 py-1 text-xs font-extrabold shadow-xs">
-                    {selectedSupplier.balance > 0 ? 'WE WILL GIVE (PAYABLE)' : selectedSupplier.balance < 0 ? 'WE WILL GET (ADVANCE)' : 'SETTLED'}
+                    {selectedSupplier.balance > 0
+                      ? "WE WILL GIVE (PAYABLE)"
+                      : selectedSupplier.balance < 0
+                        ? "WE WILL GET (ADVANCE)"
+                        : "SETTLED"}
                   </span>
                 </div>
               </div>
@@ -353,35 +439,64 @@ const SuppliersLedger = () => {
                 {ledgerLoading ? (
                   <LoadingSkeleton count={4} />
                 ) : ledgerEntries.length === 0 ? (
-                  <p className="text-center text-xs text-text-muted py-12">No ledger entries recorded yet.</p>
+                  <p className="text-center text-xs text-text-muted py-12">
+                    No ledger entries recorded yet.
+                  </p>
                 ) : (
                   ledgerEntries.map((entry) => {
-                    const isCredit = entry.type === 'credit';
+                    const isCredit = entry.type === "credit";
                     return (
                       <div
                         key={entry._id}
                         className="flex items-center justify-between rounded-xl border border-border bg-background p-3.5 hover:border-text-muted/40 transition"
                       >
                         <div className="flex items-center gap-3 min-w-0">
-                          <div className={`rounded-xl p-2.5 shrink-0 ${isCredit ? 'bg-danger/15 text-danger' : 'bg-success/15 text-success'}`}>
-                            {isCredit ? <ArrowUpRight size={18} /> : <ArrowDownLeft size={18} />}
+                          <div
+                            className={`rounded-xl p-2.5 shrink-0 ${isCredit ? "bg-danger/15 text-danger" : "bg-success/15 text-success"}`}
+                          >
+                            {isCredit ? (
+                              <ArrowUpRight size={18} />
+                            ) : (
+                              <ArrowDownLeft size={18} />
+                            )}
                           </div>
                           <div className="min-w-0">
-                            <p className="text-sm font-bold text-text truncate">{entry.description || (isCredit ? 'Goods Received (We Owe)' : 'Payment Given (Advance)')}</p>
-                            <p className="text-[11px] text-text-muted">{new Date(entry.createdAt).toLocaleString()}</p>
+                            <p className="text-sm font-bold text-text truncate">
+                              {entry.description ||
+                                (isCredit
+                                  ? "Goods Received (We Owe)"
+                                  : "Payment Given (Advance)")}
+                            </p>
+                            <p className="text-[11px] text-text-muted">
+                              {new Date(entry.createdAt).toLocaleString()}
+                            </p>
                           </div>
                         </div>
 
                         <div className="text-right shrink-0 pl-3 flex flex-col items-end">
-                          <p className={`text-sm font-black ${isCredit ? 'text-danger' : 'text-success'}`}>
-                            {isCredit ? '+' : '-'} ₹{entry.amount.toFixed(2)}
+                          <p
+                            className={`text-sm font-black ${isCredit ? "text-danger" : "text-success"}`}
+                          >
+                            {isCredit ? "+" : "-"} ₹{entry.amount.toFixed(2)}
                           </p>
                           <span className="text-[10px] font-bold uppercase tracking-wider text-text-muted">
-                            {isCredit ? 'Got Goods (Payable)' : 'Gave Money (Advance)'}
+                            {isCredit
+                              ? "Got Goods (Payable)"
+                              : "Gave Money (Advance)"}
                           </span>
                           <div className="flex gap-2 mt-2">
-                            <button onClick={() => openEditEntry(entry)} className="text-xs text-primary hover:underline">Edit</button>
-                            <button onClick={() => handleDeleteEntry(entry._id)} className="text-xs text-danger hover:underline">Delete</button>
+                            <button
+                              onClick={() => openEditEntry(entry)}
+                              className="text-xs text-primary hover:underline"
+                            >
+                              Edit
+                            </button>
+                            <button
+                              onClick={() => handleDeleteEntry(entry._id)}
+                              className="text-xs text-danger hover:underline"
+                            >
+                              Delete
+                            </button>
                           </div>
                         </div>
                       </div>
@@ -400,14 +515,19 @@ const SuppliersLedger = () => {
           <div className="w-full max-w-md rounded-3xl border border-border bg-surface p-4 sm:p-6 shadow-2xl animate-scale-up my-8 sm:my-0">
             <div className="flex items-center justify-between border-b border-border pb-4">
               <h3 className="text-lg font-black text-text">Add New Supplier</h3>
-              <button onClick={() => setIsAddSupplierOpen(false)} className="rounded-xl p-2 text-text-muted hover:bg-background transition">
+              <button
+                onClick={() => setIsAddSupplierOpen(false)}
+                className="rounded-xl p-2 text-text-muted hover:bg-background transition"
+              >
                 <X size={18} />
               </button>
             </div>
 
             <form onSubmit={handleCreateSupplier} className="mt-5 space-y-4">
               <div>
-                <label className="block text-xs font-bold text-text-muted mb-1">Supplier Name *</label>
+                <label className="block text-xs font-bold text-text-muted mb-1">
+                  Supplier Name *
+                </label>
                 <input
                   type="text"
                   required
@@ -419,7 +539,9 @@ const SuppliersLedger = () => {
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-text-muted mb-1">Phone Number *</label>
+                <label className="block text-xs font-bold text-text-muted mb-1">
+                  Phone Number *
+                </label>
                 <input
                   type="text"
                   required
@@ -431,7 +553,9 @@ const SuppliersLedger = () => {
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-text-muted mb-1">Email (Optional)</label>
+                <label className="block text-xs font-bold text-text-muted mb-1">
+                  Email (Optional)
+                </label>
                 <input
                   type="email"
                   placeholder="ramesh@example.com"
@@ -442,7 +566,9 @@ const SuppliersLedger = () => {
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-text-muted mb-1">Address (Optional)</label>
+                <label className="block text-xs font-bold text-text-muted mb-1">
+                  Address (Optional)
+                </label>
                 <input
                   type="text"
                   placeholder="Market Road, Shop #12"
@@ -453,7 +579,9 @@ const SuppliersLedger = () => {
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-text-muted mb-1">Opening Due Balance (₹)</label>
+                <label className="block text-xs font-bold text-text-muted mb-1">
+                  Opening Due Balance (₹)
+                </label>
                 <input
                   type="number"
                   step="0.01"
@@ -462,7 +590,9 @@ const SuppliersLedger = () => {
                   onChange={(e) => setNewSuppBalance(e.target.value)}
                   className="w-full rounded-xl border border-border bg-background px-3.5 py-2.5 text-sm text-text focus:border-primary focus:outline-hidden transition"
                 />
-                <p className="text-[10px] text-text-muted mt-1">Enter positive for previous due, negative if advance received.</p>
+                <p className="text-[10px] text-text-muted mt-1">
+                  Enter positive for previous due, negative if advance received.
+                </p>
               </div>
 
               <div className="flex flex-col sm:flex-row justify-end gap-2 sm:gap-3 pt-3 sm:pt-4">
@@ -491,25 +621,34 @@ const SuppliersLedger = () => {
           <div className="w-full max-w-md rounded-3xl border border-border bg-surface p-4 sm:p-6 shadow-2xl animate-scale-up my-8 sm:my-0">
             <div className="flex items-center justify-between border-b border-border pb-4">
               <div>
-                <p className="text-[10px] font-extrabold uppercase text-primary">Record Transaction</p>
-                <h3 className="text-lg font-black text-text">{selectedSupplier.name}</h3>
+                <p className="text-[10px] font-extrabold uppercase text-primary">
+                  Record Transaction
+                </p>
+                <h3 className="text-lg font-black text-text">
+                  {selectedSupplier.name}
+                </h3>
               </div>
-              <button onClick={() => setIsEntryModalOpen(false)} className="rounded-xl p-2 text-text-muted hover:bg-background transition">
+              <button
+                onClick={() => setIsEntryModalOpen(false)}
+                className="rounded-xl p-2 text-text-muted hover:bg-background transition"
+              >
                 <X size={18} />
               </button>
             </div>
 
             <form onSubmit={handleAddOrEditEntry} className="mt-5 space-y-4">
               <div>
-                <label className="block text-xs font-bold text-text-muted mb-1.5">Transaction Type</label>
+                <label className="block text-xs font-bold text-text-muted mb-1.5">
+                  Transaction Type
+                </label>
                 <div className="grid grid-cols-2 gap-3">
                   <button
                     type="button"
-                    onClick={() => setEntryType('credit')}
+                    onClick={() => setEntryType("credit")}
                     className={`rounded-xl border px-4 py-3 text-xs font-bold flex items-center justify-center gap-2 transition ${
-                      entryType === 'credit'
-                        ? 'border-danger bg-danger/15 text-danger shadow-xs'
-                        : 'border-border bg-background text-text-muted hover:text-text'
+                      entryType === "credit"
+                        ? "border-danger bg-danger/15 text-danger shadow-xs"
+                        : "border-border bg-background text-text-muted hover:text-text"
                     }`}
                   >
                     <ArrowUpRight size={16} />
@@ -518,11 +657,11 @@ const SuppliersLedger = () => {
 
                   <button
                     type="button"
-                    onClick={() => setEntryType('debit')}
+                    onClick={() => setEntryType("debit")}
                     className={`rounded-xl border px-4 py-3 text-xs font-bold flex items-center justify-center gap-2 transition ${
-                      entryType === 'debit'
-                        ? 'border-success bg-success/15 text-success shadow-xs'
-                        : 'border-border bg-background text-text-muted hover:text-text'
+                      entryType === "debit"
+                        ? "border-success bg-success/15 text-success shadow-xs"
+                        : "border-border bg-background text-text-muted hover:text-text"
                     }`}
                   >
                     <ArrowDownLeft size={16} />
@@ -532,7 +671,9 @@ const SuppliersLedger = () => {
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-text-muted mb-1">Amount (₹) *</label>
+                <label className="block text-xs font-bold text-text-muted mb-1">
+                  Amount (₹) *
+                </label>
                 <input
                   type="number"
                   min="0.01"
@@ -546,7 +687,9 @@ const SuppliersLedger = () => {
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-text-muted mb-1">Description / Note</label>
+                <label className="block text-xs font-bold text-text-muted mb-1">
+                  Description / Note
+                </label>
                 <input
                   type="text"
                   placeholder="e.g., Grocery items purchased on credit"
@@ -567,17 +710,18 @@ const SuppliersLedger = () => {
                 <button
                   type="submit"
                   className={`rounded-xl px-4 sm:px-6 py-2 sm:py-2.5 text-xs sm:text-sm font-bold text-white shadow-md transition w-full sm:w-auto ${
-                    entryType === 'credit' ? 'bg-danger hover:bg-red-600 shadow-danger/20' : 'bg-success hover:bg-emerald-600 shadow-success/20'
+                    entryType === "credit"
+                      ? "bg-danger hover:bg-red-600 shadow-danger/20"
+                      : "bg-success hover:bg-emerald-600 shadow-success/20"
                   }`}
                 >
-                  {isEditMode ? 'Update Entry' : 'Record Entry'}
+                  {isEditMode ? "Update Entry" : "Record Entry"}
                 </button>
               </div>
             </form>
           </div>
         </div>
       )}
-
     </div>
   );
 };

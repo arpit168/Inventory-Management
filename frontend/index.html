@@ -14,25 +14,27 @@
     <title>Inventory Pro</title>
 
     <script>
-      (function() {
+      (function () {
         try {
-          var savedTheme = localStorage.getItem('inventory-theme');
+          var savedTheme = localStorage.getItem("inventory-theme");
 
           if (
-            savedTheme === 'dark' ||
+            savedTheme === "dark" ||
             (!savedTheme &&
-              window.matchMedia('(prefers-color-scheme: dark)').matches)
+              window.matchMedia("(prefers-color-scheme: dark)").matches)
           ) {
-            document.documentElement.classList.add('dark');
+            document.documentElement.classList.add("dark");
           } else {
-            document.documentElement.classList.remove('dark');
+            document.documentElement.classList.remove("dark");
           }
         } catch (_) {}
       })();
     </script>
   </head>
 
-  <body class="bg-background text-text antialiased transition-colors duration-200">
+  <body
+    class="bg-background text-text antialiased transition-colors duration-200"
+  >
     <div id="root"></div>
 
     <script type="module" src="/src/main.jsx"></script>

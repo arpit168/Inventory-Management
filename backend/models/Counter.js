@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
 const counterSchema = new mongoose.Schema({
   id: {
@@ -11,7 +11,7 @@ const counterSchema = new mongoose.Schema({
   },
   user: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
+    ref: "User",
     required: true,
   },
 });
@@ -19,5 +19,5 @@ const counterSchema = new mongoose.Schema({
 // Ensure that for a given user and sequence ID, there is only one counter
 counterSchema.index({ id: 1, user: 1 }, { unique: true });
 
-const Counter = mongoose.model('Counter', counterSchema);
+const Counter = mongoose.model("Counter", counterSchema);
 export default Counter;

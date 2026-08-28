@@ -1,7 +1,7 @@
-import Product from '../models/Product.js';
-import RemovedProduct from '../models/RemovedProduct.js';
-import { addNotification } from '../utils/notifications.js';
-import { escapeRegex } from '../utils/escapeRegex.js';
+import Product from "../models/Product.js";
+import RemovedProduct from "../models/RemovedProduct.js";
+import { addNotification } from "../utils/notifications.js";
+import { escapeRegex } from "../utils/escapeRegex.js";
 
 const getMetrics = (product) => {
   const quantity = Number(product.quantity || 0);
@@ -9,15 +9,9 @@ const getMetrics = (product) => {
   const sellingPrice = Number(product.sellingPrice || 0);
 
   const inventoryValue = quantity * buyingPrice;
-  const profit = Math.max(
-    0,
-    (sellingPrice - buyingPrice) * quantity
-  );
+  const profit = Math.max(0, (sellingPrice - buyingPrice) * quantity);
 
-  const loss = Math.max(
-    0,
-    (buyingPrice - sellingPrice) * quantity
-  );
+  const loss = Math.max(0, (buyingPrice - sellingPrice) * quantity);
 
   return {
     inventoryValue,
@@ -27,22 +21,22 @@ const getMetrics = (product) => {
 };
 
 const ALLOWED_SORT_FIELDS = new Set([
-  'name',
-  'category',
-  'quantity',
-  'buyingPrice',
-  'sellingPrice',
-  'createdAt',
-  'updatedAt',
+  "name",
+  "category",
+  "quantity",
+  "buyingPrice",
+  "sellingPrice",
+  "createdAt",
+  "updatedAt",
 ]);
 
 export const getProducts = async (req, res, next) => {
   try {
     const {
-      search = '',
+      search = "",
       status,
-      sort = 'updatedAt',
-      order = 'desc',
+      sort = "updatedAt",
+      order = "desc",
       page = 1,
       limit = 10,
     } = req.query;
@@ -58,17 +52,17 @@ export const getProducts = async (req, res, next) => {
     if (search) {
       const escaped = escapeRegex(search);
       query.$or = [
-        { name: { $regex: escaped, $options: 'i' } },
-        { category: { $regex: escaped, $options: 'i' } },
-        { sku: { $regex: escaped, $options: 'i' } },
+        { name: { $regex: escaped, $options: "i" } },
+        { category: { $regex: escaped, $options: "i" } },
+        { sku: { $regex: escaped, $options: "i" } },
       ];
     }
 
     const pageNum = Math.max(Number(page), 1);
     const limitNum = Math.min(Math.max(Number(limit), 1), 100);
 
-    const sortField = ALLOWED_SORT_FIELDS.has(sort) ? sort : 'updatedAt';
-    const sortDirection = order === 'asc' ? 1 : -1;
+    const sortField = ALLOWED_SORT_FIELDS.has(sort) ? sort : "updatedAt";
+    const sortDirection = order === "asc" ? 1 : -1;
 
     const [products, total] = await Promise.all([
       Product.find(query)
@@ -119,47 +113,43 @@ export const createProduct = async (req, res, next) => {
       sellingPrice === undefined
     ) {
       return res.status(400).json({
-        message:
-          'Name, quantity, buyingPrice, and sellingPrice are required',
+        message: "Name, quantity, buyingPrice, and sellingPrice are required",
       });
     }
 
-    const status =
-      Number(quantity) <= 0
-        ? 'out_of_stock'
-        : 'in_stock';
+    const status = Number(quantity) <= 0 ? "out_of_stock" : "in_stock";
 
     const product = await Product.create({
       name,
-      category: category || 'General',
+      category: category || "General",
       sku,
-      unit: unit || 'pcs',
-      image: image || '',
+      unit: unit || "pcs",
+      image: image || "",
       quantity: Number(quantity),
       buyingPrice: Number(buyingPrice),
       sellingPrice: Number(sellingPrice),
       lowStockThreshold: Number(lowStockThreshold || 5),
-      description: description || '',
+      description: description || "",
       createdBy: req.user.id,
       status,
 
       activityLogs: [
         {
-          action: 'created',
+          action: "created",
           quantityDelta: Number(quantity),
           previousQuantity: 0,
           newQuantity: Number(quantity),
-          note: 'Product created',
+          note: "Product created",
         },
       ],
     });
 
     await addNotification(
       req.user.id,
-      'inventory_update',
-      'Product added',
+      "inventory_update",
+      "Product added",
       `${product.name} has been added to your inventory.`,
-      product.name
+      product.name,
     );
 
     return res.status(201).json({
@@ -167,7 +157,7 @@ export const createProduct = async (req, res, next) => {
         ...product.toObject(),
         ...getMetrics(product.toObject()),
       },
-      message: 'Product added successfully',
+      message: "Product added successfully",
     });
   } catch (error) {
     return next(error);
@@ -183,7 +173,7 @@ export const updateProduct = async (req, res, next) => {
 
     if (!product) {
       return res.status(404).json({
-        message: 'Product not found',
+        message: "Product not found",
       });
     }
 
@@ -212,34 +202,28 @@ export const updateProduct = async (req, res, next) => {
     if (quantity !== undefined) product.quantity = Number(quantity);
     if (buyingPrice !== undefined) product.buyingPrice = Number(buyingPrice);
     if (sellingPrice !== undefined) product.sellingPrice = Number(sellingPrice);
-    if (lowStockThreshold !== undefined) product.lowStockThreshold = Number(lowStockThreshold);
+    if (lowStockThreshold !== undefined)
+      product.lowStockThreshold = Number(lowStockThreshold);
 
-    product.status =
-      product.quantity <= 0
-        ? 'out_of_stock'
-        : 'in_stock';
+    product.status = product.quantity <= 0 ? "out_of_stock" : "in_stock";
 
     product.activityLogs.push({
-      action: 'updated',
-      quantityDelta:
-        product.quantity - previousQuantity,
+      action: "updated",
+      quantityDelta: product.quantity - previousQuantity,
       previousQuantity,
       newQuantity: product.quantity,
-      note: 'Product details updated',
+      note: "Product details updated",
     });
 
     await product.save();
 
-    if (
-      product.quantity <= 0 &&
-      previousStatus !== 'out_of_stock'
-    ) {
+    if (product.quantity <= 0 && previousStatus !== "out_of_stock") {
       await addNotification(
         req.user.id,
-        'out_of_stock',
-        'Out of stock alert',
+        "out_of_stock",
+        "Out of stock alert",
         `${product.name} is now out of stock.`,
-        product.name
+        product.name,
       );
     }
 
@@ -250,10 +234,10 @@ export const updateProduct = async (req, res, next) => {
     ) {
       await addNotification(
         req.user.id,
-        'inventory_update',
-        'Inventory restored',
+        "inventory_update",
+        "Inventory restored",
         `${product.name} has been restocked and is back in inventory.`,
-        product.name
+        product.name,
       );
     }
 
@@ -262,7 +246,7 @@ export const updateProduct = async (req, res, next) => {
         ...product.toObject(),
         ...getMetrics(product.toObject()),
       },
-      message: 'Product updated successfully',
+      message: "Product updated successfully",
     });
   } catch (error) {
     return next(error);
@@ -278,7 +262,7 @@ export const deleteProduct = async (req, res, next) => {
 
     if (!product) {
       return res.status(404).json({
-        message: 'Product not found',
+        message: "Product not found",
       });
     }
 
@@ -298,10 +282,10 @@ export const deleteProduct = async (req, res, next) => {
 
     await addNotification(
       req.user.id,
-      'product_removed',
-      'Product removed',
+      "product_removed",
+      "Product removed",
       `${product.name} was removed from inventory and saved to history.`,
-      product.name
+      product.name,
     );
 
     await Product.deleteOne({
@@ -309,7 +293,7 @@ export const deleteProduct = async (req, res, next) => {
     });
 
     return res.status(200).json({
-      message: 'Product removed successfully',
+      message: "Product removed successfully",
     });
   } catch (error) {
     return next(error);
@@ -320,12 +304,9 @@ export const adjustStock = async (req, res, next) => {
   try {
     const { change } = req.body;
 
-    if (
-      change === undefined ||
-      Number.isNaN(Number(change))
-    ) {
+    if (change === undefined || Number.isNaN(Number(change))) {
       return res.status(400).json({
-        message: 'A numeric change is required',
+        message: "A numeric change is required",
       });
     }
 
@@ -336,28 +317,22 @@ export const adjustStock = async (req, res, next) => {
 
     if (!product) {
       return res.status(404).json({
-        message: 'Product not found',
+        message: "Product not found",
       });
     }
 
     const previousQuantity = Number(product.quantity);
 
-    const nextQuantity = Math.max(
-      0,
-      previousQuantity + Number(change)
-    );
+    const nextQuantity = Math.max(0, previousQuantity + Number(change));
 
     const delta = nextQuantity - previousQuantity;
 
     product.quantity = nextQuantity;
 
-    product.status =
-      nextQuantity <= 0
-        ? 'out_of_stock'
-        : 'in_stock';
+    product.status = nextQuantity <= 0 ? "out_of_stock" : "in_stock";
 
     product.activityLogs.push({
-      action: delta >= 0 ? 'increased' : 'decreased',
+      action: delta >= 0 ? "increased" : "decreased",
       quantityDelta: delta,
       previousQuantity,
       newQuantity: nextQuantity,
@@ -369,38 +344,36 @@ export const adjustStock = async (req, res, next) => {
     if (nextQuantity <= 0) {
       await addNotification(
         req.user.id,
-        'out_of_stock',
-        'Out of stock alert',
+        "out_of_stock",
+        "Out of stock alert",
         `${product.name} is now out of stock.`,
-        product.name
+        product.name,
       );
-    } else if (
-      nextQuantity <= product.lowStockThreshold
-    ) {
+    } else if (nextQuantity <= product.lowStockThreshold) {
       await addNotification(
         req.user.id,
-        'low_stock',
-        'Low stock alert',
+        "low_stock",
+        "Low stock alert",
         `${product.name} is running low.`,
-        product.name
+        product.name,
       );
     } else {
       await addNotification(
         req.user.id,
-        'inventory_update',
-        'Inventory updated',
+        "inventory_update",
+        "Inventory updated",
         `${product.name} stock was adjusted successfully.`,
-        product.name
+        product.name,
       );
     }
 
     if (delta > 0 && previousQuantity === 0) {
       await addNotification(
         req.user.id,
-        'inventory_update',
-        'Inventory restored',
+        "inventory_update",
+        "Inventory restored",
         `${product.name} has returned to stock.`,
-        product.name
+        product.name,
       );
     }
 
@@ -411,22 +384,18 @@ export const adjustStock = async (req, res, next) => {
         ...product.toObject(),
         ...metrics,
       },
-      message: 'Stock updated successfully',
+      message: "Stock updated successfully",
     });
   } catch (error) {
     return next(error);
   }
 };
 
-export const getOutOfStockProducts = async (
-  req,
-  res,
-  next
-) => {
+export const getOutOfStockProducts = async (req, res, next) => {
   try {
     const products = await Product.find({
       createdBy: req.user.id,
-      status: 'out_of_stock',
+      status: "out_of_stock",
     })
       .sort({ updatedAt: -1 })
       .lean();
@@ -473,58 +442,43 @@ export const getAnalytics = async (req, res, next) => {
 
     const salesData = products.flatMap((product) =>
       (product.activityLogs || [])
-        .filter(
-          (log) =>
-            log.action === 'decreased' ||
-            log.action === 'sold'
-        )
+        .filter((log) => log.action === "decreased" || log.action === "sold")
         .map((log) => ({
           name: product.name,
           date: log.createdAt
-            ? new Date(log.createdAt)
-                .toISOString()
-                .slice(0, 10)
-            : new Date()
-                .toISOString()
-                .slice(0, 10),
-          quantity: Math.abs(
-            Number(log.quantityDelta) || 0
-          ),
-        }))
+            ? new Date(log.createdAt).toISOString().slice(0, 10)
+            : new Date().toISOString().slice(0, 10),
+          quantity: Math.abs(Number(log.quantityDelta) || 0),
+        })),
     );
 
     const statusData = [
       {
-        name: 'In Stock',
+        name: "In Stock",
         value: totalProducts - outOfStockCount,
       },
       {
-        name: 'Out of Stock',
+        name: "Out of Stock",
         value: outOfStockCount,
       },
     ];
 
-    const categoryData = products.reduce(
-      (acc, product) => {
-        const key = product.category || 'General';
+    const categoryData = products.reduce((acc, product) => {
+      const key = product.category || "General";
 
-        acc[key] =
-          (acc[key] || 0) +
-          Number(product.quantity || 0);
+      acc[key] = (acc[key] || 0) + Number(product.quantity || 0);
 
-        return acc;
-      },
-      {}
-    );
+      return acc;
+    }, {});
 
     const profitLossData = Object.values(
       enriched.reduce((acc, product) => {
-        const key = product.category || 'General';
+        const key = product.category || "General";
         if (!acc[key]) acc[key] = { name: key, profit: 0, loss: 0 };
         acc[key].profit += product.profit || 0;
         acc[key].loss += product.loss || 0;
         return acc;
-      }, {})
+      }, {}),
     );
 
     const recentActivity = products
@@ -534,13 +488,9 @@ export const getAnalytics = async (req, res, next) => {
           action: log.action,
           quantityDelta: log.quantityDelta,
           timestamp: log.createdAt || new Date(),
-        }))
+        })),
       )
-      .sort(
-        (a, b) =>
-          new Date(b.timestamp) -
-          new Date(a.timestamp)
-      )
+      .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
       .slice(0, 8);
 
     return res.status(200).json({

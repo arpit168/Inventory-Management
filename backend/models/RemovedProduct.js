@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
 const removedProductSchema = new mongoose.Schema(
   {
@@ -20,17 +20,14 @@ const removedProductSchema = new mongoose.Schema(
 
     removedBy: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'User',
+      ref: "User",
     },
   },
   {
     timestamps: true,
-  }
+  },
 );
 
-const RemovedProduct = mongoose.model(
-  'RemovedProduct',
-  removedProductSchema
-);
+const RemovedProduct = mongoose.model("RemovedProduct", removedProductSchema);
 
 export default RemovedProduct;

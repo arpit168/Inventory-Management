@@ -1,11 +1,17 @@
-import { useEffect, useState, useCallback } from 'react';
-import { BellRing, CheckCheck, Trash2, AlertTriangle, RefreshCw } from 'lucide-react';
-import { useScrollLock } from '../hooks/useScrollLock';
-import api from '../services/api';
-import { LoadingSkeleton } from '../components/LoadingSkeleton';
-import { useToast } from '../context/ToastContext';
-import { useAuth } from '../context/AuthContext';
-import { formatDate } from '../utils/formatters';
+import { useEffect, useState, useCallback } from "react";
+import {
+  BellRing,
+  CheckCheck,
+  Trash2,
+  AlertTriangle,
+  RefreshCw,
+} from "lucide-react";
+import { useScrollLock } from "../hooks/useScrollLock";
+import api from "../services/api";
+import { LoadingSkeleton } from "../components/LoadingSkeleton";
+import { useToast } from "../context/ToastContext";
+import { useAuth } from "../context/AuthContext";
+import { formatDate } from "../utils/formatters";
 
 const Notifications = () => {
   const { showToast } = useToast();
@@ -21,12 +27,15 @@ const Notifications = () => {
   const loadNotifications = useCallback(async () => {
     try {
       setLoading(true);
-      const response = await api.get('/notifications');
+      const response = await api.get("/notifications");
       const list = response.data.notifications || [];
       setNotifications(list);
       setGlobalNotifications(list);
     } catch (error) {
-      showToast(error.response?.data?.message || 'Unable to load notifications', 'error');
+      showToast(
+        error.response?.data?.message || "Unable to load notifications",
+        "error",
+      );
     } finally {
       setLoading(false);
     }
@@ -39,12 +48,23 @@ const Notifications = () => {
   const handleMarkRead = async (id) => {
     try {
       // Optimistic update
-      setNotifications((current) => current.map((item) => (item._id === id ? { ...item, read: true } : item)));
-      setGlobalNotifications((current) => current.map((item) => (item._id === id ? { ...item, read: true } : item)));
-      
+      setNotifications((current) =>
+        current.map((item) =>
+          item._id === id ? { ...item, read: true } : item,
+        ),
+      );
+      setGlobalNotifications((current) =>
+        current.map((item) =>
+          item._id === id ? { ...item, read: true } : item,
+        ),
+      );
+
       await api.put(`/notifications/${id}/read`);
     } catch (error) {
-      showToast(error.response?.data?.message || 'Unable to mark notification as read.', 'error');
+      showToast(
+        error.response?.data?.message || "Unable to mark notification as read.",
+        "error",
+      );
       loadNotifications(); // Revert on failure
     }
   };
@@ -54,12 +74,17 @@ const Notifications = () => {
       setDeletingId(id);
       // Optimistic update
       setNotifications((current) => current.filter((item) => item._id !== id));
-      setGlobalNotifications((current) => current.filter((item) => item._id !== id));
+      setGlobalNotifications((current) =>
+        current.filter((item) => item._id !== id),
+      );
 
       await api.delete(`/notifications/${id}`);
-      showToast('Notification removed', 'success');
+      showToast("Notification removed", "success");
     } catch (error) {
-      showToast(error.response?.data?.message || 'Failed to delete notification', 'error');
+      showToast(
+        error.response?.data?.message || "Failed to delete notification",
+        "error",
+      );
       loadNotifications();
     } finally {
       setDeletingId(null);
@@ -74,10 +99,13 @@ const Notifications = () => {
       setGlobalNotifications([]);
       setShowClearConfirm(false);
 
-      await api.delete('/notifications');
-      showToast('All notifications cleared successfully', 'success');
+      await api.delete("/notifications");
+      showToast("All notifications cleared successfully", "success");
     } catch (error) {
-      showToast(error.response?.data?.message || 'Failed to clear notifications', 'error');
+      showToast(
+        error.response?.data?.message || "Failed to clear notifications",
+        "error",
+      );
       loadNotifications();
     } finally {
       setClearingAll(false);
@@ -92,32 +120,31 @@ const Notifications = () => {
 
   return (
     <div className="space-y-6 animate-fade-in">
-      
       {/* Header Banner */}
       <div className="rounded-2xl border border-border bg-surface p-6 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-       <div className="flex flex-wrap sm:flex-nowrap items-start sm:items-center gap-3 sm:gap-4 min-w-0">
-  <div className="rounded-2xl bg-primary/10 p-2.5 sm:p-3 text-primary shrink-0">
-    <BellRing size={20} className="sm:w-6 sm:h-6" />
-  </div>
+        <div className="flex flex-wrap sm:flex-nowrap items-start sm:items-center gap-3 sm:gap-4 min-w-0">
+          <div className="rounded-2xl bg-primary/10 p-2.5 sm:p-3 text-primary shrink-0">
+            <BellRing size={20} className="sm:w-6 sm:h-6" />
+          </div>
 
-  <div className="min-w-0 flex-1">
-    <div className="flex flex-wrap items-center gap-2">
-      <p className="text-[10px] sm:text-xs uppercase tracking-[0.18em] sm:tracking-[0.25em] font-extrabold text-primary">
-        Notification Center
-      </p>
+          <div className="min-w-0 flex-1">
+            <div className="flex flex-wrap items-center gap-2">
+              <p className="text-[10px] sm:text-xs uppercase tracking-[0.18em] sm:tracking-[0.25em] font-extrabold text-primary">
+                Notification Center
+              </p>
 
-      {unreadCount > 0 && (
-        <span className="rounded-full bg-danger/15 px-2 py-0.5 text-[10px] font-bold text-danger whitespace-nowrap">
-          {unreadCount} unread
-        </span>
-      )}
-    </div>
+              {unreadCount > 0 && (
+                <span className="rounded-full bg-danger/15 px-2 py-0.5 text-[10px] font-bold text-danger whitespace-nowrap">
+                  {unreadCount} unread
+                </span>
+              )}
+            </div>
 
-    <h1 className="mt-1 text-lg sm:text-xl md:text-2xl lg:text-3xl font-black text-text tracking-tight break-words">
-      Real-time System Alerts
-    </h1>
-  </div>
-</div>
+            <h1 className="mt-1 text-lg sm:text-xl md:text-2xl lg:text-3xl font-black text-text tracking-tight break-words">
+              Real-time System Alerts
+            </h1>
+          </div>
+        </div>
 
         <div className="flex items-center gap-3 w-full sm:w-auto justify-end shrink-0">
           <button
@@ -148,10 +175,14 @@ const Notifications = () => {
               <div className="rounded-2xl bg-danger/10 p-3">
                 <AlertTriangle size={24} />
               </div>
-              <h3 className="text-lg font-black text-text">Clear All Notifications?</h3>
+              <h3 className="text-lg font-black text-text">
+                Clear All Notifications?
+              </h3>
             </div>
             <p className="mt-3 text-sm text-text-muted leading-relaxed">
-              Are you sure you want to delete all {notifications.length} notifications? This action cannot be undone and will clear your entire alert history.
+              Are you sure you want to delete all {notifications.length}{" "}
+              notifications? This action cannot be undone and will clear your
+              entire alert history.
             </p>
             <div className="mt-6 flex items-center justify-end gap-3">
               <button
@@ -166,7 +197,11 @@ const Notifications = () => {
                 disabled={clearingAll}
                 className="inline-flex items-center gap-2 rounded-xl bg-danger px-5 py-2.5 text-xs font-bold text-white shadow-lg shadow-danger/20 hover:bg-red-600 transition disabled:opacity-50"
               >
-                {clearingAll ? <RefreshCw size={14} className="animate-spin" /> : <Trash2 size={14} />}
+                {clearingAll ? (
+                  <RefreshCw size={14} className="animate-spin" />
+                ) : (
+                  <Trash2 size={14} />
+                )}
                 <span>Yes, Clear All</span>
               </button>
             </div>
@@ -182,7 +217,8 @@ const Notifications = () => {
           </div>
           <h3 className="text-lg font-bold text-text">All Caught Up!</h3>
           <p className="mt-1 text-sm text-text-muted max-w-sm mx-auto">
-            You have no system alerts or inventory notifications right now. Everything is running smoothly.
+            You have no system alerts or inventory notifications right now.
+            Everything is running smoothly.
           </p>
         </div>
       ) : (
@@ -196,11 +232,11 @@ const Notifications = () => {
               <div
                 key={notification._id}
                 className={`group relative overflow-hidden rounded-2xl border p-5 transition-all duration-200 ${
-                  isDeleting ? 'opacity-40 scale-98 pointer-events-none' : ''
+                  isDeleting ? "opacity-40 scale-98 pointer-events-none" : ""
                 } ${
                   isUnread
-                    ? 'border-primary/40 bg-primary/5 hover:border-primary shadow-sm'
-                    : 'border-border bg-surface hover:border-text-muted/40 shadow-xs'
+                    ? "border-primary/40 bg-primary/5 hover:border-primary shadow-sm"
+                    : "border-border bg-surface hover:border-text-muted/40 shadow-xs"
                 }`}
               >
                 {/* Unread Accent Indicator */}
@@ -211,12 +247,16 @@ const Notifications = () => {
                 <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
                   <div className="min-w-0 flex-1 pl-1">
                     <div className="flex items-center gap-2.5 flex-wrap">
-                      <span className={`inline-flex items-center rounded-md px-2 py-0.5 text-[10px] font-extrabold uppercase tracking-wider ${
-                        notification.type === 'out_of_stock' ? 'bg-danger/15 text-danger' :
-                        notification.type === 'low_stock' ? 'bg-warning/15 text-warning' :
-                        'bg-info/15 text-info'
-                      }`}>
-                        {notification.type.replace('_', ' ')}
+                      <span
+                        className={`inline-flex items-center rounded-md px-2 py-0.5 text-[10px] font-extrabold uppercase tracking-wider ${
+                          notification.type === "out_of_stock"
+                            ? "bg-danger/15 text-danger"
+                            : notification.type === "low_stock"
+                              ? "bg-warning/15 text-warning"
+                              : "bg-info/15 text-info"
+                        }`}
+                      >
+                        {notification.type.replace("_", " ")}
                       </span>
                       <span className="text-xs font-semibold text-text-muted">
                         {formatDate(notification.createdAt)}

@@ -1,15 +1,15 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
 const supplierSchema = new mongoose.Schema(
   {
     name: {
       type: String,
-      required: [true, 'Supplier name is required'],
+      required: [true, "Supplier name is required"],
       trim: true,
     },
     phone: {
       type: String,
-      required: [true, 'Phone number is required'],
+      required: [true, "Phone number is required"],
       trim: true,
     },
     email: {
@@ -36,16 +36,16 @@ const supplierSchema = new mongoose.Schema(
     },
     createdBy: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'User',
+      ref: "User",
       required: true,
     },
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 supplierSchema.index({ createdBy: 1 });
 
-const Supplier = mongoose.model('Supplier', supplierSchema);
+const Supplier = mongoose.model("Supplier", supplierSchema);
 export default Supplier;

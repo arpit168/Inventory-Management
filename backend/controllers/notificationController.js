@@ -1,4 +1,4 @@
-import Notification from '../models/Notification.js';
+import Notification from "../models/Notification.js";
 
 export const getNotifications = async (req, res, next) => {
   try {
@@ -25,11 +25,11 @@ export const markAsRead = async (req, res, next) => {
       },
       {
         read: true,
-      }
+      },
     );
 
     return res.status(200).json({
-      message: 'Notification marked as read',
+      message: "Notification marked as read",
     });
   } catch (error) {
     return next(error);
@@ -44,11 +44,11 @@ export const deleteNotification = async (req, res, next) => {
     });
 
     if (!deleted) {
-      return res.status(404).json({ message: 'Notification not found' });
+      return res.status(404).json({ message: "Notification not found" });
     }
 
     return res.status(200).json({
-      message: 'Notification deleted successfully',
+      message: "Notification deleted successfully",
       id: req.params.id,
     });
   } catch (error) {
@@ -63,7 +63,7 @@ export const deleteAllNotifications = async (req, res, next) => {
     });
 
     return res.status(200).json({
-      message: 'All notifications cleared successfully',
+      message: "All notifications cleared successfully",
     });
   } catch (error) {
     return next(error);

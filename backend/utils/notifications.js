@@ -1,11 +1,11 @@
-import Notification from '../models/Notification.js';
+import Notification from "../models/Notification.js";
 
 export const addNotification = async (
   userId,
   type,
   title,
   message,
-  relatedProduct = ''
+  relatedProduct = "",
 ) => {
   await Notification.create({
     user: userId,

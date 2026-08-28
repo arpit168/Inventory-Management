@@ -1,36 +1,26 @@
-import jwt from 'jsonwebtoken';
+import jwt from "jsonwebtoken";
 
-import User from '../models/User.js';
+import User from "../models/User.js";
 
 const protect = async (req, res, next) => {
   try {
-    const authHeader =
-      req.headers.authorization || '';
+    const authHeader = req.headers.authorization || "";
 
-    const token = authHeader.startsWith(
-      'Bearer '
-    )
-      ? authHeader.slice(7)
-      : null;
+    const token = authHeader.startsWith("Bearer ") ? authHeader.slice(7) : null;
 
     if (!token) {
       return res.status(401).json({
-        message: 'Authentication required',
+        message: "Authentication required",
       });
     }
 
-    const decoded = jwt.verify(
-      token,
-      process.env.JWT_SECRET
-    );
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-    const user = await User.findById(
-      decoded.id
-    ).select('-password');
+    const user = await User.findById(decoded.id).select("-password");
 
     if (!user) {
       return res.status(401).json({
-        message: 'User not found',
+        message: "User not found",
       });
     }
 
@@ -39,7 +29,7 @@ const protect = async (req, res, next) => {
     return next();
   } catch {
     return res.status(401).json({
-      message: 'Invalid or expired token',
+      message: "Invalid or expired token",
     });
   }
 };
