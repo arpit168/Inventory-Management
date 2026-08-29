@@ -1,10 +1,10 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
 const notificationSchema = new mongoose.Schema(
   {
     user: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'User',
+      ref: "User",
       required: true,
     },
 
@@ -12,12 +12,12 @@ const notificationSchema = new mongoose.Schema(
       type: String,
 
       enum: [
-        'low_stock',
-        'out_of_stock',
-        'product_removed',
-        'profit_alert',
-        'loss_alert',
-        'inventory_update',
+        "low_stock",
+        "out_of_stock",
+        "product_removed",
+        "profit_alert",
+        "loss_alert",
+        "inventory_update",
       ],
 
       required: true,
@@ -35,7 +35,7 @@ const notificationSchema = new mongoose.Schema(
 
     relatedProduct: {
       type: String,
-      default: '',
+      default: "",
     },
 
     read: {
@@ -45,12 +45,9 @@ const notificationSchema = new mongoose.Schema(
   },
   {
     timestamps: true,
-  }
+  },
 );
 
-const Notification = mongoose.model(
-  'Notification',
-  notificationSchema
-);
+const Notification = mongoose.model("Notification", notificationSchema);
 
 export default Notification;

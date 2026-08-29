@@ -1,10 +1,12 @@
-import { Package } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { Package } from "lucide-react";
+import { motion } from "framer-motion";
 
 const LoadingScreen = ({ message = "Loading...", fullScreen = true }) => {
   return (
-    <div className={`${fullScreen ? 'fixed inset-0 z-50' : 'w-full h-[60vh]'} flex items-center justify-center bg-background text-text`}>
-      <motion.div 
+    <div
+      className={`${fullScreen ? "fixed inset-0 z-50" : "w-full h-[60vh]"} flex items-center justify-center bg-background text-text`}
+    >
+      <motion.div
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.3 }}
@@ -24,7 +26,7 @@ const LoadingScreen = ({ message = "Loading...", fullScreen = true }) => {
         >
           <Package className="h-12 w-12 text-primary drop-shadow-md" />
         </motion.div>
-        
+
         <div className="flex flex-col items-center gap-3">
           <p className="text-xs font-bold text-text-muted tracking-[0.3em] uppercase">
             {message}

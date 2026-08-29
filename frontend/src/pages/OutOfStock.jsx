@@ -1,20 +1,20 @@
-import { useEffect, useState, useCallback } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import api from '../services/api';
-import { LoadingSkeleton } from '../components/LoadingSkeleton';
-import { useToast } from '../context/ToastContext';
-import { formatCurrency } from '../utils/formatters';
-import { 
-  PackageX, 
-  RotateCcw, 
-  TrendingDown, 
+import { useEffect, useState, useCallback } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import api from "../services/api";
+import { LoadingSkeleton } from "../components/LoadingSkeleton";
+import { useToast } from "../context/ToastContext";
+import { formatCurrency } from "../utils/formatters";
+import {
+  PackageX,
+  RotateCcw,
+  TrendingDown,
   AlertTriangle,
   Search,
   Filter,
   ShoppingCart,
   Tag,
-  RefreshCw
-} from 'lucide-react';
+  RefreshCw,
+} from "lucide-react";
 
 const OutOfStock = () => {
   const { showToast } = useToast();
@@ -22,17 +22,17 @@ const OutOfStock = () => {
   const [loading, setLoading] = useState(true);
   const [restockId, setRestockId] = useState(null);
   const [restockQuantity, setRestockQuantity] = useState(1);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('all');
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("all");
   const [restoringId, setRestoringId] = useState(null);
 
   const loadProducts = useCallback(async () => {
     setLoading(true);
     try {
-      const response = await api.get('/products/out-of-stock');
+      const response = await api.get("/products/out-of-stock");
       setProducts(response.data.products || []);
     } catch {
-      showToast('Failed to load out of stock products', 'error');
+      showToast("Failed to load out of stock products", "error");
     } finally {
       setLoading(false);
     }
@@ -42,36 +42,46 @@ const OutOfStock = () => {
     loadProducts();
   }, [loadProducts]);
 
-  const categories = [...new Set(products.map(p => p.category))];
+  const categories = [...new Set(products.map((p) => p.category))];
 
-  const filteredProducts = products.filter(product => {
-    const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         product.sku?.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCategory = selectedCategory === 'all' || product.category === selectedCategory;
+  const filteredProducts = products.filter((product) => {
+    const matchesSearch =
+      product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      product.sku?.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesCategory =
+      selectedCategory === "all" || product.category === selectedCategory;
     return matchesSearch && matchesCategory;
   });
 
   const handleRestore = async (productId) => {
     if (!restockQuantity || Number(restockQuantity) <= 0) {
-      showToast('Please enter a valid positive quantity', 'warning');
+      showToast("Please enter a valid positive quantity", "warning");
       return;
     }
 
     setRestoringId(productId);
     try {
-      await api.patch(`/products/${productId}/adjust-stock`, { change: Number(restockQuantity) });
-      showToast('Stock restored successfully!', 'success');
+      await api.patch(`/products/${productId}/adjust-stock`, {
+        change: Number(restockQuantity),
+      });
+      showToast("Stock restored successfully!", "success");
       setRestockId(null);
       setRestockQuantity(1);
       await loadProducts();
     } catch (error) {
-      showToast(error.response?.data?.message || 'Failed to restore stock', 'error');
+      showToast(
+        error.response?.data?.message || "Failed to restore stock",
+        "error",
+      );
     } finally {
       setRestoringId(null);
     }
   };
 
-  const totalLostValue = products.reduce((sum, p) => sum + (p.inventoryValue || 0), 0);
+  const totalLostValue = products.reduce(
+    (sum, p) => sum + (p.inventoryValue || 0),
+    0,
+  );
 
   if (loading) {
     return <LoadingSkeleton count={4} />;
@@ -90,27 +100,34 @@ const OutOfStock = () => {
               Inventory Alert
             </span>
           </div>
-          
+
           <h1 className="text-2xl sm:text-3xl font-black text-text tracking-tight mb-2">
             Out of Stock Products
           </h1>
-          
+
           <p className="text-sm text-text-muted max-w-2xl">
-            {products.length === 0 
-              ? 'All products are currently in stock. Great job managing your inventory supply!'
-              : `${products.length} product${products.length > 1 ? 's are' : ' is'} currently unavailable. Restore stock levels to enable sales again.`
-            }
+            {products.length === 0
+              ? "All products are currently in stock. Great job managing your inventory supply!"
+              : `${products.length} product${products.length > 1 ? "s are" : " is"} currently unavailable. Restore stock levels to enable sales again.`}
           </p>
 
           {products.length > 0 && (
             <div className="flex flex-wrap gap-3 mt-6">
               <div className="inline-flex items-center gap-2 px-4 py-2 bg-background rounded-xl border border-border text-xs font-bold text-text">
                 <AlertTriangle size={16} className="text-warning" />
-                <span><strong className="text-warning">{products.length}</strong> items depleted</span>
+                <span>
+                  <strong className="text-warning">{products.length}</strong>{" "}
+                  items depleted
+                </span>
               </div>
               <div className="inline-flex items-center gap-2 px-4 py-2 bg-background rounded-xl border border-border text-xs font-bold text-text">
                 <TrendingDown size={16} className="text-danger" />
-                <span>Depleted Valuation: <strong className="text-danger">{formatCurrency(totalLostValue)}</strong></span>
+                <span>
+                  Depleted Valuation:{" "}
+                  <strong className="text-danger">
+                    {formatCurrency(totalLostValue)}
+                  </strong>
+                </span>
               </div>
             </div>
           )}
@@ -121,7 +138,10 @@ const OutOfStock = () => {
       {products.length > 0 && (
         <div className="rounded-2xl border border-border bg-surface p-4 shadow-xs flex flex-col sm:flex-row gap-4 items-stretch sm:items-center justify-between">
           <div className="relative flex-1">
-            <Search size={18} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-text-muted" />
+            <Search
+              size={18}
+              className="absolute left-3.5 top-1/2 -translate-y-1/2 text-text-muted"
+            />
             <input
               type="text"
               placeholder="Search by product name or SKU..."
@@ -133,15 +153,20 @@ const OutOfStock = () => {
 
           <div className="flex items-center gap-3">
             <div className="relative">
-              <Filter size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-text-muted" />
+              <Filter
+                size={16}
+                className="absolute left-3.5 top-1/2 -translate-y-1/2 text-text-muted"
+              />
               <select
                 value={selectedCategory}
                 onChange={(e) => setSelectedCategory(e.target.value)}
                 className="pl-9 pr-8 py-2.5 rounded-xl border border-border bg-background text-sm font-semibold text-text focus:border-primary focus:outline-hidden transition appearance-none cursor-pointer"
               >
                 <option value="all">All Categories</option>
-                {categories.map(category => (
-                  <option key={category} value={category}>{category}</option>
+                {categories.map((category) => (
+                  <option key={category} value={category}>
+                    {category}
+                  </option>
                 ))}
               </select>
             </div>
@@ -169,7 +194,6 @@ const OutOfStock = () => {
               className="rounded-2xl border border-border bg-surface p-5 sm:p-6 shadow-xs hover:border-text-muted/40 transition flex flex-col gap-4"
             >
               <div className="flex flex-col lg:flex-row lg:items-start justify-between gap-4">
-                
                 <div className="flex gap-4 items-start flex-1 min-w-0">
                   <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-danger/10 border border-danger/20 flex items-center justify-center shrink-0 text-danger">
                     <PackageX size={32} />
@@ -191,7 +215,7 @@ const OutOfStock = () => {
                       {product.name}
                     </h3>
                     <p className="text-xs font-mono text-text-muted mt-0.5">
-                      SKU: {product.sku || 'N/A'}
+                      SKU: {product.sku || "N/A"}
                     </p>
                   </div>
                 </div>
@@ -199,16 +223,28 @@ const OutOfStock = () => {
                 {/* Price Cards */}
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 shrink-0">
                   <div className="rounded-xl border border-border bg-background/60 p-3 text-center">
-                    <p className="text-[11px] font-bold uppercase text-text-muted">Buying</p>
-                    <p className="text-base font-black text-text mt-0.5">{formatCurrency(product.buyingPrice)}</p>
+                    <p className="text-[11px] font-bold uppercase text-text-muted">
+                      Buying
+                    </p>
+                    <p className="text-base font-black text-text mt-0.5">
+                      {formatCurrency(product.buyingPrice)}
+                    </p>
                   </div>
                   <div className="rounded-xl border border-border bg-background/60 p-3 text-center">
-                    <p className="text-[11px] font-bold uppercase text-text-muted">Selling</p>
-                    <p className="text-base font-black text-text mt-0.5">{formatCurrency(product.sellingPrice)}</p>
+                    <p className="text-[11px] font-bold uppercase text-text-muted">
+                      Selling
+                    </p>
+                    <p className="text-base font-black text-text mt-0.5">
+                      {formatCurrency(product.sellingPrice)}
+                    </p>
                   </div>
                   <div className="col-span-2 sm:col-span-1 rounded-xl border border-border bg-background/60 p-3 text-center">
-                    <p className="text-[11px] font-bold uppercase text-text-muted">Lost Valuation</p>
-                    <p className="text-base font-black text-danger mt-0.5">{formatCurrency(product.inventoryValue || 0)}</p>
+                    <p className="text-[11px] font-bold uppercase text-text-muted">
+                      Lost Valuation
+                    </p>
+                    <p className="text-base font-black text-danger mt-0.5">
+                      {formatCurrency(product.inventoryValue || 0)}
+                    </p>
                   </div>
                 </div>
               </div>
@@ -218,7 +254,9 @@ const OutOfStock = () => {
                 {restockId === product._id ? (
                   <div className="flex flex-wrap items-center gap-3 w-full sm:w-auto bg-background p-3 rounded-xl border border-border animate-fade-in">
                     <div className="flex items-center gap-2 flex-1 sm:flex-none">
-                      <label className="text-xs font-bold text-text-muted whitespace-nowrap">Add Qty:</label>
+                      <label className="text-xs font-bold text-text-muted whitespace-nowrap">
+                        Add Qty:
+                      </label>
                       <input
                         type="number"
                         min="1"
@@ -262,12 +300,17 @@ const OutOfStock = () => {
         {/* Empty State */}
         {filteredProducts.length === 0 && products.length > 0 && (
           <div className="rounded-2xl border border-border bg-surface p-12 text-center">
-            <PackageX size={48} className="text-text-muted mx-auto mb-3 opacity-60" />
-            <p className="text-base font-bold text-text">No matching depleted products</p>
+            <PackageX
+              size={48}
+              className="text-text-muted mx-auto mb-3 opacity-60"
+            />
+            <p className="text-base font-bold text-text">
+              No matching depleted products
+            </p>
             <button
               onClick={() => {
-                setSearchTerm('');
-                setSelectedCategory('all');
+                setSearchTerm("");
+                setSelectedCategory("all");
               }}
               className="mt-3 text-xs font-bold text-primary hover:underline"
             >
@@ -286,7 +329,8 @@ const OutOfStock = () => {
               All Products Are in Stock!
             </h3>
             <p className="text-sm text-text-muted max-w-md mx-auto">
-              Your inventory levels are healthy. None of your catalog items are currently depleted.
+              Your inventory levels are healthy. None of your catalog items are
+              currently depleted.
             </p>
           </div>
         )}

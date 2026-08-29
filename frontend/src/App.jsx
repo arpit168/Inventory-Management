@@ -1,26 +1,26 @@
-import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
-import { Toaster } from 'react-hot-toast';
-import Layout from './components/Layout';
-import ProtectedRoute from './components/ProtectedRoute';
-import PublicRoute from './components/PublicRoute';
-import { AuthProvider } from './context/AuthContext';
-import { ToastProvider } from './context/ToastContext';
-import Dashboard from './pages/Dashboard';
-import ForgotPassword from './pages/ForgotPassword';
-import Login from './pages/Login';
-import Notifications from './pages/Notifications';
-import NotFound from './pages/NotFound';
-import OutOfStock from './pages/OutOfStock';
-import Products from './pages/Products';
-import Profile from './pages/Profile';
-import Register from './pages/Register';
-import Reports from './pages/Reports';
-import ResetPassword from './pages/ResetPassword';
-import Invoices from './pages/Invoices';
-import CustomersLedger from './pages/CustomersLedger';
-import SuppliersLedger from './pages/SuppliersLedger';
-import Expenses from './pages/Expenses';
-import BusinessProfile from './pages/BusinessProfile';
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import { Toaster } from "react-hot-toast";
+import Layout from "./components/Layout";
+import ProtectedRoute from "./components/ProtectedRoute";
+import PublicRoute from "./components/PublicRoute";
+import { AuthProvider } from "./context/AuthContext";
+import { ToastProvider } from "./context/ToastContext";
+import Dashboard from "./pages/Dashboard";
+import ForgotPassword from "./pages/ForgotPassword";
+import Login from "./pages/Login";
+import Notifications from "./pages/Notifications";
+import NotFound from "./pages/NotFound";
+import OutOfStock from "./pages/OutOfStock";
+import Products from "./pages/Products";
+import Profile from "./pages/Profile";
+import Register from "./pages/Register";
+import Reports from "./pages/Reports";
+import ResetPassword from "./pages/ResetPassword";
+import Invoices from "./pages/Invoices";
+import CustomersLedger from "./pages/CustomersLedger";
+import SuppliersLedger from "./pages/SuppliersLedger";
+import Expenses from "./pages/Expenses";
+import BusinessProfile from "./pages/BusinessProfile";
 
 const App = () => (
   <AuthProvider>
@@ -28,11 +28,38 @@ const App = () => (
       <BrowserRouter>
         <Toaster position="top-right" />
         <Routes>
-          <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
-          <Route path="/register" element={<PublicRoute><Register /></PublicRoute>} />
-          <Route path="/forgot-password" element={<PublicRoute><ForgotPassword /></PublicRoute>} />
-          <Route path="/reset-password" element={<PublicRoute><ResetPassword /></PublicRoute>} />
-
+          <Route
+            path="/login"
+            element={
+              <PublicRoute>
+                <Login />
+              </PublicRoute>
+            }
+          />
+          <Route
+            path="/register"
+            element={
+              <PublicRoute>
+                <Register />
+              </PublicRoute>
+            }
+          />
+          <Route
+            path="/forgot-password"
+            element={
+              <PublicRoute>
+                <ForgotPassword />
+              </PublicRoute>
+            }
+          />
+          <Route
+            path="/reset-password"
+            element={
+              <PublicRoute>
+                <ResetPassword />
+              </PublicRoute>
+            }
+          />
 
           <Route
             element={

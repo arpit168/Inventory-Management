@@ -42,7 +42,8 @@ body::-webkit-scrollbar {
     --scroll-track: rgba(226, 232, 240, 0.5);
   }
 
-  html.dark, .force-dark {
+  html.dark,
+  .force-dark {
     --color-primary: #22d3ee;
     --color-primary-hover: #06b6d4;
     --color-secondary: #94a3b8;

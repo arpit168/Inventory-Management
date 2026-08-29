@@ -1,10 +1,10 @@
-import Invoice from '../models/Invoice.js';
-import BusinessProfile from '../models/BusinessProfile.js';
-import Counter from '../models/Counter.js';
-import Customer from '../models/Customer.js';
-import LedgerEntry from '../models/LedgerEntry.js';
-import { addNotification } from '../utils/notifications.js';
-import { sendEmail, generateInvoiceEmailTemplate } from '../utils/email.js';
+import Invoice from "../models/Invoice.js";
+import BusinessProfile from "../models/BusinessProfile.js";
+import Counter from "../models/Counter.js";
+import Customer from "../models/Customer.js";
+import LedgerEntry from "../models/LedgerEntry.js";
+import { addNotification } from "../utils/notifications.js";
+import { sendEmail, generateInvoiceEmailTemplate } from "../utils/email.js";
 
 export const getInvoices = async (req, res, next) => {
   try {
@@ -17,9 +17,9 @@ export const getInvoices = async (req, res, next) => {
 
     if (search) {
       query.$or = [
-        { invoiceNumber: { $regex: search, $options: 'i' } },
-        { customerName: { $regex: search, $options: 'i' } },
-        { customerPhone: { $regex: search, $options: 'i' } },
+        { invoiceNumber: { $regex: search, $options: "i" } },
+        { customerName: { $regex: search, $options: "i" } },
+        { customerPhone: { $regex: search, $options: "i" } },
       ];
     }
 
@@ -32,9 +32,12 @@ export const getInvoices = async (req, res, next) => {
 
 export const getInvoiceById = async (req, res, next) => {
   try {
-    const invoice = await Invoice.findOne({ _id: req.params.id, createdBy: req.user.id }).lean();
+    const invoice = await Invoice.findOne({
+      _id: req.params.id,
+      createdBy: req.user.id,
+    }).lean();
     if (!invoice) {
-      return res.status(404).json({ message: 'Invoice not found' });
+      return res.status(404).json({ message: "Invoice not found" });
     }
     return res.status(200).json({ invoice });
   } catch (error) {
@@ -52,14 +55,16 @@ export const createInvoice = async (req, res, next) => {
       customerAddress,
       items = [],
       discount = 0,
-      status = 'unpaid',
+      status = "unpaid",
       dueDate,
       notes,
       businessProfileId,
     } = req.body;
 
     if (!customerName || items.length === 0) {
-      return res.status(400).json({ message: 'Customer name and at least one item are required' });
+      return res
+        .status(400)
+        .json({ message: "Customer name and at least one item are required" });
     }
 
     let subTotal = 0;
@@ -91,16 +96,18 @@ export const createInvoice = async (req, res, next) => {
 
     // Generate unique invoice number e.g. INV-2026-XXXX
     const counter = await Counter.findOneAndUpdate(
-      { id: 'invoiceNumber', user: req.user.id },
+      { id: "invoiceNumber", user: req.user.id },
       { $inc: { seq: 1 } },
-      { new: true, upsert: true }
+      { new: true, upsert: true },
     );
-    const invoiceNumber = `INV-${new Date().getFullYear()}-${String(counter.seq + 100).padStart(4, '0')}`;
-
+    const invoiceNumber = `INV-${new Date().getFullYear()}-${String(counter.seq + 100).padStart(4, "0")}`;
 
     let profileSnapshot = null;
     if (businessProfileId) {
-      const p = await BusinessProfile.findOne({ _id: businessProfileId, createdBy: req.user.id });
+      const p = await BusinessProfile.findOne({
+        _id: businessProfileId,
+        createdBy: req.user.id,
+      });
       if (p) {
         profileSnapshot = {
           businessName: p.businessName,
@@ -109,13 +116,17 @@ export const createInvoice = async (req, res, next) => {
           email: p.email,
           phone: p.phone,
           gstNumber: p.gstNumber,
-          address: [p.address, p.city, p.state, p.postalCode].filter(Boolean).join(', '),
+          address: [p.address, p.city, p.state, p.postalCode]
+            .filter(Boolean)
+            .join(", "),
         };
       }
     }
 
     if (!profileSnapshot) {
-      const defaultP = await BusinessProfile.findOne({ createdBy: req.user.id }).sort({ isDefault: -1, createdAt: -1 });
+      const defaultP = await BusinessProfile.findOne({
+        createdBy: req.user.id,
+      }).sort({ isDefault: -1, createdAt: -1 });
       if (defaultP) {
         profileSnapshot = {
           businessName: defaultP.businessName,
@@ -124,12 +135,19 @@ export const createInvoice = async (req, res, next) => {
           email: defaultP.email,
           phone: defaultP.phone,
           gstNumber: defaultP.gstNumber,
-          address: [defaultP.address, defaultP.city, defaultP.state, defaultP.postalCode].filter(Boolean).join(', '),
+          address: [
+            defaultP.address,
+            defaultP.city,
+            defaultP.state,
+            defaultP.postalCode,
+          ]
+            .filter(Boolean)
+            .join(", "),
         };
       } else {
         profileSnapshot = {
-          businessName: 'Inventory Management Shop',
-          ownerName: req.user.name || 'Owner',
+          businessName: "Inventory Management Shop",
+          ownerName: req.user.name || "Owner",
         };
       }
     }
@@ -153,11 +171,14 @@ export const createInvoice = async (req, res, next) => {
     });
 
     if (customerId) {
-      const customer = await Customer.findOne({ _id: customerId, createdBy: req.user.id });
+      const customer = await Customer.findOne({
+        _id: customerId,
+        createdBy: req.user.id,
+      });
       if (customer) {
         await LedgerEntry.create({
           customer: customer._id,
-          type: 'credit',
+          type: "credit",
           amount: grandTotal,
           description: `Invoice ${invoiceNumber} generated`,
           invoice: invoice._id,
@@ -171,13 +192,15 @@ export const createInvoice = async (req, res, next) => {
 
     await addNotification(
       req.user.id,
-      'inventory_update',
-      'Invoice Created',
+      "inventory_update",
+      "Invoice Created",
       `Invoice ${invoiceNumber} generated for ${customerName} (₹${grandTotal.toFixed(2)})`,
-      customerName
+      customerName,
     );
 
-    return res.status(201).json({ invoice, message: 'Invoice created successfully' });
+    return res
+      .status(201)
+      .json({ invoice, message: "Invoice created successfully" });
   } catch (error) {
     return next(error);
   }
@@ -185,9 +208,12 @@ export const createInvoice = async (req, res, next) => {
 
 export const updateInvoice = async (req, res, next) => {
   try {
-    const invoice = await Invoice.findOne({ _id: req.params.id, createdBy: req.user.id });
+    const invoice = await Invoice.findOne({
+      _id: req.params.id,
+      createdBy: req.user.id,
+    });
     if (!invoice) {
-      return res.status(404).json({ message: 'Invoice not found' });
+      return res.status(404).json({ message: "Invoice not found" });
     }
 
     const { status, notes, dueDate } = req.body;
@@ -199,13 +225,15 @@ export const updateInvoice = async (req, res, next) => {
 
     await addNotification(
       req.user.id,
-      'inventory_update',
-      'Invoice Updated',
+      "inventory_update",
+      "Invoice Updated",
       `Invoice ${invoice.invoiceNumber} status marked as ${invoice.status.toUpperCase()}`,
-      invoice.customerName
+      invoice.customerName,
     );
 
-    return res.status(200).json({ invoice, message: 'Invoice updated successfully' });
+    return res
+      .status(200)
+      .json({ invoice, message: "Invoice updated successfully" });
   } catch (error) {
     return next(error);
   }
@@ -213,20 +241,23 @@ export const updateInvoice = async (req, res, next) => {
 
 export const deleteInvoice = async (req, res, next) => {
   try {
-    const invoice = await Invoice.findOneAndDelete({ _id: req.params.id, createdBy: req.user.id });
+    const invoice = await Invoice.findOneAndDelete({
+      _id: req.params.id,
+      createdBy: req.user.id,
+    });
     if (!invoice) {
-      return res.status(404).json({ message: 'Invoice not found' });
+      return res.status(404).json({ message: "Invoice not found" });
     }
 
     await addNotification(
       req.user.id,
-      'inventory_update',
-      'Invoice Deleted',
+      "inventory_update",
+      "Invoice Deleted",
       `Invoice ${invoice.invoiceNumber} was removed.`,
-      invoice.customerName
+      invoice.customerName,
     );
 
-    return res.status(200).json({ message: 'Invoice deleted successfully' });
+    return res.status(200).json({ message: "Invoice deleted successfully" });
   } catch (error) {
     return next(error);
   }
@@ -234,19 +265,24 @@ export const deleteInvoice = async (req, res, next) => {
 
 export const emailInvoice = async (req, res, next) => {
   try {
-    const invoice = await Invoice.findOne({ _id: req.params.id, createdBy: req.user.id });
+    const invoice = await Invoice.findOne({
+      _id: req.params.id,
+      createdBy: req.user.id,
+    });
     if (!invoice) {
-      return res.status(404).json({ message: 'Invoice not found' });
+      return res.status(404).json({ message: "Invoice not found" });
     }
 
     const { targetEmail } = req.body;
     const recipient = targetEmail || invoice.customerEmail;
 
     if (!recipient) {
-      return res.status(400).json({ message: 'No recipient email address provided' });
+      return res
+        .status(400)
+        .json({ message: "No recipient email address provided" });
     }
 
-    const businessName = invoice.businessProfile?.businessName || 'Our Shop';
+    const businessName = invoice.businessProfile?.businessName || "Our Shop";
 
     const html = generateInvoiceEmailTemplate({
       businessName,
@@ -265,10 +301,12 @@ export const emailInvoice = async (req, res, next) => {
     });
 
     if (!sent) {
-      return res.status(500).json({ message: 'Failed to dispatch email' });
+      return res.status(500).json({ message: "Failed to dispatch email" });
     }
 
-    return res.status(200).json({ message: `Invoice emailed successfully to ${recipient}` });
+    return res
+      .status(200)
+      .json({ message: `Invoice emailed successfully to ${recipient}` });
   } catch (error) {
     return next(error);
   }

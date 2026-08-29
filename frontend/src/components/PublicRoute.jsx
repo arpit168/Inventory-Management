@@ -1,6 +1,6 @@
-import { Navigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
-import LoadingScreen from './LoadingScreen';
+import { Navigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
+import LoadingScreen from "./LoadingScreen";
 
 const PublicRoute = ({ children }) => {
   const { token, loading } = useAuth();

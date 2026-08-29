@@ -1,4 +1,4 @@
-import express from 'express';
+import express from "express";
 
 import {
   register,
@@ -9,35 +9,25 @@ import {
   updateProfile,
   changePassword,
   logout,
-} from '../controllers/authController.js';
+} from "../controllers/authController.js";
 
-import protect from '../middleware/authMiddleware.js';
+import protect from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
-router.post('/register', register);
+router.post("/register", register);
 
-router.post('/login', login);
+router.post("/login", login);
 
-router.post(
-  '/forgot-password',
-  forgotPassword
-);
+router.post("/forgot-password", forgotPassword);
 
-router.post(
-  '/reset-password',
-  resetPassword
-);
+router.post("/reset-password", resetPassword);
 
-router.get('/me', protect, getProfile);
-router.put('/profile', protect, updateProfile);
+router.get("/me", protect, getProfile);
+router.put("/profile", protect, updateProfile);
 
-router.put(
-  '/change-password',
-  protect,
-  changePassword
-);
+router.put("/change-password", protect, changePassword);
 
-router.post('/logout', protect, logout);
+router.post("/logout", protect, logout);
 
 export default router;

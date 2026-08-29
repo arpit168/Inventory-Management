@@ -1,8 +1,8 @@
-import nodemailer from 'nodemailer';
+import nodemailer from "nodemailer";
 
 export const sendEmail = async ({ to, subject, html, text }) => {
   if (!to) {
-    console.warn('sendEmail called without recipient email address.');
+    console.warn("sendEmail called without recipient email address.");
     return false;
   }
 
@@ -10,9 +10,13 @@ export const sendEmail = async ({ to, subject, html, text }) => {
   const user = process.env.EMAIL_USER || process.env.SMTP_USER;
   const pass = process.env.EMAIL_PASS || process.env.SMTP_PASS;
   const port = Number(process.env.EMAIL_PORT || process.env.SMTP_PORT || 587);
-  const from = process.env.EMAIL_FROM || process.env.SMTP_FROM || process.env.FROM_EMAIL || user;
+  const from =
+    process.env.EMAIL_FROM ||
+    process.env.SMTP_FROM ||
+    process.env.FROM_EMAIL ||
+    user;
 
-  if (host && user && pass && user !== 'your_email@gmail.com') {
+  if (host && user && pass && user !== "your_email@gmail.com") {
     try {
       const transporter = nodemailer.createTransport({
         host,
@@ -28,42 +32,44 @@ export const sendEmail = async ({ to, subject, html, text }) => {
         text: text || subject,
         html,
       });
-      console.log('✅ SMTP Email sent successfully: %s', info.messageId);
+      console.log("✅ SMTP Email sent successfully: %s", info.messageId);
       return true;
     } catch (err) {
-      console.error('❌ Failed to send SMTP email:', err.message);
+      console.error("❌ Failed to send SMTP email:", err.message);
     }
-  } else if (process.env.NODE_ENV === 'production') {
-    console.error('❌ SMTP credentials missing or incomplete in production environment variables.');
+  } else if (process.env.NODE_ENV === "production") {
+    console.error(
+      "❌ SMTP credentials missing or incomplete in production environment variables.",
+    );
   }
 
   // Graceful dev logging if SMTP is unconfigured or placeholders used
-  console.log('====================================================');
-  console.log('📬 [EMAIL DISPATCH LOG] (Dev / Placeholder Mode)');
+  console.log("====================================================");
+  console.log("📬 [EMAIL DISPATCH LOG] (Dev / Placeholder Mode)");
   console.log(`From: ${from}`);
   console.log(`To: ${to}`);
   console.log(`Subject: ${subject}`);
-  console.log(`Preview: ${text || 'HTML Content generated'}`);
-  console.log('====================================================');
+  console.log(`Preview: ${text || "HTML Content generated"}`);
+  console.log("====================================================");
   return true;
 };
 
 export const generateLedgerEmailTemplate = ({
-  businessName = 'Our Shop',
+  businessName = "Our Shop",
   customerName,
   transactionType,
   amount,
   previousBalance,
   updatedBalance,
   date = new Date(),
-  notes = '-',
+  notes = "-",
 }) => {
-  const isCredit = transactionType === 'credit';
-  const typeLabel = isCredit ? 'Credit Given (Due Added)' : 'Payment Received';
-  const color = isCredit ? '#ef4444' : '#10b981'; // Red for credit due, Green for payment got
-  const formattedDate = new Date(date).toLocaleString('en-IN', {
-    dateStyle: 'medium',
-    timeStyle: 'short',
+  const isCredit = transactionType === "credit";
+  const typeLabel = isCredit ? "Credit Given (Due Added)" : "Payment Received";
+  const color = isCredit ? "#ef4444" : "#10b981"; // Red for credit due, Green for payment got
+  const formattedDate = new Date(date).toLocaleString("en-IN", {
+    dateStyle: "medium",
+    timeStyle: "short",
   });
 
   return `
@@ -133,15 +139,17 @@ export const generateLedgerEmailTemplate = ({
 };
 
 export const generateInvoiceEmailTemplate = ({
-  businessName = 'Our Shop',
+  businessName = "Our Shop",
   customerName,
   invoiceNumber,
   grandTotal,
   dueDate,
   items = [],
-  notes = '',
+  notes = "",
 }) => {
-  const formattedDueDate = new Date(dueDate).toLocaleDateString('en-IN', { dateStyle: 'medium' });
+  const formattedDueDate = new Date(dueDate).toLocaleDateString("en-IN", {
+    dateStyle: "medium",
+  });
 
   const itemsRows = items
     .map(
@@ -152,9 +160,9 @@ export const generateInvoiceEmailTemplate = ({
       <td style="padding: 10px; border-bottom: 1px solid #e2e8f0; text-align: right;">₹${Number(item.unitPrice).toFixed(2)}</td>
       <td style="padding: 10px; border-bottom: 1px solid #e2e8f0; text-align: right; font-weight: bold;">₹${Number(item.total).toFixed(2)}</td>
     </tr>
-  `
+  `,
     )
-    .join('');
+    .join("");
 
   return `
     <!DOCTYPE html>
@@ -208,7 +216,7 @@ export const generateInvoiceEmailTemplate = ({
             Grand Total Due: <span>₹${Number(grandTotal).toFixed(2)}</span>
           </div>
 
-          ${notes ? `<p style="font-size: 13px; color: #64748b; background: #f8fafc; padding: 12px; border-radius: 6px;"><strong>Notes:</strong> ${notes}</p>` : ''}
+          ${notes ? `<p style="font-size: 13px; color: #64748b; background: #f8fafc; padding: 12px; border-radius: 6px;"><strong>Notes:</strong> ${notes}</p>` : ""}
 
           <p style="font-size: 14px; color: #64748b; margin-top: 30px;">
             Please ensure timely settlement. If you have already paid, please ignore this notice.

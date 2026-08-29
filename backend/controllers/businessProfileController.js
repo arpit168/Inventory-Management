@@ -1,5 +1,5 @@
-import BusinessProfile from '../models/BusinessProfile.js';
-import { addNotification } from '../utils/notifications.js';
+import BusinessProfile from "../models/BusinessProfile.js";
+import { addNotification } from "../utils/notifications.js";
 
 export const getProfiles = async (req, res, next) => {
   try {
@@ -30,14 +30,21 @@ export const createProfile = async (req, res, next) => {
     } = req.body;
 
     if (!businessName || !ownerName) {
-      return res.status(400).json({ message: 'Business Name and Owner Name are required' });
+      return res
+        .status(400)
+        .json({ message: "Business Name and Owner Name are required" });
     }
 
-    const existingCount = await BusinessProfile.countDocuments({ createdBy: req.user.id });
+    const existingCount = await BusinessProfile.countDocuments({
+      createdBy: req.user.id,
+    });
     const makeDefault = existingCount === 0 || isDefault === true;
 
     if (makeDefault) {
-      await BusinessProfile.updateMany({ createdBy: req.user.id }, { $set: { isDefault: false } });
+      await BusinessProfile.updateMany(
+        { createdBy: req.user.id },
+        { $set: { isDefault: false } },
+      );
     }
 
     const profile = await BusinessProfile.create({
@@ -58,13 +65,15 @@ export const createProfile = async (req, res, next) => {
 
     await addNotification(
       req.user.id,
-      'inventory_update',
-      'Business Profile Created',
+      "inventory_update",
+      "Business Profile Created",
       `Shop profile "${businessName}" added successfully.`,
-      businessName
+      businessName,
     );
 
-    return res.status(201).json({ profile, message: 'Business profile created successfully' });
+    return res
+      .status(201)
+      .json({ profile, message: "Business profile created successfully" });
   } catch (error) {
     return next(error);
   }
@@ -72,24 +81,27 @@ export const createProfile = async (req, res, next) => {
 
 export const updateProfile = async (req, res, next) => {
   try {
-    const profile = await BusinessProfile.findOne({ _id: req.params.id, createdBy: req.user.id });
+    const profile = await BusinessProfile.findOne({
+      _id: req.params.id,
+      createdBy: req.user.id,
+    });
     if (!profile) {
-      return res.status(404).json({ message: 'Business profile not found' });
+      return res.status(404).json({ message: "Business profile not found" });
     }
 
     const fields = [
-      'businessName',
-      'ownerName',
-      'logo',
-      'email',
-      'phone',
-      'gstNumber',
-      'address',
-      'city',
-      'state',
-      'country',
-      'postalCode',
-      'isDefault',
+      "businessName",
+      "ownerName",
+      "logo",
+      "email",
+      "phone",
+      "gstNumber",
+      "address",
+      "city",
+      "state",
+      "country",
+      "postalCode",
+      "isDefault",
     ];
 
     fields.forEach((field) => {
@@ -101,7 +113,7 @@ export const updateProfile = async (req, res, next) => {
     if (profile.isDefault) {
       await BusinessProfile.updateMany(
         { createdBy: req.user.id, _id: { $ne: profile._id } },
-        { $set: { isDefault: false } }
+        { $set: { isDefault: false } },
       );
     }
 
@@ -109,13 +121,15 @@ export const updateProfile = async (req, res, next) => {
 
     await addNotification(
       req.user.id,
-      'inventory_update',
-      'Business Profile Updated',
+      "inventory_update",
+      "Business Profile Updated",
       `Shop profile "${profile.businessName}" updated successfully.`,
-      profile.businessName
+      profile.businessName,
     );
 
-    return res.status(200).json({ profile, message: 'Business profile updated successfully' });
+    return res
+      .status(200)
+      .json({ profile, message: "Business profile updated successfully" });
   } catch (error) {
     return next(error);
   }
@@ -123,13 +137,18 @@ export const updateProfile = async (req, res, next) => {
 
 export const deleteProfile = async (req, res, next) => {
   try {
-    const profile = await BusinessProfile.findOneAndDelete({ _id: req.params.id, createdBy: req.user.id });
+    const profile = await BusinessProfile.findOneAndDelete({
+      _id: req.params.id,
+      createdBy: req.user.id,
+    });
     if (!profile) {
-      return res.status(404).json({ message: 'Business profile not found' });
+      return res.status(404).json({ message: "Business profile not found" });
     }
 
     if (profile.isDefault) {
-      const remaining = await BusinessProfile.findOne({ createdBy: req.user.id });
+      const remaining = await BusinessProfile.findOne({
+        createdBy: req.user.id,
+      });
       if (remaining) {
         remaining.isDefault = true;
         await remaining.save();
@@ -138,13 +157,15 @@ export const deleteProfile = async (req, res, next) => {
 
     await addNotification(
       req.user.id,
-      'inventory_update',
-      'Business Profile Removed',
+      "inventory_update",
+      "Business Profile Removed",
       `Shop profile "${profile.businessName}" removed.`,
-      profile.businessName
+      profile.businessName,
     );
 
-    return res.status(200).json({ message: 'Business profile deleted successfully' });
+    return res
+      .status(200)
+      .json({ message: "Business profile deleted successfully" });
   } catch (error) {
     return next(error);
   }

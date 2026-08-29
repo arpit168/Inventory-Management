@@ -1,9 +1,9 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
 const invoiceItemSchema = new mongoose.Schema({
   product: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Product',
+    ref: "Product",
   },
   name: { type: String, required: true },
   quantity: { type: Number, required: true, min: 1 },
@@ -20,7 +20,7 @@ const invoiceSchema = new mongoose.Schema(
     },
     customerName: {
       type: String,
-      required: [true, 'Customer name is required'],
+      required: [true, "Customer name is required"],
       trim: true,
     },
     customerEmail: {
@@ -67,30 +67,30 @@ const invoiceSchema = new mongoose.Schema(
     },
     status: {
       type: String,
-      enum: ['paid', 'unpaid', 'partial'],
-      default: 'unpaid',
+      enum: ["paid", "unpaid", "partial"],
+      default: "unpaid",
     },
     dueDate: {
       type: Date,
     },
     notes: {
       type: String,
-      default: 'Thank you for your business!',
+      default: "Thank you for your business!",
     },
     createdBy: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'User',
+      ref: "User",
       required: true,
     },
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 invoiceSchema.index({ invoiceNumber: 1, createdBy: 1 }, { unique: true });
 invoiceSchema.index({ createdBy: 1 });
 invoiceSchema.index({ status: 1 });
 
-const Invoice = mongoose.model('Invoice', invoiceSchema);
+const Invoice = mongoose.model("Invoice", invoiceSchema);
 export default Invoice;

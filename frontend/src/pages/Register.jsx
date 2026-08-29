@@ -1,42 +1,54 @@
-import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { ArrowRight, Sparkles, ShieldCheck } from 'lucide-react';
-import { useAuth } from '../context/AuthContext';
-import { useToast } from '../context/ToastContext';
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { ArrowRight, Sparkles, ShieldCheck } from "lucide-react";
+import { useAuth } from "../context/AuthContext";
+import { useToast } from "../context/ToastContext";
 
 const Register = () => {
   const navigate = useNavigate();
   const { register } = useAuth();
   const { showToast } = useToast();
   const [loading, setLoading] = useState(false);
-  const [form, setForm] = useState({ name: '', email: '', password: '', confirmPassword: '' });
+  const [form, setForm] = useState({
+    name: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+  });
 
   const handleSubmit = async (event) => {
     event.preventDefault();
 
     if (!form.name || !form.email || !form.password) {
-      showToast('Please complete the form.', 'warning');
+      showToast("Please complete the form.", "warning");
       return;
     }
 
     if (form.password.length < 8) {
-      showToast('Password must be at least 8 characters.', 'warning');
+      showToast("Password must be at least 8 characters.", "warning");
       return;
     }
 
     if (form.password !== form.confirmPassword) {
-      showToast('Passwords do not match.', 'warning');
+      showToast("Passwords do not match.", "warning");
       return;
     }
 
     setLoading(true);
 
     try {
-      await register({ name: form.name, email: form.email, password: form.password });
-      showToast('Account created successfully.', 'success');
-      navigate('/dashboard');
+      await register({
+        name: form.name,
+        email: form.email,
+        password: form.password,
+      });
+      showToast("Account created successfully.", "success");
+      navigate("/dashboard");
     } catch (error) {
-      showToast(error.response?.data?.message || 'Registration failed.', 'error');
+      showToast(
+        error.response?.data?.message || "Registration failed.",
+        "error",
+      );
     } finally {
       setLoading(false);
     }
@@ -50,54 +62,87 @@ const Register = () => {
             <Sparkles size={24} />
           </div>
           <div>
-            <p className="text-xs uppercase tracking-[0.35em] text-primary font-extrabold">Inventory Management Pro</p>
-            <h1 className="mt-1 text-2xl sm:text-3xl font-black text-text tracking-tight">Create Administrator Account</h1>
+            <p className="text-xs uppercase tracking-[0.35em] text-primary font-extrabold">
+              Inventory Management Pro
+            </p>
+            <h1 className="mt-1 text-2xl sm:text-3xl font-black text-text tracking-tight">
+              Create Administrator Account
+            </h1>
           </div>
         </div>
 
         <p className="mt-3 text-sm text-text-muted max-w-2xl leading-relaxed">
-          Register to set up your shop workspace, track real-time stock valuations, generate invoices, and manage customer ledgers.
+          Register to set up your shop workspace, track real-time stock
+          valuations, generate invoices, and manage customer ledgers.
         </p>
 
-        <form onSubmit={handleSubmit} className="mt-6 grid gap-4 sm:grid-cols-2">
+        <form
+          onSubmit={handleSubmit}
+          className="mt-6 grid gap-4 sm:grid-cols-2"
+        >
           <div className="sm:col-span-2">
-            <label className="mb-1.5 block text-xs font-bold text-text-muted uppercase tracking-wider">Full Name *</label>
+            <label className="mb-1.5 block text-xs font-bold text-text-muted uppercase tracking-wider">
+              Full Name *
+            </label>
             <input
               value={form.name}
-              onChange={(event) => setForm((current) => ({ ...current, name: event.target.value }))}
+              onChange={(event) =>
+                setForm((current) => ({ ...current, name: event.target.value }))
+              }
               className="w-full rounded-xl border border-border bg-background px-4 py-3 text-sm font-semibold text-text placeholder:text-text-muted focus:border-primary focus:outline-hidden transition shadow-xs"
               placeholder="e.g., Arpit Sharma"
             />
           </div>
 
           <div>
-            <label className="mb-1.5 block text-xs font-bold text-text-muted uppercase tracking-wider">Email Address *</label>
+            <label className="mb-1.5 block text-xs font-bold text-text-muted uppercase tracking-wider">
+              Email Address *
+            </label>
             <input
               type="email"
               value={form.email}
-              onChange={(event) => setForm((current) => ({ ...current, email: event.target.value }))}
+              onChange={(event) =>
+                setForm((current) => ({
+                  ...current,
+                  email: event.target.value,
+                }))
+              }
               className="w-full rounded-xl border border-border bg-background px-4 py-3 text-sm font-semibold text-text placeholder:text-text-muted focus:border-primary focus:outline-hidden transition shadow-xs"
               placeholder="shop@example.com"
             />
           </div>
 
           <div>
-            <label className="mb-1.5 block text-xs font-bold text-text-muted uppercase tracking-wider">Password (8+ chars) *</label>
+            <label className="mb-1.5 block text-xs font-bold text-text-muted uppercase tracking-wider">
+              Password (8+ chars) *
+            </label>
             <input
               type="password"
               value={form.password}
-              onChange={(event) => setForm((current) => ({ ...current, password: event.target.value }))}
+              onChange={(event) =>
+                setForm((current) => ({
+                  ...current,
+                  password: event.target.value,
+                }))
+              }
               className="w-full rounded-xl border border-border bg-background px-4 py-3 text-sm font-semibold text-text placeholder:text-text-muted focus:border-primary focus:outline-hidden transition shadow-xs"
               placeholder="••••••••"
             />
           </div>
 
           <div className="sm:col-span-2">
-            <label className="mb-1.5 block text-xs font-bold text-text-muted uppercase tracking-wider">Confirm Password *</label>
+            <label className="mb-1.5 block text-xs font-bold text-text-muted uppercase tracking-wider">
+              Confirm Password *
+            </label>
             <input
               type="password"
               value={form.confirmPassword}
-              onChange={(event) => setForm((current) => ({ ...current, confirmPassword: event.target.value }))}
+              onChange={(event) =>
+                setForm((current) => ({
+                  ...current,
+                  confirmPassword: event.target.value,
+                }))
+              }
               className="w-full rounded-xl border border-border bg-background px-4 py-3 text-sm font-semibold text-text placeholder:text-text-muted focus:border-primary focus:outline-hidden transition shadow-xs"
               placeholder="Repeat exact password"
             />
@@ -109,7 +154,11 @@ const Register = () => {
               disabled={loading}
               className="flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-5 py-3.5 text-sm font-bold text-slate-950 shadow-md shadow-primary/20 hover:bg-primary-hover disabled:opacity-50 transition active:scale-98"
             >
-              <span>{loading ? 'Creating Account Workspace...' : 'Create Account & Access Dashboard'}</span>
+              <span>
+                {loading
+                  ? "Creating Account Workspace..."
+                  : "Create Account & Access Dashboard"}
+              </span>
               <ArrowRight size={16} />
             </button>
           </div>
@@ -121,8 +170,11 @@ const Register = () => {
             <span>Instant workspace setup</span>
           </div>
           <p>
-            Already registered?{' '}
-            <Link to="/login" className="text-primary hover:underline transition">
+            Already registered?{" "}
+            <Link
+              to="/login"
+              className="text-primary hover:underline transition"
+            >
               Sign in here &rarr;
             </Link>
           </p>

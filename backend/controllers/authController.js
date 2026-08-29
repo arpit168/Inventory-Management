@@ -1,14 +1,14 @@
-import bcrypt from 'bcryptjs';
-import crypto from 'crypto';
-import jwt from 'jsonwebtoken';
+import bcrypt from "bcryptjs";
+import crypto from "crypto";
+import jwt from "jsonwebtoken";
 
-import User from '../models/User.js';
-import { addNotification } from '../utils/notifications.js';
-import { sendEmail } from '../utils/email.js';
+import User from "../models/User.js";
+import { addNotification } from "../utils/notifications.js";
+import { sendEmail } from "../utils/email.js";
 
 const signToken = (userId) =>
   jwt.sign({ id: userId }, process.env.JWT_SECRET, {
-    expiresIn: '7d',
+    expiresIn: "7d",
   });
 
 export const register = async (req, res, next) => {
@@ -18,13 +18,13 @@ export const register = async (req, res, next) => {
     if (!name || !email || !password) {
       return res
         .status(400)
-        .json({ message: 'Name, email, and password are required' });
+        .json({ message: "Name, email, and password are required" });
     }
 
     if (password.length < 8) {
       return res
         .status(400)
-        .json({ message: 'Password must be at least 8 characters long' });
+        .json({ message: "Password must be at least 8 characters long" });
     }
 
     const existingUser = await User.findOne({
@@ -34,7 +34,7 @@ export const register = async (req, res, next) => {
     if (existingUser) {
       return res
         .status(409)
-        .json({ message: 'An account with this email already exists' });
+        .json({ message: "An account with this email already exists" });
     }
 
     const hashedPassword = await bcrypt.hash(password, 12);
@@ -50,7 +50,7 @@ export const register = async (req, res, next) => {
     return res.status(201).json({
       token,
       user,
-      message: 'Account registered successfully',
+      message: "Account registered successfully",
     });
   } catch (error) {
     return next(error);
@@ -64,7 +64,7 @@ export const login = async (req, res, next) => {
     if (!email || !password) {
       return res
         .status(400)
-        .json({ message: 'Email and password are required' });
+        .json({ message: "Email and password are required" });
     }
 
     const user = await User.findOne({
@@ -72,17 +72,13 @@ export const login = async (req, res, next) => {
     });
 
     if (!user) {
-      return res
-        .status(401)
-        .json({ message: 'Invalid email or password' });
+      return res.status(401).json({ message: "Invalid email or password" });
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
 
     if (!isMatch) {
-      return res
-        .status(401)
-        .json({ message: 'Invalid email or password' });
+      return res.status(401).json({ message: "Invalid email or password" });
     }
 
     const token = signToken(user._id);
@@ -90,7 +86,7 @@ export const login = async (req, res, next) => {
     return res.status(200).json({
       token,
       user,
-      message: 'Login successful',
+      message: "Login successful",
     });
   } catch (error) {
     return next(error);
@@ -103,7 +99,7 @@ export const forgotPassword = async (req, res, next) => {
 
     if (!email) {
       return res.status(400).json({
-        message: 'Email is required',
+        message: "Email is required",
       });
     }
 
@@ -113,36 +109,38 @@ export const forgotPassword = async (req, res, next) => {
 
     if (!user) {
       return res.status(200).json({
-        message: 'If the account exists, a reset token has been generated.',
+        message: "If the account exists, a reset token has been generated.",
       });
     }
 
-    const resetToken = crypto.randomBytes(32).toString('hex');
+    const resetToken = crypto.randomBytes(32).toString("hex");
 
     user.resetPasswordToken = crypto
-      .createHash('sha256')
+      .createHash("sha256")
       .update(resetToken)
-      .digest('hex');
+      .digest("hex");
 
     user.resetPasswordExpires = Date.now() + 15 * 60 * 1000;
 
     await user.save();
 
     const resetUrl = `${
-      process.env.FRONTEND_URL || process.env.CLIENT_URL || 'http://localhost:5173'
+      process.env.FRONTEND_URL ||
+      process.env.CLIENT_URL ||
+      "http://localhost:5173"
     }/reset-password?token=${resetToken}`;
 
     await addNotification(
       user._id,
-      'inventory_update',
-      'Password reset requested',
-      'We received a password reset request for your account. Use the reset link or token to continue.',
-      'account'
+      "inventory_update",
+      "Password reset requested",
+      "We received a password reset request for your account. Use the reset link or token to continue.",
+      "account",
     );
 
     await sendEmail({
       to: user.email,
-      subject: 'Password Reset Request - Inventory Pro',
+      subject: "Password Reset Request - Inventory Pro",
       text: `You requested a password reset. Click the following link or copy the token:\n\nReset Link: ${resetUrl}\nReset Token: ${resetToken}\n\nIf you did not request this, ignore this email. This token expires in 15 minutes.`,
       html: `<div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #eee; border-radius: 10px;">
         <h2 style="color: #0891b2;">Password Reset Request</h2>
@@ -157,10 +155,11 @@ export const forgotPassword = async (req, res, next) => {
     });
 
     const response = {
-      message: 'If the account exists, a reset token has been generated and sent to your email.',
+      message:
+        "If the account exists, a reset token has been generated and sent to your email.",
     };
 
-    if (process.env.NODE_ENV !== 'production') {
+    if (process.env.NODE_ENV !== "production") {
       response.resetToken = resetToken;
       response.resetUrl = resetUrl;
     }
@@ -177,20 +176,17 @@ export const resetPassword = async (req, res, next) => {
 
     if (!token || !password) {
       return res.status(400).json({
-        message: 'Token and new password are required',
+        message: "Token and new password are required",
       });
     }
 
     if (password.length < 8) {
       return res.status(400).json({
-        message: 'Password must be at least 8 characters long',
+        message: "Password must be at least 8 characters long",
       });
     }
 
-    const hashedToken = crypto
-      .createHash('sha256')
-      .update(token)
-      .digest('hex');
+    const hashedToken = crypto.createHash("sha256").update(token).digest("hex");
 
     const user = await User.findOne({
       resetPasswordToken: hashedToken,
@@ -199,7 +195,7 @@ export const resetPassword = async (req, res, next) => {
 
     if (!user) {
       return res.status(400).json({
-        message: 'Reset token is invalid or expired',
+        message: "Reset token is invalid or expired",
       });
     }
 
@@ -210,7 +206,7 @@ export const resetPassword = async (req, res, next) => {
     await user.save();
 
     return res.status(200).json({
-      message: 'Password reset successfully. Please log in again.',
+      message: "Password reset successfully. Please log in again.",
     });
   } catch (error) {
     return next(error);
@@ -229,7 +225,7 @@ export const updateProfile = async (req, res, next) => {
     const user = await User.findById(req.user._id);
 
     if (!user) {
-      return res.status(404).json({ message: 'User not found' });
+      return res.status(404).json({ message: "User not found" });
     }
 
     if (name !== undefined) user.name = name;
@@ -240,7 +236,7 @@ export const updateProfile = async (req, res, next) => {
 
     return res.status(200).json({
       user,
-      message: 'Profile updated successfully',
+      message: "Profile updated successfully",
     });
   } catch (error) {
     return next(error);
@@ -253,32 +249,29 @@ export const changePassword = async (req, res, next) => {
 
     if (!currentPassword || !newPassword) {
       return res.status(400).json({
-        message: 'Current and new password are required',
+        message: "Current and new password are required",
       });
     }
 
     if (newPassword.length < 8) {
       return res.status(400).json({
-        message: 'New password must be at least 8 characters long',
+        message: "New password must be at least 8 characters long",
       });
     }
 
-    const user = await User.findById(req.user._id).select('+password');
+    const user = await User.findById(req.user._id).select("+password");
 
     if (!user) {
       return res.status(404).json({
-        message: 'User not found',
+        message: "User not found",
       });
     }
 
-    const isCurrentValid = await bcrypt.compare(
-      currentPassword,
-      user.password
-    );
+    const isCurrentValid = await bcrypt.compare(currentPassword, user.password);
 
     if (!isCurrentValid) {
       return res.status(401).json({
-        message: 'Current password is incorrect',
+        message: "Current password is incorrect",
       });
     }
 
@@ -287,7 +280,7 @@ export const changePassword = async (req, res, next) => {
     await user.save();
 
     return res.status(200).json({
-      message: 'Password changed successfully',
+      message: "Password changed successfully",
     });
   } catch (error) {
     return next(error);
@@ -296,6 +289,6 @@ export const changePassword = async (req, res, next) => {
 
 export const logout = async (_req, res) => {
   return res.status(200).json({
-    message: 'Logged out successfully',
+    message: "Logged out successfully",
   });
 };

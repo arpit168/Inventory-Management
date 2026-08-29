@@ -1,20 +1,20 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
 const businessProfileSchema = new mongoose.Schema(
   {
     businessName: {
       type: String,
-      required: [true, 'Business Name is required'],
+      required: [true, "Business Name is required"],
       trim: true,
     },
     ownerName: {
       type: String,
-      required: [true, 'Owner Name is required'],
+      required: [true, "Owner Name is required"],
       trim: true,
     },
     logo: {
       type: String,
-      default: '',
+      default: "",
     },
     email: {
       type: String,
@@ -45,7 +45,7 @@ const businessProfileSchema = new mongoose.Schema(
     country: {
       type: String,
       trim: true,
-      default: 'India',
+      default: "India",
     },
     postalCode: {
       type: String,
@@ -57,14 +57,17 @@ const businessProfileSchema = new mongoose.Schema(
     },
     createdBy: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'User',
+      ref: "User",
       required: true,
     },
   },
   {
     timestamps: true,
-  }
+  },
 );
 
-const BusinessProfile = mongoose.model('BusinessProfile', businessProfileSchema);
+const BusinessProfile = mongoose.model(
+  "BusinessProfile",
+  businessProfileSchema,
+);
 export default BusinessProfile;
