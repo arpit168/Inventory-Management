@@ -25,6 +25,7 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useScrollLock } from "../hooks/useScrollLock";
 import LoadingScreen from "./LoadingScreen";
+import Footer from "./Footer";
 
 const links = [
   { to: "/dashboard", label: "Dashboard", icon: Home, inBottomBar: true },
@@ -314,8 +315,8 @@ const Layout = () => {
         </header>
 
         {/* ================= PAGE CONTENT ================= */}
-        <main className="flex-1 p-4 pt-20 sm:p-6 sm:pt-24 lg:p-8 lg:pt-24 pb-24 lg:pb-8 relative">
-          <div className="mx-auto max-w-7xl">
+        <main className="flex-1 p-4 pt-20 sm:p-6 sm:pt-24 lg:p-8 lg:pt-24 pb-24 lg:pb-8 relative flex flex-col">
+          <div className="mx-auto max-w-7xl w-full flex-1">
             <AnimatePresence mode="wait">
               {isPageLoading ? (
                 <motion.div
@@ -340,6 +341,7 @@ const Layout = () => {
               )}
             </AnimatePresence>
           </div>
+          <Footer />
         </main>
       </div>
 
