@@ -169,7 +169,7 @@ const Layout = () => {
         </div>
 
         {/* Nav Links Section (Independently Scrollable) */}
-        <nav className="flex-1 overflow-y-auto px-4 py-4 space-y-1.5">
+        <nav className="flex-1 overflow-y-auto px-4 py-1 space-y-1.5">
           {links.map(({ to, label, icon: Icon, inBottomBar }) => {
             const active = location.pathname === to;
 
