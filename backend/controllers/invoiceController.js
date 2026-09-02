@@ -170,7 +170,7 @@ export const createInvoice = async (req, res, next) => {
       createdBy: req.user.id,
     });
 
-    if (customerId) {
+    if (customerId && status === "unpaid") {
       const customer = await Customer.findOne({
         _id: customerId,
         createdBy: req.user.id,
@@ -180,7 +180,7 @@ export const createInvoice = async (req, res, next) => {
           customer: customer._id,
           type: "credit",
           amount: grandTotal,
-          description: `Invoice ${invoiceNumber} generated`,
+          description: `Invoice ${invoiceNumber} generated (Unpaid)`,
           invoice: invoice._id,
           createdBy: req.user.id,
         });
@@ -217,11 +217,27 @@ export const updateInvoice = async (req, res, next) => {
     }
 
     const { status, notes, dueDate } = req.body;
+    const oldStatus = invoice.status;
+
     if (status !== undefined) invoice.status = status;
     if (notes !== undefined) invoice.notes = notes;
     if (dueDate !== undefined) invoice.dueDate = dueDate;
 
     await invoice.save();
+
+    // If status changed to "paid", remove the associated ledger entry
+    if (oldStatus !== "paid" && status === "paid") {
+      const entry = await LedgerEntry.findOne({ invoice: invoice._id, createdBy: req.user.id });
+      if (entry) {
+        await LedgerEntry.deleteOne({ _id: entry._id });
+        const customer = await Customer.findOne({ _id: entry.customer });
+        if (customer) {
+          customer.totalCredit -= entry.amount;
+          customer.netBalance -= entry.amount;
+          await customer.save();
+        }
+      }
+    }
 
     await addNotification(
       req.user.id,

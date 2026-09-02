@@ -49,7 +49,8 @@ const Invoices = () => {
   }, [fetchInvoices]);
 
   const handleStatusToggle = async (invoice) => {
-    const nextStatus = invoice.status === "paid" ? "unpaid" : "paid";
+    if (invoice.status === "paid") return;
+    const nextStatus = "paid";
     try {
       await api.put(`/invoices/${invoice._id}`, { status: nextStatus });
       showToast(`Marked as ${nextStatus.toUpperCase()}`, "success");
@@ -209,9 +210,10 @@ const Invoices = () => {
                       </div>
                       <button
                         onClick={() => handleStatusToggle(inv)}
+                        disabled={isPaid}
                         className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[10px] font-extrabold transition shadow-xs ${
                           isPaid
-                            ? "bg-success/15 text-success hover:bg-success hover:text-white"
+                            ? "bg-success/15 text-success opacity-75 cursor-not-allowed"
                             : "bg-warning/15 text-warning hover:bg-warning hover:text-white"
                         }`}
                       >
@@ -289,9 +291,10 @@ const Invoices = () => {
                       <td className="px-5 py-4">
                         <button
                           onClick={() => handleStatusToggle(inv)}
+                          disabled={isPaid}
                           className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-extrabold transition shadow-xs ${
                             isPaid
-                              ? "bg-success/15 text-success hover:bg-success hover:text-white"
+                              ? "bg-success/15 text-success opacity-75 cursor-not-allowed"
                               : "bg-warning/15 text-warning hover:bg-warning hover:text-white"
                           }`}
                         >

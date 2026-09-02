@@ -301,7 +301,7 @@ const CustomersLedger = () => {
             ) : (
               customers.map((cust) => {
                 const isSelected = selectedCustomer?._id === cust._id;
-                const balance = cust.balance || 0;
+                const balance = cust.netBalance || 0;
                 const isDue = balance > 0;
                 const isAdvance = balance < 0;
 
@@ -413,9 +413,9 @@ const CustomersLedger = () => {
               {/* Balance Summary Banner */}
               <div
                 className={`rounded-2xl p-3 sm:p-4 mb-4 sm:mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 ${
-                  selectedCustomer.balance > 0
+                  selectedCustomer.netBalance > 0
                     ? "bg-red-500/10 border border-red-500/20 text-red-600 dark:text-red-400"
-                    : selectedCustomer.balance < 0
+                    : selectedCustomer.netBalance < 0
                       ? "bg-green-500/10 border border-green-500/20 text-green-600 dark:text-green-400"
                       : "bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white"
                 }`}
@@ -425,14 +425,14 @@ const CustomersLedger = () => {
                     Net Balance
                   </p>
                   <p className="text-lg sm:text-xl font-black mt-0.5">
-                    ₹{Math.abs(selectedCustomer.balance || 0).toFixed(2)}
+                    ₹{Math.abs(selectedCustomer.netBalance || 0).toFixed(2)}
                   </p>
                 </div>
                 <div className="w-full sm:w-auto">
                   <span className="inline-block w-full sm:w-auto text-center rounded-full bg-white dark:bg-gray-800 px-2.5 sm:px-3 py-1 text-[8px] sm:text-xs font-extrabold shadow-sm border border-gray-200 dark:border-gray-700">
-                    {selectedCustomer.balance > 0
+                    {selectedCustomer.netBalance > 0
                       ? "YOU WILL GET (DUE)"
-                      : selectedCustomer.balance < 0
+                      : selectedCustomer.netBalance < 0
                         ? "YOU WILL GIVE (ADVANCE)"
                         : "SETTLED"}
                   </span>
