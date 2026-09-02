@@ -301,7 +301,7 @@ const SuppliersLedger = () => {
             ) : (
               suppliers.map((cust) => {
                 const isSelected = selectedSupplier?._id === cust._id;
-                const balance = cust.balance || 0;
+                const balance = cust.netBalance || 0;
                 const isDue = balance > 0;
                 const isAdvance = balance < 0;
 
@@ -408,9 +408,9 @@ const SuppliersLedger = () => {
               {/* Balance Summary Banner */}
               <div
                 className={`rounded-2xl p-4 mb-6 flex items-center justify-between ${
-                  selectedSupplier.balance > 0
+                  selectedSupplier.netBalance > 0
                     ? "bg-danger/10 border border-danger/20 text-danger"
-                    : selectedSupplier.balance < 0
+                    : selectedSupplier.netBalance < 0
                       ? "bg-success/10 border border-success/20 text-success"
                       : "bg-background border border-border text-text"
                 }`}
@@ -420,14 +420,14 @@ const SuppliersLedger = () => {
                     Net Balance
                   </p>
                   <p className="text-xl font-black mt-0.5">
-                    ₹{Math.abs(selectedSupplier.balance || 0).toFixed(2)}
+                    ₹{Math.abs(selectedSupplier.netBalance || 0).toFixed(2)}
                   </p>
                 </div>
                 <div className="text-right">
                   <span className="rounded-full bg-surface px-3 py-1 text-xs font-extrabold shadow-xs">
-                    {selectedSupplier.balance > 0
+                    {selectedSupplier.netBalance > 0
                       ? "WE WILL GIVE (PAYABLE)"
-                      : selectedSupplier.balance < 0
+                      : selectedSupplier.netBalance < 0
                         ? "WE WILL GET (ADVANCE)"
                         : "SETTLED"}
                   </span>

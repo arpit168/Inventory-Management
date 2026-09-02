@@ -1,6 +1,7 @@
 import Customer from "../models/Customer.js";
 import LedgerEntry from "../models/LedgerEntry.js";
 import BusinessProfile from "../models/BusinessProfile.js";
+import Invoice from "../models/Invoice.js";
 import { addNotification } from "../utils/notifications.js";
 import { sendEmail, generateLedgerEmailTemplate } from "../utils/email.js";
 
@@ -258,6 +259,17 @@ export const addLedgerEntry = async (req, res, next) => {
 
     await customer.save();
 
+    if (customer.netBalance <= 0) {
+      const entriesWithInvoice = await LedgerEntry.find({ customer: customer._id, invoice: { $exists: true, $ne: null } });
+      const invoiceIds = entriesWithInvoice.map(e => e.invoice);
+      if (invoiceIds.length > 0) {
+        await Invoice.updateMany(
+          { _id: { $in: invoiceIds }, status: "unpaid" },
+          { $set: { status: "paid" } }
+        );
+      }
+    }
+
     sendLedgerNotificationEmail(
       req.user.id,
       customer,
@@ -298,6 +310,17 @@ const recalculateCustomerBalance = async (customerId, userId) => {
     { _id: customerId, createdBy: userId },
     { totalCredit, totalDebit, netBalance },
   );
+
+  if (netBalance <= 0) {
+    const entriesWithInvoice = await LedgerEntry.find({ customer: customerId, invoice: { $exists: true, $ne: null } });
+    const invoiceIds = entriesWithInvoice.map(e => e.invoice);
+    if (invoiceIds.length > 0) {
+      await Invoice.updateMany(
+        { _id: { $in: invoiceIds }, status: "unpaid" },
+        { $set: { status: "paid" } }
+      );
+    }
+  }
 };
 
 export const updateLedgerEntry = async (req, res, next) => {
