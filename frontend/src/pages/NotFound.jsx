@@ -1,8 +1,8 @@
 import { Link } from "react-router-dom";
 
 const NotFound = () => (
-  <div className="flex min-h-screen items-center justify-center bg-[radial-gradient(circle_at_top,_rgba(59,130,246,0.28),_transparent_30%),linear-gradient(135deg,_#020617,_#111827)] px-4 py-12">
-    <div className="max-w-xl rounded-[28px] border border-white/10 bg-slate-950/85 p-8 text-center">
+  <div className="flex min-h-screen items-center justify-center bg-black px-4 py-12">
+    <div className="max-w-xl rounded-[28px] border border-white/10 bg-neutral-900/90 p-8 text-center shadow-2xl">
       <p className="text-sm uppercase tracking-[0.35em] text-cyan-300">404</p>
       <h1 className="mt-3 text-3xl font-semibold text-white">
         The page you are looking for is unavailable

@@ -278,14 +278,14 @@ const Products = () => {
       {/* Header Section */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4">
         <div>
-          <div className="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1 rounded-full bg-blue-500/10 text-blue-600 dark:text-blue-400 text-[10px] sm:text-xs font-extrabold mb-1.5 sm:mb-2">
+          <div className="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1 rounded-full bg-primary/10 text-primary text-[10px] sm:text-xs font-extrabold mb-1.5 sm:mb-2">
             <Package size={12} className="sm:w-[14px] sm:h-[14px]" />
             <span>Inventory Management</span>
           </div>
-          <h1 className="text-xl sm:text-2xl md:text-3xl font-black text-gray-900 dark:text-white tracking-tight">
+          <h1 className="text-xl sm:text-2xl md:text-3xl font-black text-text tracking-tight">
             Products Catalog
           </h1>
-          <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 mt-0.5 sm:mt-1">
+          <p className="text-xs sm:text-sm text-text-muted mt-0.5 sm:mt-1">
             Manage inventory stock, adjust quantities, and monitor profit
             valuations.
           </p>
@@ -294,82 +294,82 @@ const Products = () => {
 
       {/* Stats Cards */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
-        <div className="rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-3 sm:p-5 shadow-sm flex items-center justify-between">
+        <div className="rounded-2xl border border-border bg-surface p-3 sm:p-5 shadow-xs flex items-center justify-between">
           <div>
-            <p className="text-[8px] sm:text-xs uppercase tracking-wider font-bold text-gray-500 dark:text-gray-400">
+            <p className="text-[8px] sm:text-xs uppercase tracking-wider font-bold text-text-muted">
               Total Units
             </p>
-            <p className="mt-0.5 sm:mt-1 text-lg sm:text-2xl font-black text-gray-900 dark:text-white">
+            <p className="mt-0.5 sm:mt-1 text-lg sm:text-2xl font-black text-text">
               {formatNumber(filteredBanner.stock)}
             </p>
-            <p className="text-[8px] sm:text-[11px] text-gray-500 dark:text-gray-400 mt-0.5">
+            <p className="text-[8px] sm:text-[11px] text-text-muted mt-0.5">
               Units in stock
             </p>
           </div>
-          <div className="rounded-2xl bg-blue-500/10 p-2.5 sm:p-3.5 text-blue-600 dark:text-blue-400">
+          <div className="rounded-2xl bg-primary/10 p-2.5 sm:p-3.5 text-primary">
             <Package size={18} className="sm:w-6 sm:h-6" />
           </div>
         </div>
 
-        <div className="rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-3 sm:p-5 shadow-sm flex items-center justify-between">
+        <div className="rounded-2xl border border-border bg-surface p-3 sm:p-5 shadow-xs flex items-center justify-between">
           <div>
-            <p className="text-[8px] sm:text-xs uppercase tracking-wider font-bold text-gray-500 dark:text-gray-400">
+            <p className="text-[8px] sm:text-xs uppercase tracking-wider font-bold text-text-muted">
               Stock Value
             </p>
-            <p className="mt-0.5 sm:mt-1 text-lg sm:text-2xl font-black text-gray-900 dark:text-white">
+            <p className="mt-0.5 sm:mt-1 text-lg sm:text-2xl font-black text-text">
               {formatCurrency(filteredBanner.value)}
             </p>
-            <p className="text-[8px] sm:text-[11px] text-gray-500 dark:text-gray-400 mt-0.5">
+            <p className="text-[8px] sm:text-[11px] text-text-muted mt-0.5">
               Total valuation
             </p>
           </div>
-          <div className="rounded-2xl bg-blue-500/10 p-2.5 sm:p-3.5 text-blue-600 dark:text-blue-400">
+          <div className="rounded-2xl bg-primary/10 p-2.5 sm:p-3.5 text-primary">
             <DollarSign size={18} className="sm:w-6 sm:h-6" />
           </div>
         </div>
 
-        <div className="rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-3 sm:p-5 shadow-sm flex items-center justify-between">
+        <div className="rounded-2xl border border-border bg-surface p-3 sm:p-5 shadow-xs flex items-center justify-between">
           <div>
-            <p className="text-[8px] sm:text-xs uppercase tracking-wider font-bold text-gray-500 dark:text-gray-400">
+            <p className="text-[8px] sm:text-xs uppercase tracking-wider font-bold text-text-muted">
               Expected Profit
             </p>
-            <p className="mt-0.5 sm:mt-1 text-lg sm:text-2xl font-black text-green-600 dark:text-green-400">
+            <p className="mt-0.5 sm:mt-1 text-lg sm:text-2xl font-black text-success">
               {formatCurrency(filteredBanner.profit)}
             </p>
-            <p className="text-[8px] sm:text-[11px] text-gray-500 dark:text-gray-400 mt-0.5">
+            <p className="text-[8px] sm:text-[11px] text-text-muted mt-0.5">
               Potential margin
             </p>
           </div>
-          <div className="rounded-2xl bg-green-500/10 p-2.5 sm:p-3.5 text-green-600 dark:text-green-400">
+          <div className="rounded-2xl bg-success/10 p-2.5 sm:p-3.5 text-success">
             <TrendingUp size={18} className="sm:w-6 sm:h-6" />
           </div>
         </div>
 
-        <div className="rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-3 sm:p-5 shadow-sm flex items-center justify-between">
+        <div className="rounded-2xl border border-border bg-surface p-3 sm:p-5 shadow-xs flex items-center justify-between">
           <div>
-            <p className="text-[8px] sm:text-xs uppercase tracking-wider font-bold text-gray-500 dark:text-gray-400">
+            <p className="text-[8px] sm:text-xs uppercase tracking-wider font-bold text-text-muted">
               Potential Loss
             </p>
-            <p className="mt-0.5 sm:mt-1 text-lg sm:text-2xl font-black text-red-600 dark:text-red-400">
+            <p className="mt-0.5 sm:mt-1 text-lg sm:text-2xl font-black text-danger">
               {formatCurrency(filteredBanner.loss)}
             </p>
-            <p className="text-[8px] sm:text-[11px] text-gray-500 dark:text-gray-400 mt-0.5">
+            <p className="text-[8px] sm:text-[11px] text-text-muted mt-0.5">
               Depreciation / risk
             </p>
           </div>
-          <div className="rounded-2xl bg-red-500/10 p-2.5 sm:p-3.5 text-red-600 dark:text-red-400">
+          <div className="rounded-2xl bg-danger/10 p-2.5 sm:p-3.5 text-danger">
             <TrendingDown size={18} className="sm:w-6 sm:h-6" />
           </div>
         </div>
       </div>
 
       {/* Search and Filters */}
-      <div className="rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-3 sm:p-4 shadow-sm">
+      <div className="rounded-2xl border border-border bg-surface p-3 sm:p-4 shadow-xs">
         <div className="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-3 sm:gap-4">
           <div className="relative flex-1 min-w-[150px]">
             <Search
               size={16}
-              className="sm:w-[18px] sm:h-[18px] absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500"
+              className="sm:w-[18px] sm:h-[18px] absolute left-3 top-1/2 -translate-y-1/2 text-text-muted"
             />
             <input
               value={search}
@@ -377,7 +377,7 @@ const Products = () => {
                 setSearch(event.target.value);
                 setPage(1);
               }}
-              className="w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 pl-8 sm:pl-10 pr-3 sm:pr-4 py-2 sm:py-2.5 text-xs sm:text-sm text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:border-blue-500 dark:focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20 dark:focus:ring-blue-400/20 outline-none transition"
+              className="w-full rounded-xl border border-border bg-background pl-8 sm:pl-10 pr-3 sm:pr-4 py-2 sm:py-2.5 text-xs sm:text-sm text-text placeholder:text-text-muted focus:border-primary outline-none transition"
               placeholder="Search products..."
             />
           </div>
@@ -389,7 +389,7 @@ const Products = () => {
                 setStatus(event.target.value);
                 setPage(1);
               }}
-              className="rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 px-2.5 sm:px-3.5 py-2 sm:py-2.5 text-xs sm:text-sm font-semibold text-gray-900 dark:text-white focus:border-blue-500 dark:focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20 dark:focus:ring-blue-400/20 outline-none transition"
+              className="rounded-xl border border-border bg-background px-2.5 sm:px-3.5 py-2 sm:py-2.5 text-xs sm:text-sm font-semibold text-text focus:border-primary outline-none transition"
             >
               <option value="">All Stock</option>
               <option value="in_stock">In Stock</option>
@@ -399,7 +399,7 @@ const Products = () => {
             <select
               value={sort}
               onChange={(event) => setSort(event.target.value)}
-              className="rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 px-2.5 sm:px-3.5 py-2 sm:py-2.5 text-xs sm:text-sm font-semibold text-gray-900 dark:text-white focus:border-blue-500 dark:focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20 dark:focus:ring-blue-400/20 outline-none transition"
+              className="rounded-xl border border-border bg-background px-2.5 sm:px-3.5 py-2 sm:py-2.5 text-xs sm:text-sm font-semibold text-text focus:border-primary outline-none transition"
             >
               <option value="updatedAt">Sort: Updated</option>
               <option value="name">Sort: Name</option>
@@ -410,7 +410,7 @@ const Products = () => {
             <select
               value={order}
               onChange={(event) => setOrder(event.target.value)}
-              className="rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 px-2.5 sm:px-3.5 py-2 sm:py-2.5 text-xs sm:text-sm font-semibold text-gray-900 dark:text-white focus:border-blue-500 dark:focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20 dark:focus:ring-blue-400/20 outline-none transition"
+              className="rounded-xl border border-border bg-background px-2.5 sm:px-3.5 py-2 sm:py-2.5 text-xs sm:text-sm font-semibold text-text focus:border-primary outline-none transition"
             >
               <option value="desc">Desc</option>
               <option value="asc">Asc</option>
@@ -419,7 +419,7 @@ const Products = () => {
             <button
               onClick={loadProducts}
               title="Refresh List"
-              className="rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 p-2 sm:p-2.5 text-gray-700 dark:text-gray-300 hover:border-blue-500 dark:hover:border-blue-400 transition shadow-sm"
+              className="rounded-xl border border-border bg-background p-2 sm:p-2.5 text-text hover:border-primary transition shadow-xs"
             >
               <RefreshCw size={16} className="sm:w-[18px] sm:h-[18px]" />
             </button>
@@ -431,26 +431,26 @@ const Products = () => {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
         <button
           onClick={openCreate}
-          className="inline-flex items-center justify-center gap-2 rounded-xl bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 px-4 sm:px-5 py-2 sm:py-2.5 text-xs sm:text-sm font-bold text-white shadow-md shadow-blue-500/20 transition active:scale-95 shrink-0 w-full sm:w-auto"
+          className="inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-4 sm:px-5 py-2 sm:py-2.5 text-xs sm:text-sm font-bold text-slate-950 hover:bg-primary-hover shadow-md shadow-primary/20 transition active:scale-95 shrink-0 w-full sm:w-auto"
         >
           <Plus size={16} className="sm:w-[18px] sm:h-[18px]" />
           <span>Add New Product</span>
         </button>
 
         <div className="flex items-center gap-2 sm:gap-2.5 w-full sm:w-auto justify-end">
-          <span className="text-[10px] sm:text-xs font-bold text-gray-500 dark:text-gray-400 hidden sm:block">
+          <span className="text-[10px] sm:text-xs font-bold text-text-muted hidden sm:block">
             Export:
           </span>
           <button
             onClick={handleExportExcel}
-            className="inline-flex items-center justify-center gap-1 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 px-2.5 sm:px-3.5 py-1.5 sm:py-2 text-[10px] sm:text-xs font-bold text-gray-700 dark:text-gray-300 hover:border-blue-500 dark:hover:border-blue-400 transition shadow-sm flex-1 sm:flex-none"
+            className="inline-flex items-center justify-center gap-1 rounded-xl border border-border bg-background px-2.5 sm:px-3.5 py-1.5 sm:py-2 text-[10px] sm:text-xs font-bold text-text hover:border-primary transition shadow-xs flex-1 sm:flex-none"
           >
             <Download size={12} className="sm:w-[14px] sm:h-[14px]" />
             <span>Excel</span>
           </button>
           <button
             onClick={handleExportPdf}
-            className="inline-flex items-center justify-center gap-1 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 px-2.5 sm:px-3.5 py-1.5 sm:py-2 text-[10px] sm:text-xs font-bold text-gray-700 dark:text-gray-300 hover:border-blue-500 dark:hover:border-blue-400 transition shadow-sm flex-1 sm:flex-none"
+            className="inline-flex items-center justify-center gap-1 rounded-xl border border-border bg-background px-2.5 sm:px-3.5 py-1.5 sm:py-2 text-[10px] sm:text-xs font-bold text-text hover:border-primary transition shadow-xs flex-1 sm:flex-none"
           >
             <WandSparkles size={12} className="sm:w-[14px] sm:h-[14px]" />
             <span>PDF</span>
@@ -466,7 +466,7 @@ const Products = () => {
           {products.map((product) => (
             <div
               key={product._id}
-              className="rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-3 sm:p-5 shadow-sm hover:border-gray-400 dark:hover:border-gray-500 transition flex flex-col gap-3 sm:gap-4"
+              className="rounded-2xl border border-border bg-surface p-3 sm:p-5 shadow-xs hover:border-primary/40 transition flex flex-col gap-3 sm:gap-4"
             >
               <div className="flex flex-col lg:flex-row lg:items-start justify-between gap-3 sm:gap-4">
                 {/* Product Info & Thumbnail */}
@@ -475,46 +475,46 @@ const Products = () => {
                     <img
                       src={product.image}
                       alt={product.name}
-                      className="h-12 w-12 sm:h-16 sm:w-16 rounded-xl object-cover border border-gray-200 dark:border-gray-700 shrink-0 bg-gray-50 dark:bg-gray-900"
+                      className="h-12 w-12 sm:h-16 sm:w-16 rounded-xl object-cover border border-border shrink-0 bg-background"
                     />
                   ) : (
-                    <div className="h-12 w-12 sm:h-16 sm:w-16 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 flex items-center justify-center text-gray-400 dark:text-gray-500 shrink-0">
+                    <div className="h-12 w-12 sm:h-16 sm:w-16 rounded-xl border border-border bg-background flex items-center justify-center text-text-muted shrink-0">
                       <Package size={20} className="sm:w-6 sm:h-6" />
                     </div>
                   )}
                   <div className="flex-1 min-w-0">
                     <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 mb-1.5 sm:mb-2">
-                      <span className="inline-flex items-center gap-1 rounded-full bg-blue-500/10 px-2 sm:px-3 py-0.5 sm:py-1 text-[8px] sm:text-xs font-extrabold text-blue-600 dark:text-blue-400">
+                      <span className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-2 sm:px-3 py-0.5 sm:py-1 text-[8px] sm:text-xs font-extrabold text-primary">
                         <Package size={10} className="sm:w-3 sm:h-3" />
                         {product.category}
                       </span>
                       {product.status === "out_of_stock" ? (
-                        <span className="inline-flex items-center gap-1 rounded-full bg-red-500/15 px-2 sm:px-3 py-0.5 sm:py-1 text-[8px] sm:text-xs font-extrabold text-red-600 dark:text-red-400">
+                        <span className="inline-flex items-center gap-1 rounded-full bg-danger/15 px-2 sm:px-3 py-0.5 sm:py-1 text-[8px] sm:text-xs font-extrabold text-danger">
                           <AlertCircle size={10} className="sm:w-3 sm:h-3" />
                           Out of stock
                         </span>
                       ) : (
-                        <span className="inline-flex items-center gap-1 rounded-full bg-green-500/15 px-2 sm:px-3 py-0.5 sm:py-1 text-[8px] sm:text-xs font-extrabold text-green-600 dark:text-green-400">
+                        <span className="inline-flex items-center gap-1 rounded-full bg-success/15 px-2 sm:px-3 py-0.5 sm:py-1 text-[8px] sm:text-xs font-extrabold text-success">
                           In stock
                         </span>
                       )}
                       {product.quantity <= (product.lowStockThreshold || 5) &&
                         product.quantity > 0 && (
-                          <span className="inline-flex items-center gap-1 rounded-full bg-yellow-500/15 px-2 sm:px-3 py-0.5 sm:py-1 text-[8px] sm:text-xs font-extrabold text-yellow-600 dark:text-yellow-400">
+                          <span className="inline-flex items-center gap-1 rounded-full bg-warning/15 px-2 sm:px-3 py-0.5 sm:py-1 text-[8px] sm:text-xs font-extrabold text-warning">
                             <AlertCircle size={10} className="sm:w-3 sm:h-3" />
                             Low stock
                           </span>
                         )}
                     </div>
-                    <h3 className="text-base sm:text-lg font-black text-gray-900 dark:text-white truncate mb-0.5 sm:mb-1">
+                    <h3 className="text-base sm:text-lg font-black text-text truncate mb-0.5 sm:mb-1">
                       {product.name}
                     </h3>
                     {product.sku && (
-                      <p className="text-[10px] sm:text-xs text-gray-500 dark:text-gray-400 font-mono mb-1 sm:mb-2">
+                      <p className="text-[10px] sm:text-xs text-text-muted font-mono mb-1 sm:mb-2">
                         SKU: {product.sku}
                       </p>
                     )}
-                    <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 line-clamp-2">
+                    <p className="text-xs sm:text-sm text-text-muted line-clamp-2">
                       {product.description || "No description added."}
                     </p>
                   </div>
@@ -522,38 +522,38 @@ const Products = () => {
 
                 {/* Quick Stats */}
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3 flex-1 lg:max-w-md">
-                  <div className="rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50/60 dark:bg-gray-900/60 p-2 sm:p-3 text-center">
-                    <p className="text-[8px] sm:text-[11px] font-bold uppercase text-gray-500 dark:text-gray-400">
+                  <div className="rounded-xl border border-border bg-background/60 p-2 sm:p-3 text-center">
+                    <p className="text-[8px] sm:text-[11px] font-bold uppercase text-text-muted">
                       Qty
                     </p>
-                    <p className="text-base sm:text-lg font-black text-gray-900 dark:text-white mt-0.5">
+                    <p className="text-base sm:text-lg font-black text-text mt-0.5">
                       {formatNumber(product.quantity)}{" "}
-                      <span className="text-[8px] sm:text-xs font-normal text-gray-500 dark:text-gray-400">
+                      <span className="text-[8px] sm:text-xs font-normal text-text-muted">
                         {product.unit || "pcs"}
                       </span>
                     </p>
                   </div>
-                  <div className="rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50/60 dark:bg-gray-900/60 p-2 sm:p-3 text-center">
-                    <p className="text-[8px] sm:text-[11px] font-bold uppercase text-gray-500 dark:text-gray-400">
+                  <div className="rounded-xl border border-border bg-background/60 p-2 sm:p-3 text-center">
+                    <p className="text-[8px] sm:text-[11px] font-bold uppercase text-text-muted">
                       Buying
                     </p>
-                    <p className="text-base sm:text-lg font-black text-gray-900 dark:text-white mt-0.5">
+                    <p className="text-base sm:text-lg font-black text-text mt-0.5">
                       {formatCurrency(product.buyingPrice)}
                     </p>
                   </div>
-                  <div className="rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50/60 dark:bg-gray-900/60 p-2 sm:p-3 text-center">
-                    <p className="text-[8px] sm:text-[11px] font-bold uppercase text-gray-500 dark:text-gray-400">
+                  <div className="rounded-xl border border-border bg-background/60 p-2 sm:p-3 text-center">
+                    <p className="text-[8px] sm:text-[11px] font-bold uppercase text-text-muted">
                       Selling
                     </p>
-                    <p className="text-base sm:text-lg font-black text-gray-900 dark:text-white mt-0.5">
+                    <p className="text-base sm:text-lg font-black text-text mt-0.5">
                       {formatCurrency(product.sellingPrice)}
                     </p>
                   </div>
-                  <div className="rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50/60 dark:bg-gray-900/60 p-2 sm:p-3 text-center">
-                    <p className="text-[8px] sm:text-[11px] font-bold uppercase text-gray-500 dark:text-gray-400">
+                  <div className="rounded-xl border border-border bg-background/60 p-2 sm:p-3 text-center">
+                    <p className="text-[8px] sm:text-[11px] font-bold uppercase text-text-muted">
                       Valuation
                     </p>
-                    <p className="text-base sm:text-lg font-black text-gray-900 dark:text-white mt-0.5">
+                    <p className="text-base sm:text-lg font-black text-text mt-0.5">
                       {formatCurrency(product.inventoryValue)}
                     </p>
                   </div>
@@ -561,48 +561,44 @@ const Products = () => {
               </div>
 
               {/* Profit/Loss Row & Actions */}
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 pt-2.5 sm:pt-3 border-t border-gray-200 dark:border-gray-700">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 pt-2.5 sm:pt-3 border-t border-border">
                 <div className="flex flex-wrap items-center gap-3 sm:gap-6 text-xs sm:text-sm">
                   <div className="flex items-center gap-1.5 sm:gap-2">
                     <TrendingUp
                       size={14}
-                      className="sm:w-4 sm:h-4 text-green-600 dark:text-green-400"
+                      className="sm:w-4 sm:h-4 text-success"
                     />
-                    <span className="text-gray-500 dark:text-gray-400 font-medium">
-                      Profit:
-                    </span>
-                    <span className="font-bold text-green-600 dark:text-green-400">
+                    <span className="text-text-muted font-medium">Profit:</span>
+                    <span className="font-bold text-success">
                       {formatCurrency(product.profit)}
                     </span>
                   </div>
                   <div className="flex items-center gap-1.5 sm:gap-2">
                     <TrendingDown
                       size={14}
-                      className="sm:w-4 sm:h-4 text-red-600 dark:text-red-400"
+                      className="sm:w-4 sm:h-4 text-danger"
                     />
-                    <span className="text-gray-500 dark:text-gray-400 font-medium">
-                      Loss:
-                    </span>
-                    <span className="font-bold text-red-600 dark:text-red-400">
+                    <span className="text-text-muted font-medium">Loss:</span>
+                    <span className="font-bold text-danger">
                       {formatCurrency(product.loss)}
                     </span>
                   </div>
                 </div>
 
                 <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
-                  <div className="inline-flex items-center rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 p-0.5 sm:p-1">
+                  <div className="inline-flex items-center rounded-xl border border-border bg-background p-0.5 sm:p-1">
                     <button
                       onClick={() => handleAdjustStock(product._id, 1)}
-                      className="inline-flex items-center gap-0.5 rounded-lg px-1.5 sm:px-2.5 py-0.5 sm:py-1 text-[8px] sm:text-xs font-bold text-green-600 dark:text-green-400 hover:bg-green-500/15 transition"
+                      className="inline-flex items-center gap-0.5 rounded-lg px-1.5 sm:px-2.5 py-0.5 sm:py-1 text-[8px] sm:text-xs font-bold text-success hover:bg-success/15 transition"
                       title="Add +1 to stock"
                     >
                       <PlusIcon size={12} className="sm:w-[14px] sm:h-[14px]" />{" "}
                       +1
                     </button>
-                    <div className="w-[1px] h-3 sm:h-4 bg-gray-200 dark:border-gray-700 mx-0.5 sm:mx-1"></div>
+                    <div className="w-[1px] h-3 sm:h-4 bg-border mx-0.5 sm:mx-1"></div>
                     <button
                       onClick={() => handleAdjustStock(product._id, -1)}
-                      className="inline-flex items-center gap-0.5 rounded-lg px-1.5 sm:px-2.5 py-0.5 sm:py-1 text-[8px] sm:text-xs font-bold text-red-600 dark:text-red-400 hover:bg-red-500/15 transition"
+                      className="inline-flex items-center gap-0.5 rounded-lg px-1.5 sm:px-2.5 py-0.5 sm:py-1 text-[8px] sm:text-xs font-bold text-danger hover:bg-danger/15 transition"
                       title="Subtract -1 from stock"
                     >
                       <Minus size={12} className="sm:w-[14px] sm:h-[14px]" /> -1
@@ -611,7 +607,7 @@ const Products = () => {
 
                   <button
                     onClick={() => openEdit(product)}
-                    className="inline-flex items-center gap-1 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 px-2.5 sm:px-3.5 py-1 sm:py-2 text-[8px] sm:text-xs font-bold text-gray-700 dark:text-gray-300 hover:border-blue-500 dark:hover:border-blue-400 transition shadow-sm"
+                    className="inline-flex items-center gap-1 rounded-xl border border-border bg-background px-2.5 sm:px-3.5 py-1 sm:py-2 text-[8px] sm:text-xs font-bold text-text hover:border-primary transition shadow-xs"
                   >
                     <Edit size={12} className="sm:w-[14px] sm:h-[14px]" />
                     <span className="hidden xs:inline">Edit</span>
@@ -619,7 +615,7 @@ const Products = () => {
 
                   <button
                     onClick={() => handleDelete(product._id)}
-                    className="inline-flex items-center gap-1 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 px-2.5 sm:px-3.5 py-1 sm:py-2 text-[8px] sm:text-xs font-bold text-red-600 dark:text-red-400 hover:bg-red-500 hover:text-white dark:hover:text-white transition shadow-sm"
+                    className="inline-flex items-center gap-1 rounded-xl border border-border bg-background px-2.5 sm:px-3.5 py-1 sm:py-2 text-[8px] sm:text-xs font-bold text-danger hover:bg-danger hover:text-white transition shadow-xs"
                   >
                     <Trash2 size={12} className="sm:w-[14px] sm:h-[14px]" />
                     <span className="hidden xs:inline">Delete</span>
@@ -630,19 +626,19 @@ const Products = () => {
           ))}
 
           {products.length === 0 && (
-            <div className="rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-8 sm:p-12 text-center">
-              <div className="mx-auto flex h-14 w-14 sm:h-16 sm:w-16 items-center justify-center rounded-2xl bg-blue-500/10 text-blue-600 dark:text-blue-400 mb-4">
+            <div className="rounded-2xl border border-border bg-surface p-8 sm:p-12 text-center">
+              <div className="mx-auto flex h-14 w-14 sm:h-16 sm:w-16 items-center justify-center rounded-2xl bg-primary/10 text-primary mb-4">
                 <Package size={28} className="sm:w-8 sm:h-8" />
               </div>
-              <p className="text-base sm:text-lg font-bold text-gray-900 dark:text-white">
+              <p className="text-base sm:text-lg font-bold text-text">
                 No Products Found
               </p>
-              <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 mt-1">
+              <p className="text-xs sm:text-sm text-text-muted mt-1">
                 Try adjusting your search criteria or add a new product item.
               </p>
               <button
                 onClick={openCreate}
-                className="inline-flex items-center gap-2 rounded-xl bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 px-4 sm:px-5 py-2 sm:py-2.5 text-xs sm:text-sm font-bold text-white mt-4 sm:mt-5 shadow-md shadow-blue-500/20 transition"
+                className="inline-flex items-center gap-2 rounded-xl bg-primary px-4 sm:px-5 py-2 sm:py-2.5 text-xs sm:text-sm font-bold text-slate-950 hover:bg-primary-hover shadow-md shadow-primary/20 transition mt-4 sm:mt-5"
               >
                 <Plus size={14} className="sm:w-4 sm:h-4" />
                 Add Product
@@ -652,15 +648,15 @@ const Products = () => {
 
           {/* Pagination */}
           {totalPages > 1 && (
-            <div className="flex flex-col sm:flex-row items-center justify-between gap-3 rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 px-3 sm:px-5 py-3 sm:py-4 shadow-sm">
-              <div className="text-[10px] sm:text-xs font-bold text-gray-500 dark:text-gray-400">
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-3 rounded-2xl border border-border bg-surface px-3 sm:px-5 py-3 sm:py-4 shadow-xs">
+              <div className="text-[10px] sm:text-xs font-bold text-text-muted">
                 Page {page} of {totalPages}
               </div>
               <div className="flex gap-2 w-full sm:w-auto">
                 <button
                   onClick={() => setPage((current) => Math.max(current - 1, 1))}
                   disabled={page === 1}
-                  className="flex-1 sm:flex-none rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 px-3 sm:px-4 py-1.5 sm:py-2 text-[10px] sm:text-xs font-bold text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 disabled:opacity-40 transition"
+                  className="flex-1 sm:flex-none rounded-xl border border-border bg-background px-3 sm:px-4 py-1.5 sm:py-2 text-[10px] sm:text-xs font-bold text-text hover:bg-surface disabled:opacity-40 transition"
                 >
                   Previous
                 </button>
@@ -669,7 +665,7 @@ const Products = () => {
                     setPage((current) => Math.min(current + 1, totalPages))
                   }
                   disabled={page === totalPages}
-                  className="flex-1 sm:flex-none rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 px-3 sm:px-4 py-1.5 sm:py-2 text-[10px] sm:text-xs font-bold text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 disabled:opacity-40 transition"
+                  className="flex-1 sm:flex-none rounded-xl border border-border bg-background px-3 sm:px-4 py-1.5 sm:py-2 text-[10px] sm:text-xs font-bold text-text hover:bg-surface disabled:opacity-40 transition"
                 >
                   Next
                 </button>
@@ -690,23 +686,23 @@ const Products = () => {
           aria-modal="true"
           aria-labelledby="modal-title"
         >
-          <div className="w-full max-w-2xl rounded-3xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-4 sm:p-6 shadow-2xl my-8 sm:my-0 animate-scale-up max-h-none sm:max-h-[90vh] overflow-visible sm:overflow-y-auto flex flex-col">
+          <div className="w-full max-w-2xl rounded-3xl border border-border bg-surface p-4 sm:p-6 shadow-2xl my-8 sm:my-0 animate-scale-up max-h-none sm:max-h-[90vh] overflow-visible sm:overflow-y-auto flex flex-col">
             {/* Modal Header */}
-            <div className="flex items-start justify-between gap-3 border-b border-gray-200 dark:border-gray-700 pb-3 sm:pb-4">
+            <div className="flex items-start justify-between gap-3 border-b border-border pb-3 sm:pb-4">
               <div className="flex-1 min-w-0">
-                <p className="text-[8px] sm:text-[10px] font-extrabold uppercase tracking-widest text-blue-600 dark:text-blue-400">
+                <p className="text-[8px] sm:text-[10px] font-extrabold uppercase tracking-widest text-primary">
                   Catalog Item
                 </p>
                 <h2
                   id="modal-title"
-                  className="text-base sm:text-xl font-black text-gray-900 dark:text-white truncate"
+                  className="text-base sm:text-xl font-black text-text truncate"
                 >
                   {editingId ? "Edit Product" : "Add New Product"}
                 </h2>
               </div>
               <button
                 onClick={() => setShowModal(false)}
-                className="p-1.5 sm:p-2 rounded-xl text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white transition shrink-0"
+                className="p-1.5 sm:p-2 rounded-xl text-text-muted hover:bg-background hover:text-text transition shrink-0"
                 aria-label="Close modal"
               >
                 <X size={16} className="sm:w-[20px] sm:h-[20px]" />
@@ -723,9 +719,9 @@ const Products = () => {
                 <div className="sm:col-span-2">
                   <label
                     htmlFor="productName"
-                    className="mb-1 block text-[10px] sm:text-xs font-bold text-gray-500 dark:text-gray-400"
+                    className="mb-1 block text-[10px] sm:text-xs font-bold text-text-muted"
                   >
-                    Product Name <span className="text-red-500">*</span>
+                    Product Name <span className="text-danger">*</span>
                   </label>
                   <input
                     id="productName"
@@ -737,7 +733,7 @@ const Products = () => {
                         name: event.target.value,
                       }))
                     }
-                    className="w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 px-3 sm:px-3.5 py-2.5 sm:py-2.5 text-sm sm:text-sm text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:border-blue-500 dark:focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20 dark:focus:ring-blue-400/20 outline-none transition"
+                    className="w-full rounded-xl border border-border bg-background px-3 sm:px-3.5 py-2.5 sm:py-2.5 text-sm sm:text-sm text-text placeholder:text-text-muted focus:border-primary outline-none transition"
                     placeholder="Enter product name"
                     required
                     autoFocus
@@ -748,7 +744,7 @@ const Products = () => {
                 <div>
                   <label
                     htmlFor="category"
-                    className="mb-1 block text-[10px] sm:text-xs font-bold text-gray-500 dark:text-gray-400"
+                    className="mb-1 block text-[10px] sm:text-xs font-bold text-text-muted"
                   >
                     Category
                   </label>
@@ -762,7 +758,7 @@ const Products = () => {
                         category: event.target.value,
                       }))
                     }
-                    className="w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 px-3 sm:px-3.5 py-2.5 sm:py-2.5 text-sm sm:text-sm text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:border-blue-500 dark:focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20 dark:focus:ring-blue-400/20 outline-none transition"
+                    className="w-full rounded-xl border border-border bg-background px-3 sm:px-3.5 py-2.5 sm:py-2.5 text-sm sm:text-sm text-text placeholder:text-text-muted focus:border-primary outline-none transition"
                     placeholder="e.g., Electronics"
                   />
                 </div>
@@ -771,7 +767,7 @@ const Products = () => {
                 <div>
                   <label
                     htmlFor="sku"
-                    className="mb-1 block text-[10px] sm:text-xs font-bold text-gray-500 dark:text-gray-400"
+                    className="mb-1 block text-[10px] sm:text-xs font-bold text-text-muted"
                   >
                     SKU
                   </label>
@@ -785,7 +781,7 @@ const Products = () => {
                         sku: event.target.value,
                       }))
                     }
-                    className="w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 px-3 sm:px-3.5 py-2.5 sm:py-2.5 text-sm sm:text-sm text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:border-blue-500 dark:focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20 dark:focus:ring-blue-400/20 outline-none transition"
+                    className="w-full rounded-xl border border-border bg-background px-3 sm:px-3.5 py-2.5 sm:py-2.5 text-sm sm:text-sm text-text placeholder:text-text-muted focus:border-primary outline-none transition"
                     placeholder="Stock keeping unit"
                   />
                 </div>
@@ -794,7 +790,7 @@ const Products = () => {
                 <div>
                   <label
                     htmlFor="lowStockThreshold"
-                    className="mb-1 block text-[10px] sm:text-xs font-bold text-gray-500 dark:text-gray-400"
+                    className="mb-1 block text-[10px] sm:text-xs font-bold text-text-muted"
                   >
                     Low Stock Threshold
                   </label>
@@ -809,7 +805,7 @@ const Products = () => {
                         lowStockThreshold: event.target.value,
                       }))
                     }
-                    className="w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 px-3 sm:px-3.5 py-2.5 sm:py-2.5 text-sm sm:text-sm text-gray-900 dark:text-white focus:border-blue-500 dark:focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20 dark:focus:ring-blue-400/20 outline-none transition"
+                    className="w-full rounded-xl border border-border bg-background px-3 sm:px-3.5 py-2.5 sm:py-2.5 text-sm sm:text-sm text-text focus:border-primary outline-none transition"
                     placeholder="5"
                   />
                 </div>
@@ -818,7 +814,7 @@ const Products = () => {
                 <div>
                   <label
                     htmlFor="quantity"
-                    className="mb-1 block text-[10px] sm:text-xs font-bold text-gray-500 dark:text-gray-400"
+                    className="mb-1 block text-[10px] sm:text-xs font-bold text-text-muted"
                   >
                     Quantity & Unit
                   </label>
@@ -834,7 +830,7 @@ const Products = () => {
                           quantity: event.target.value,
                         }))
                       }
-                      className="flex-1 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 px-3 sm:px-3.5 py-2.5 sm:py-2.5 text-sm sm:text-sm text-gray-900 dark:text-white focus:border-blue-500 dark:focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20 dark:focus:ring-blue-400/20 outline-none transition"
+                      className="flex-1 rounded-xl border border-border bg-background px-3 sm:px-3.5 py-2.5 sm:py-2.5 text-sm sm:text-sm text-text focus:border-primary outline-none transition"
                       placeholder="0"
                     />
                     <select
@@ -846,7 +842,7 @@ const Products = () => {
                           unit: event.target.value,
                         }))
                       }
-                      className="w-20 sm:w-24 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 px-1.5 sm:px-2.5 py-2.5 sm:py-2.5 text-[10px] sm:text-xs font-bold text-gray-900 dark:text-white focus:border-blue-500 dark:focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20 dark:focus:ring-blue-400/20 outline-none transition"
+                      className="w-20 sm:w-24 rounded-xl border border-border bg-background px-1.5 sm:px-2.5 py-2.5 sm:py-2.5 text-[10px] sm:text-xs font-bold text-text focus:border-primary outline-none transition"
                     >
                       <option value="pcs">pcs</option>
                       <option value="kg">kg</option>
@@ -861,7 +857,7 @@ const Products = () => {
 
                 {/* Product Image - Full Width */}
                 <div className="sm:col-span-2">
-                  <label className="mb-1 block text-[10px] sm:text-xs font-bold text-gray-500 dark:text-gray-400">
+                  <label className="mb-1 block text-[10px] sm:text-xs font-bold text-text-muted">
                     Product Image
                   </label>
                   <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4">
@@ -869,18 +865,18 @@ const Products = () => {
                       <img
                         src={form.image}
                         alt="Product preview"
-                        className="h-12 w-12 sm:h-14 sm:w-14 rounded-xl object-cover border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 shrink-0"
+                        className="h-12 w-12 sm:h-14 sm:w-14 rounded-xl object-cover border border-border bg-background shrink-0"
                       />
                     )}
                     <label
-                      className={`flex-1 cursor-pointer rounded-xl border-2 border-dashed border-gray-200 dark:border-gray-700 bg-gray-50/50 dark:bg-gray-900/50 p-2.5 sm:p-3.5 text-center text-[10px] sm:text-xs font-semibold text-gray-500 dark:text-gray-400 hover:border-blue-500 dark:hover:border-blue-400 hover:text-gray-700 dark:hover:text-gray-300 transition ${
+                      className={`flex-1 cursor-pointer rounded-xl border-2 border-dashed border-border bg-background/50 p-2.5 sm:p-3.5 text-center text-[10px] sm:text-xs font-semibold text-text-muted hover:border-primary hover:text-text transition ${
                         uploadingImage ? "opacity-50 cursor-not-allowed" : ""
                       }`}
                     >
                       {uploadingImage ? (
                         <span className="flex items-center justify-center gap-2">
                           <svg
-                            className="animate-spin h-4 w-4 text-blue-500"
+                            className="animate-spin h-4 w-4 text-primary"
                             xmlns="http://www.w3.org/2000/svg"
                             fill="none"
                             viewBox="0 0 24 24"
@@ -915,7 +911,7 @@ const Products = () => {
                       />
                     </label>
                   </div>
-                  <p className="mt-1 text-[8px] sm:text-[10px] text-gray-400 dark:text-gray-500">
+                  <p className="mt-1 text-[8px] sm:text-[10px] text-text-muted">
                     Supported formats: JPG, PNG, GIF (Max 5MB)
                   </p>
                 </div>
@@ -924,7 +920,7 @@ const Products = () => {
                 <div>
                   <label
                     htmlFor="buyingPrice"
-                    className="mb-1 block text-[10px] sm:text-xs font-bold text-gray-500 dark:text-gray-400"
+                    className="mb-1 block text-[10px] sm:text-xs font-bold text-text-muted"
                   >
                     Buying Price (₹)
                   </label>
@@ -940,7 +936,7 @@ const Products = () => {
                         buyingPrice: event.target.value,
                       }))
                     }
-                    className="w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 px-3 sm:px-3.5 py-2.5 sm:py-2.5 text-sm sm:text-sm text-gray-900 dark:text-white focus:border-blue-500 dark:focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20 dark:focus:ring-blue-400/20 outline-none transition"
+                    className="w-full rounded-xl border border-border bg-background px-3 sm:px-3.5 py-2.5 sm:py-2.5 text-sm sm:text-sm text-text focus:border-primary outline-none transition"
                     placeholder="0.00"
                   />
                 </div>
@@ -949,7 +945,7 @@ const Products = () => {
                 <div>
                   <label
                     htmlFor="sellingPrice"
-                    className="mb-1 block text-[10px] sm:text-xs font-bold text-gray-500 dark:text-gray-400"
+                    className="mb-1 block text-[10px] sm:text-xs font-bold text-text-muted"
                   >
                     Selling Price (₹)
                   </label>
@@ -965,7 +961,7 @@ const Products = () => {
                         sellingPrice: event.target.value,
                       }))
                     }
-                    className="w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 px-3 sm:px-3.5 py-2.5 sm:py-2.5 text-sm sm:text-sm text-gray-900 dark:text-white focus:border-blue-500 dark:focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20 dark:focus:ring-blue-400/20 outline-none transition"
+                    className="w-full rounded-xl border border-border bg-background px-3 sm:px-3.5 py-2.5 sm:py-2.5 text-sm sm:text-sm text-text focus:border-primary outline-none transition"
                     placeholder="0.00"
                   />
                 </div>
@@ -974,7 +970,7 @@ const Products = () => {
                 <div className="sm:col-span-2">
                   <label
                     htmlFor="description"
-                    className="mb-1 block text-[10px] sm:text-xs font-bold text-gray-500 dark:text-gray-400"
+                    className="mb-1 block text-[10px] sm:text-xs font-bold text-text-muted"
                   >
                     Description
                   </label>
@@ -987,7 +983,7 @@ const Products = () => {
                         description: event.target.value,
                       }))
                     }
-                    className="w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 px-3 sm:px-3.5 py-2.5 sm:py-2.5 text-sm sm:text-sm text-gray-900 dark:text-white focus:border-blue-500 dark:focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20 dark:focus:ring-blue-400/20 outline-none transition resize-none"
+                    className="w-full rounded-xl border border-border bg-background px-3 sm:px-3.5 py-2.5 sm:py-2.5 text-sm sm:text-sm text-text focus:border-primary outline-none transition resize-none"
                     rows={3}
                     placeholder="Add optional product details..."
                   />
@@ -995,17 +991,17 @@ const Products = () => {
               </div>
 
               {/* Modal Footer */}
-              <div className="flex flex-col-reverse sm:flex-row justify-end gap-2 sm:gap-3 mt-4 sm:mt-6 pt-3 sm:pt-4 border-t border-gray-200 dark:border-gray-700">
+              <div className="flex flex-col-reverse sm:flex-row justify-end gap-2 sm:gap-3 mt-4 sm:mt-6 pt-3 sm:pt-4 border-t border-border">
                 <button
                   type="button"
                   onClick={() => setShowModal(false)}
-                  className="rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 px-4 sm:px-5 py-2.5 sm:py-2.5 text-[10px] sm:text-xs font-bold text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition w-full sm:w-auto active:scale-95"
+                  className="rounded-xl border border-border bg-background px-4 sm:px-5 py-2.5 sm:py-2.5 text-[10px] sm:text-xs font-bold text-text hover:bg-surface transition w-full sm:w-auto active:scale-95"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="rounded-xl bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 px-4 sm:px-6 py-2.5 sm:py-2.5 text-[10px] sm:text-xs font-bold text-white shadow-md shadow-blue-500/20 transition w-full sm:w-auto active:scale-95"
+                  className="rounded-xl bg-primary px-4 sm:px-6 py-2.5 sm:py-2.5 text-[10px] sm:text-xs font-bold text-slate-950 hover:bg-primary-hover shadow-md shadow-primary/20 transition w-full sm:w-auto active:scale-95"
                 >
                   {editingId ? (
                     <span className="flex items-center justify-center gap-2">
@@ -1026,20 +1022,8 @@ const Products = () => {
                     </span>
                   ) : (
                     <span className="flex items-center justify-center gap-2">
-                      <svg
-                        className="w-4 h-4"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth="2"
-                          d="M12 4v16m8-8H4"
-                        />
-                      </svg>
-                      Create Product
+                      <Plus size={14} />
+                      Save Product
                     </span>
                   )}
                 </button>
