@@ -44,44 +44,44 @@ body::-webkit-scrollbar {
 
   html.dark,
   .force-dark {
-    --color-primary: #22d3ee;
-    --color-primary-hover: #06b6d4;
-    --color-secondary: #94a3b8;
-    --color-secondary-hover: #cbd5e1;
-    --color-background: #020617;
-    --color-surface: #0f172a;
-    --color-card: #1e293b;
-    --color-text: #f8fafc;
-    --color-text-muted: #94a3b8;
-    --color-border: rgba(255, 255, 255, 0.1);
-    --color-success: #34d399;
-    --color-warning: #fbbf24;
-    --color-danger: #f87171;
-    --color-info: #60a5fa;
+    --color-primary: #06b6d4;
+    --color-primary-hover: #0891b2;
+    --color-secondary: #71717a;
+    --color-secondary-hover: #a1a1aa;
+    --color-background: #000000;
+    --color-surface: #060608;
+    --color-card: #0a0a0c;
+    --color-text: #f4f4f5;
+    --color-text-muted: #71717a;
+    --color-border: rgba(255, 255, 255, 0.07);
+    --color-success: #10b981;
+    --color-warning: #f59e0b;
+    --color-danger: #ef4444;
+    --color-info: #3b82f6;
 
-    --scroll-thumb: rgba(34, 211, 238, 0.6);
-    --scroll-track: rgba(15, 23, 42, 0.9);
+    --scroll-thumb: rgba(255, 255, 255, 0.12);
+    --scroll-track: #000000;
   }
 
   @media (max-width: 1023px) {
     .mobile-force-dark {
-      --color-primary: #22d3ee;
-      --color-primary-hover: #06b6d4;
-      --color-secondary: #94a3b8;
-      --color-secondary-hover: #cbd5e1;
-      --color-background: #020617;
-      --color-surface: #0f172a;
-      --color-card: #1e293b;
-      --color-text: #f8fafc;
-      --color-text-muted: #94a3b8;
-      --color-border: rgba(255, 255, 255, 0.1);
-      --color-success: #34d399;
-      --color-warning: #fbbf24;
-      --color-danger: #f87171;
-      --color-info: #60a5fa;
+      --color-primary: #06b6d4;
+      --color-primary-hover: #0891b2;
+      --color-secondary: #71717a;
+      --color-secondary-hover: #a1a1aa;
+      --color-background: #000000;
+      --color-surface: #060608;
+      --color-card: #0a0a0c;
+      --color-text: #f4f4f5;
+      --color-text-muted: #71717a;
+      --color-border: rgba(255, 255, 255, 0.07);
+      --color-success: #10b981;
+      --color-warning: #f59e0b;
+      --color-danger: #ef4444;
+      --color-info: #3b82f6;
 
-      --scroll-thumb: rgba(34, 211, 238, 0.6);
-      --scroll-track: rgba(15, 23, 42, 0.9);
+      --scroll-thumb: rgba(255, 255, 255, 0.12);
+      --scroll-track: #000000;
     }
   }
 }
@@ -122,9 +122,8 @@ body {
 }
 
 html.dark body {
-  background:
-    radial-gradient(circle at top, rgba(34, 211, 238, 0.1), transparent 25%),
-    linear-gradient(135deg, #020617, #0f172a);
+  background-color: #000000;
+  background: #000000;
 }
 
 #root {

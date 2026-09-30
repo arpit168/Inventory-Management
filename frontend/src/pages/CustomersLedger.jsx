@@ -202,17 +202,17 @@ const CustomersLedger = () => {
       {/* Header */}
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <p className="text-[10px] sm:text-xs font-extrabold uppercase tracking-[0.25em] text-blue-600 dark:text-blue-400">
+          <p className="text-[10px] sm:text-xs font-extrabold uppercase tracking-[0.25em] text-primary">
             Ledger Suite
           </p>
-          <h1 className="text-xl sm:text-2xl md:text-3xl font-black text-gray-900 dark:text-white tracking-tight">
+          <h1 className="text-xl sm:text-2xl md:text-3xl font-black text-text tracking-tight">
             Khatabook Customer Ledger
           </h1>
         </div>
 
         <button
           onClick={() => setIsAddCustomerOpen(true)}
-          className="inline-flex items-center justify-center gap-2 rounded-xl bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 px-4 sm:px-5 py-2.5 sm:py-3 text-sm font-bold text-white shadow-md shadow-blue-500/20 transition active:scale-95 shrink-0"
+          className="inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-4 sm:px-5 py-2.5 sm:py-3 text-sm font-bold text-slate-950 hover:bg-primary-hover shadow-md shadow-primary/20 transition active:scale-95 shrink-0"
         >
           <UserPlus size={16} className="sm:w-[18px] sm:h-[18px]" />
           <span>Add New Customer</span>
@@ -221,44 +221,44 @@ const CustomersLedger = () => {
 
       {/* Summary Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
-        <div className="rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-4 sm:p-5 shadow-sm flex items-center justify-between">
+        <div className="rounded-2xl border border-border bg-surface p-4 sm:p-5 shadow-xs flex items-center justify-between">
           <div>
-            <p className="text-[10px] sm:text-xs uppercase tracking-wider font-bold text-gray-500 dark:text-gray-400">
+            <p className="text-[10px] sm:text-xs uppercase tracking-wider font-bold text-text-muted">
               Total Customers
             </p>
-            <p className="mt-1 text-xl sm:text-2xl font-black text-gray-900 dark:text-white">
+            <p className="mt-1 text-xl sm:text-2xl font-black text-text">
               {summary.totalCustomers || 0}
             </p>
           </div>
-          <div className="rounded-2xl bg-blue-500/10 p-3 sm:p-3.5 text-blue-500 dark:text-blue-400">
+          <div className="rounded-2xl bg-primary/10 p-3 sm:p-3.5 text-primary">
             <BookOpen size={20} className="sm:w-6 sm:h-6" />
           </div>
         </div>
 
-        <div className="rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-4 sm:p-5 shadow-sm flex items-center justify-between">
+        <div className="rounded-2xl border border-border bg-surface p-4 sm:p-5 shadow-xs flex items-center justify-between">
           <div>
-            <p className="text-[10px] sm:text-xs uppercase tracking-wider font-bold text-gray-500 dark:text-gray-400">
+            <p className="text-[10px] sm:text-xs uppercase tracking-wider font-bold text-text-muted">
               Total Due (Receivable)
             </p>
-            <p className="mt-1 text-xl sm:text-2xl font-black text-red-600 dark:text-red-400">
+            <p className="mt-1 text-xl sm:text-2xl font-black text-danger">
               ₹{(summary.totalReceivable || 0).toFixed(2)}
             </p>
           </div>
-          <div className="rounded-2xl bg-red-500/10 p-3 sm:p-3.5 text-red-600 dark:text-red-400">
+          <div className="rounded-2xl bg-danger/10 p-3 sm:p-3.5 text-danger">
             <ArrowUpRight size={20} className="sm:w-6 sm:h-6" />
           </div>
         </div>
 
-        <div className="rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-4 sm:p-5 shadow-sm flex items-center justify-between sm:col-span-2 lg:col-span-1">
+        <div className="rounded-2xl border border-border bg-surface p-4 sm:p-5 shadow-xs flex items-center justify-between sm:col-span-2 lg:col-span-1">
           <div>
-            <p className="text-[10px] sm:text-xs uppercase tracking-wider font-bold text-gray-500 dark:text-gray-400">
+            <p className="text-[10px] sm:text-xs uppercase tracking-wider font-bold text-text-muted">
               Total Advance Given
             </p>
-            <p className="mt-1 text-xl sm:text-2xl font-black text-green-600 dark:text-green-400">
+            <p className="mt-1 text-xl sm:text-2xl font-black text-success">
               ₹{(summary.totalAdvance || 0).toFixed(2)}
             </p>
           </div>
-          <div className="rounded-2xl bg-green-500/10 p-3 sm:p-3.5 text-green-600 dark:text-green-400">
+          <div className="rounded-2xl bg-success/10 p-3 sm:p-3.5 text-success">
             <ArrowDownLeft size={20} className="sm:w-6 sm:h-6" />
           </div>
         </div>
@@ -267,25 +267,25 @@ const CustomersLedger = () => {
       {/* Main Content Layout */}
       <div className="grid gap-4 sm:gap-6 lg:grid-cols-[1fr_1.3fr]">
         {/* Left Side: Customer List */}
-        <div className="rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-3 sm:p-5 shadow-sm flex flex-col">
+        <div className="rounded-2xl border border-border bg-surface p-3 sm:p-5 shadow-xs flex flex-col">
           <div className="flex items-center justify-between gap-3 mb-4">
             <div className="relative flex-1 min-w-[120px]">
               <Search
                 size={14}
-                className="sm:w-4 sm:h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500"
+                className="sm:w-4 sm:h-4 absolute left-3 top-1/2 -translate-y-1/2 text-text-muted"
               />
               <input
                 type="text"
                 placeholder="Search customer..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 pl-8 sm:pl-9 pr-3 py-2 text-xs sm:text-sm text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:border-blue-500 dark:focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20 dark:focus:ring-blue-400/20 outline-none transition"
+                className="w-full rounded-xl border border-border bg-background pl-8 sm:pl-9 pr-3 py-2 text-xs sm:text-sm text-text placeholder:text-text-muted focus:border-primary outline-none transition"
               />
             </div>
             <button
               onClick={fetchCustomers}
               title="Refresh List"
-              className="rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 p-2 text-gray-700 dark:text-gray-300 hover:border-blue-500 dark:hover:border-blue-400 transition shrink-0 shadow-sm"
+              className="rounded-xl border border-border bg-background p-2 text-text hover:border-primary transition shrink-0 shadow-xs"
             >
               <RefreshCw size={14} className="sm:w-4 sm:h-4" />
             </button>
@@ -295,7 +295,7 @@ const CustomersLedger = () => {
             {loading ? (
               <LoadingSkeleton count={6} />
             ) : customers.length === 0 ? (
-              <p className="text-center text-xs sm:text-sm text-gray-500 dark:text-gray-400 py-12">
+              <p className="text-center text-xs sm:text-sm text-text-muted py-12">
                 No customers found.
               </p>
             ) : (
@@ -311,15 +311,15 @@ const CustomersLedger = () => {
                     onClick={() => fetchLedger(cust._id)}
                     className={`cursor-pointer rounded-xl border p-3 sm:p-4 transition-all duration-200 flex items-center justify-between gap-2 sm:gap-3 ${
                       isSelected
-                        ? "border-blue-500 dark:border-blue-400 bg-blue-500/10 shadow-sm font-semibold"
-                        : "border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 hover:border-gray-400 dark:hover:border-gray-500"
+                        ? "border-primary bg-primary/10 shadow-xs font-semibold"
+                        : "border-border bg-background hover:border-border/80"
                     }`}
                   >
                     <div className="min-w-0 flex-1">
-                      <p className="text-xs sm:text-sm font-bold text-gray-900 dark:text-white truncate">
+                      <p className="text-xs sm:text-sm font-bold text-text truncate">
                         {cust.name}
                       </p>
-                      <div className="flex items-center gap-1 text-[10px] sm:text-xs text-gray-500 dark:text-gray-400 mt-0.5">
+                      <div className="flex items-center gap-1 text-[10px] sm:text-xs text-text-muted mt-0.5">
                         <Phone size={10} className="sm:w-3 sm:h-3" />
                         <span>{cust.phone}</span>
                       </div>
@@ -327,11 +327,11 @@ const CustomersLedger = () => {
 
                     <div className="text-right shrink-0">
                       <p
-                        className={`text-sm sm:text-base font-black ${isDue ? "text-red-600 dark:text-red-400" : isAdvance ? "text-green-600 dark:text-green-400" : "text-gray-500 dark:text-gray-400"}`}
+                        className={`text-sm sm:text-base font-black ${isDue ? "text-danger" : isAdvance ? "text-success" : "text-text-muted"}`}
                       >
                         ₹{Math.abs(balance).toFixed(2)}
                       </p>
-                      <span className="text-[8px] sm:text-[10px] font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
+                      <span className="text-[8px] sm:text-[10px] font-bold uppercase tracking-wider text-text-muted">
                         {isDue ? "Due" : isAdvance ? "Advance" : "Settled"}
                       </span>
                     </div>
@@ -343,16 +343,16 @@ const CustomersLedger = () => {
         </div>
 
         {/* Right Side: Ledger Detail View */}
-        <div className="rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-3 sm:p-5 shadow-sm flex flex-col min-h-[300px] sm:min-h-[400px] lg:min-h-[500px]">
+        <div className="rounded-2xl border border-border bg-surface p-3 sm:p-5 shadow-xs flex flex-col min-h-[300px] sm:min-h-[400px] lg:min-h-[500px]">
           {!selectedCustomer ? (
             <div className="flex flex-1 flex-col items-center justify-center text-center p-8 sm:p-12">
-              <div className="flex h-14 w-14 sm:h-16 sm:w-16 items-center justify-center rounded-2xl bg-blue-500/10 text-blue-500 dark:text-blue-400 mb-4">
+              <div className="flex h-14 w-14 sm:h-16 sm:w-16 items-center justify-center rounded-2xl bg-primary/10 text-primary mb-4">
                 <BookOpen size={28} className="sm:w-8 sm:h-8" />
               </div>
-              <h3 className="text-base sm:text-lg font-bold text-gray-900 dark:text-white">
+              <h3 className="text-base sm:text-lg font-bold text-text">
                 Select a Customer
               </h3>
-              <p className="mt-1 text-xs sm:text-sm text-gray-500 dark:text-gray-400 max-w-xs">
+              <p className="mt-1 text-xs sm:text-sm text-text-muted max-w-xs">
                 Click on any customer from the list on the left to view their
                 detailed transaction ledger and record entries.
               </p>
@@ -360,12 +360,12 @@ const CustomersLedger = () => {
           ) : (
             <div className="flex flex-col flex-1">
               {/* Selected Customer Header */}
-              <div className="flex flex-wrap items-start justify-between gap-3 border-b border-gray-200 dark:border-gray-700 pb-3 sm:pb-4 mb-3 sm:mb-4">
+              <div className="flex flex-wrap items-start justify-between gap-3 border-b border-border pb-3 sm:pb-4 mb-3 sm:mb-4">
                 <div>
-                  <h2 className="text-lg sm:text-xl font-black text-gray-900 dark:text-white">
+                  <h2 className="text-lg sm:text-xl font-black text-text">
                     {selectedCustomer.name}
                   </h2>
-                  <div className="flex flex-wrap gap-2 sm:gap-3 text-[10px] sm:text-xs text-gray-500 dark:text-gray-400 mt-1 font-medium">
+                  <div className="flex flex-wrap gap-2 sm:gap-3 text-[10px] sm:text-xs text-text-muted mt-1 font-medium">
                     <span>📞 {selectedCustomer.phone}</span>
                     {selectedCustomer.email && (
                       <span className="hidden sm:inline">
@@ -374,7 +374,7 @@ const CustomersLedger = () => {
                     )}
                   </div>
                   {selectedCustomer.address && (
-                    <p className="text-[10px] sm:text-xs text-gray-500 dark:text-gray-400 mt-1">
+                    <p className="text-[10px] sm:text-xs text-text-muted mt-1">
                       📍 {selectedCustomer.address}
                     </p>
                   )}
@@ -389,7 +389,7 @@ const CustomersLedger = () => {
                       setEntryDesc("");
                       setIsEntryModalOpen(true);
                     }}
-                    className="inline-flex items-center gap-1 rounded-xl bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 px-3 sm:px-4 py-1.5 sm:py-2 text-[10px] sm:text-xs font-bold text-white shadow-sm transition"
+                    className="inline-flex items-center gap-1 rounded-xl bg-primary px-3 sm:px-4 py-1.5 sm:py-2 text-[10px] sm:text-xs font-bold text-slate-950 hover:bg-primary-hover shadow-sm transition"
                   >
                     <Plus size={12} className="sm:w-[14px] sm:h-[14px]" />
                     <span className="hidden xs:inline">New Entry</span>
@@ -402,7 +402,7 @@ const CustomersLedger = () => {
                         selectedCustomer.name,
                       )
                     }
-                    className="rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 p-1.5 sm:p-2 text-red-500 dark:text-red-400 hover:border-red-500 dark:hover:border-red-400 hover:bg-red-500 hover:text-white dark:hover:text-white transition shadow-sm"
+                    className="rounded-xl border border-border bg-background p-1.5 sm:p-2 text-danger hover:border-danger hover:bg-danger hover:text-white transition shadow-xs"
                     title="Delete Customer"
                   >
                     <Trash2 size={12} className="sm:w-4 sm:h-4" />
@@ -414,10 +414,10 @@ const CustomersLedger = () => {
               <div
                 className={`rounded-2xl p-3 sm:p-4 mb-4 sm:mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 ${
                   selectedCustomer.netBalance > 0
-                    ? "bg-red-500/10 border border-red-500/20 text-red-600 dark:text-red-400"
+                    ? "bg-danger/10 border border-danger/20 text-danger"
                     : selectedCustomer.netBalance < 0
-                      ? "bg-green-500/10 border border-green-500/20 text-green-600 dark:text-green-400"
-                      : "bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white"
+                      ? "bg-success/10 border border-success/20 text-success"
+                      : "bg-background border border-border text-text"
                 }`}
               >
                 <div>
@@ -429,7 +429,7 @@ const CustomersLedger = () => {
                   </p>
                 </div>
                 <div className="w-full sm:w-auto">
-                  <span className="inline-block w-full sm:w-auto text-center rounded-full bg-white dark:bg-gray-800 px-2.5 sm:px-3 py-1 text-[8px] sm:text-xs font-extrabold shadow-sm border border-gray-200 dark:border-gray-700">
+                  <span className="inline-block w-full sm:w-auto text-center rounded-full bg-surface px-2.5 sm:px-3 py-1 text-[8px] sm:text-xs font-extrabold shadow-xs border border-border">
                     {selectedCustomer.netBalance > 0
                       ? "YOU WILL GET (DUE)"
                       : selectedCustomer.netBalance < 0
@@ -453,11 +453,11 @@ const CustomersLedger = () => {
                     return (
                       <div
                         key={entry._id}
-                        className="flex flex-col sm:flex-row items-start sm:items-center justify-between rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 p-3 sm:p-3.5 hover:border-gray-400 dark:hover:border-gray-500 transition gap-2 sm:gap-3"
+                        className="flex flex-col sm:flex-row items-start sm:items-center justify-between rounded-xl border border-border bg-background p-3 sm:p-3.5 hover:border-border/80 transition gap-2 sm:gap-3"
                       >
                         <div className="flex items-center gap-2 sm:gap-3 min-w-0 w-full sm:w-auto">
                           <div
-                            className={`rounded-xl p-1.5 sm:p-2.5 shrink-0 ${isCredit ? "bg-red-500/15 text-red-600 dark:text-red-400" : "bg-green-500/15 text-green-600 dark:text-green-400"}`}
+                            className={`rounded-xl p-1.5 sm:p-2.5 shrink-0 ${isCredit ? "bg-danger/15 text-danger" : "bg-success/15 text-success"}`}
                           >
                             {isCredit ? (
                               <ArrowUpRight
@@ -472,13 +472,13 @@ const CustomersLedger = () => {
                             )}
                           </div>
                           <div className="min-w-0 flex-1">
-                            <p className="text-xs sm:text-sm font-bold text-gray-900 dark:text-white truncate">
+                            <p className="text-xs sm:text-sm font-bold text-text truncate">
                               {entry.description ||
                                 (isCredit
                                   ? "Credit Given"
                                   : "Payment Received")}
                             </p>
-                            <p className="text-[10px] sm:text-[11px] text-gray-500 dark:text-gray-400">
+                            <p className="text-[10px] sm:text-[11px] text-text-muted">
                               {new Date(entry.createdAt).toLocaleString()}
                             </p>
                           </div>
@@ -486,23 +486,23 @@ const CustomersLedger = () => {
 
                         <div className="text-right shrink-0 w-full sm:w-auto flex flex-row sm:flex-col items-center justify-between sm:items-end gap-1 sm:gap-2">
                           <p
-                            className={`text-sm sm:text-base font-black ${isCredit ? "text-red-600 dark:text-red-400" : "text-green-600 dark:text-green-400"}`}
+                            className={`text-sm sm:text-base font-black ${isCredit ? "text-danger" : "text-success"}`}
                           >
                             {isCredit ? "+" : "-"} ₹{entry.amount.toFixed(2)}
                           </p>
                           <div className="flex items-center gap-1 sm:gap-2">
-                            <span className="text-[8px] sm:text-[10px] font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 hidden sm:inline">
+                            <span className="text-[8px] sm:text-[10px] font-bold uppercase tracking-wider text-text-muted hidden sm:inline">
                               {isCredit ? "Gave" : "Got"}
                             </span>
                             <button
                               onClick={() => openEditEntry(entry)}
-                              className="text-[9px] sm:text-xs text-blue-600 dark:text-blue-400 hover:underline font-medium"
+                              className="text-[9px] sm:text-xs text-primary hover:underline font-medium"
                             >
                               Edit
                             </button>
                             <button
                               onClick={() => handleDeleteEntry(entry._id)}
-                              className="text-[9px] sm:text-xs text-red-600 dark:text-red-400 hover:underline font-medium"
+                              className="text-[9px] sm:text-xs text-danger hover:underline font-medium"
                             >
                               Del
                             </button>
@@ -521,14 +521,14 @@ const CustomersLedger = () => {
       {/* Add Customer Modal */}
       {isAddCustomerOpen && (
         <div className="fixed inset-0 z-50 flex items-start sm:items-center justify-center bg-black/60 p-3 sm:p-4 backdrop-blur-sm animate-fade-in overflow-y-auto">
-          <div className="w-full max-w-md rounded-3xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-4 sm:p-6 shadow-2xl animate-scale-up my-8 sm:my-0">
-            <div className="flex items-center justify-between border-b border-gray-200 dark:border-gray-700 pb-3 sm:pb-4">
-              <h3 className="text-base sm:text-lg font-black text-gray-900 dark:text-white">
+          <div className="w-full max-w-md rounded-3xl border border-border bg-surface p-4 sm:p-6 shadow-2xl animate-scale-up my-8 sm:my-0">
+            <div className="flex items-center justify-between border-b border-border pb-3 sm:pb-4">
+              <h3 className="text-base sm:text-lg font-black text-text">
                 Add New Customer
               </h3>
               <button
                 onClick={() => setIsAddCustomerOpen(false)}
-                className="rounded-xl p-1.5 sm:p-2 text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 transition"
+                className="rounded-xl p-1.5 sm:p-2 text-text-muted hover:bg-background hover:text-text transition"
               >
                 <X size={16} className="sm:w-[18px] sm:h-[18px]" />
               </button>
@@ -539,7 +539,7 @@ const CustomersLedger = () => {
               className="mt-4 sm:mt-5 space-y-3 sm:space-y-4"
             >
               <div>
-                <label className="block text-[10px] sm:text-xs font-bold text-gray-500 dark:text-gray-400 mb-1">
+                <label className="block text-[10px] sm:text-xs font-bold text-text-muted mb-1">
                   Customer Name *
                 </label>
                 <input
@@ -548,12 +548,12 @@ const CustomersLedger = () => {
                   placeholder="John Aleandro"
                   value={newCustName}
                   onChange={(e) => setNewCustName(e.target.value)}
-                  className="w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 px-3 sm:px-3.5 py-2 sm:py-2.5 text-sm text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:border-blue-500 dark:focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20 dark:focus:ring-blue-400/20 outline-none transition"
+                  className="w-full rounded-xl border border-border bg-background px-3 sm:px-3.5 py-2 sm:py-2.5 text-sm text-text placeholder:text-text-muted focus:border-primary outline-none transition"
                 />
               </div>
 
               <div>
-                <label className="block text-[10px] sm:text-xs font-bold text-gray-500 dark:text-gray-400 mb-1">
+                <label className="block text-[10px] sm:text-xs font-bold text-text-muted mb-1">
                   Phone Number *
                 </label>
                 <input
@@ -562,12 +562,12 @@ const CustomersLedger = () => {
                   placeholder="+91 9876543210"
                   value={newCustPhone}
                   onChange={(e) => setNewCustPhone(e.target.value)}
-                  className="w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 px-3 sm:px-3.5 py-2 sm:py-2.5 text-sm text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:border-blue-500 dark:focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20 dark:focus:ring-blue-400/20 outline-none transition"
+                  className="w-full rounded-xl border border-border bg-background px-3 sm:px-3.5 py-2 sm:py-2.5 text-sm text-text placeholder:text-text-muted focus:border-primary outline-none transition"
                 />
               </div>
 
               <div>
-                <label className="block text-[10px] sm:text-xs font-bold text-gray-500 dark:text-gray-400 mb-1">
+                <label className="block text-[10px] sm:text-xs font-bold text-text-muted mb-1">
                   Email (Optional)
                 </label>
                 <input
@@ -575,12 +575,12 @@ const CustomersLedger = () => {
                   placeholder="ramesh@example.com"
                   value={newCustEmail}
                   onChange={(e) => setNewCustEmail(e.target.value)}
-                  className="w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 px-3 sm:px-3.5 py-2 sm:py-2.5 text-sm text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:border-blue-500 dark:focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20 dark:focus:ring-blue-400/20 outline-none transition"
+                  className="w-full rounded-xl border border-border bg-background px-3 sm:px-3.5 py-2 sm:py-2.5 text-sm text-text placeholder:text-text-muted focus:border-primary outline-none transition"
                 />
               </div>
 
               <div>
-                <label className="block text-[10px] sm:text-xs font-bold text-gray-500 dark:text-gray-400 mb-1">
+                <label className="block text-[10px] sm:text-xs font-bold text-text-muted mb-1">
                   Address (Optional)
                 </label>
                 <input
@@ -588,12 +588,12 @@ const CustomersLedger = () => {
                   placeholder="Market Road, Shop #12"
                   value={newCustAddress}
                   onChange={(e) => setNewCustAddress(e.target.value)}
-                  className="w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 px-3 sm:px-3.5 py-2 sm:py-2.5 text-sm text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:border-blue-500 dark:focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20 dark:focus:ring-blue-400/20 outline-none transition"
+                  className="w-full rounded-xl border border-border bg-background px-3 sm:px-3.5 py-2 sm:py-2.5 text-sm text-text placeholder:text-text-muted focus:border-primary outline-none transition"
                 />
               </div>
 
               <div>
-                <label className="block text-[10px] sm:text-xs font-bold text-gray-500 dark:text-gray-400 mb-1">
+                <label className="block text-[10px] sm:text-xs font-bold text-text-muted mb-1">
                   Opening Due Balance (₹)
                 </label>
                 <input
@@ -602,9 +602,9 @@ const CustomersLedger = () => {
                   placeholder="0.00"
                   value={newCustBalance}
                   onChange={(e) => setNewCustBalance(e.target.value)}
-                  className="w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 px-3 sm:px-3.5 py-2 sm:py-2.5 text-sm text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:border-blue-500 dark:focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20 dark:focus:ring-blue-400/20 outline-none transition"
+                  className="w-full rounded-xl border border-border bg-background px-3 sm:px-3.5 py-2 sm:py-2.5 text-sm text-text placeholder:text-text-muted focus:border-primary outline-none transition"
                 />
-                <p className="text-[8px] sm:text-[10px] text-gray-500 dark:text-gray-400 mt-1">
+                <p className="text-[8px] sm:text-[10px] text-text-muted mt-1">
                   Enter positive for previous due, negative if advance received.
                 </p>
               </div>
@@ -613,13 +613,13 @@ const CustomersLedger = () => {
                 <button
                   type="button"
                   onClick={() => setIsAddCustomerOpen(false)}
-                  className="rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 px-4 sm:px-5 py-2 sm:py-2.5 text-xs sm:text-sm font-bold text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition w-full sm:w-auto"
+                  className="rounded-xl border border-border bg-background px-4 sm:px-5 py-2 sm:py-2.5 text-xs sm:text-sm font-bold text-text hover:bg-surface transition w-full sm:w-auto"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="rounded-xl bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 px-4 sm:px-6 py-2 sm:py-2.5 text-xs sm:text-sm font-bold text-white shadow-md shadow-blue-500/20 transition w-full sm:w-auto"
+                  className="rounded-xl bg-primary px-4 sm:px-6 py-2 sm:py-2.5 text-xs sm:text-sm font-bold text-slate-950 hover:bg-primary-hover shadow-md shadow-primary/20 transition w-full sm:w-auto"
                 >
                   Save Customer
                 </button>
@@ -632,19 +632,19 @@ const CustomersLedger = () => {
       {/* New Entry Modal */}
       {isEntryModalOpen && selectedCustomer && (
         <div className="fixed inset-0 z-50 flex items-start sm:items-center justify-center bg-black/60 p-3 sm:p-4 backdrop-blur-sm animate-fade-in overflow-y-auto">
-          <div className="w-full max-w-md rounded-3xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-4 sm:p-6 shadow-2xl animate-scale-up my-8 sm:my-0">
-            <div className="flex items-center justify-between border-b border-gray-200 dark:border-gray-700 pb-3 sm:pb-4">
+          <div className="w-full max-w-md rounded-3xl border border-border bg-surface p-4 sm:p-6 shadow-2xl animate-scale-up my-8 sm:my-0">
+            <div className="flex items-center justify-between border-b border-border pb-3 sm:pb-4">
               <div>
-                <p className="text-[8px] sm:text-[10px] font-extrabold uppercase text-blue-600 dark:text-blue-400">
+                <p className="text-[8px] sm:text-[10px] font-extrabold uppercase text-primary">
                   Record Transaction
                 </p>
-                <h3 className="text-base sm:text-lg font-black text-gray-900 dark:text-white">
+                <h3 className="text-base sm:text-lg font-black text-text">
                   {selectedCustomer.name}
                 </h3>
               </div>
               <button
                 onClick={() => setIsEntryModalOpen(false)}
-                className="rounded-xl p-1.5 sm:p-2 text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 transition"
+                className="rounded-xl p-1.5 sm:p-2 text-text-muted hover:bg-background hover:text-text transition"
               >
                 <X size={16} className="sm:w-[18px] sm:h-[18px]" />
               </button>
@@ -655,7 +655,7 @@ const CustomersLedger = () => {
               className="mt-4 sm:mt-5 space-y-3 sm:space-y-4"
             >
               <div>
-                <label className="block text-[10px] sm:text-xs font-bold text-gray-500 dark:text-gray-400 mb-1.5">
+                <label className="block text-[10px] sm:text-xs font-bold text-text-muted mb-1.5">
                   Transaction Type
                 </label>
                 <div className="grid grid-cols-2 gap-2 sm:gap-3">
@@ -664,8 +664,8 @@ const CustomersLedger = () => {
                     onClick={() => setEntryType("credit")}
                     className={`rounded-xl border px-3 sm:px-4 py-2 sm:py-3 text-[10px] sm:text-xs font-bold flex items-center justify-center gap-1.5 transition ${
                       entryType === "credit"
-                        ? "border-red-500 bg-red-500/15 text-red-600 dark:text-red-400 shadow-xs"
-                        : "border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
+                        ? "border-danger bg-danger/15 text-danger shadow-xs"
+                        : "border-border bg-background text-text-muted hover:text-text"
                     }`}
                   >
                     <ArrowUpRight size={14} className="sm:w-4 sm:h-4" />
@@ -677,8 +677,8 @@ const CustomersLedger = () => {
                     onClick={() => setEntryType("debit")}
                     className={`rounded-xl border px-3 sm:px-4 py-2 sm:py-3 text-[10px] sm:text-xs font-bold flex items-center justify-center gap-1.5 transition ${
                       entryType === "debit"
-                        ? "border-green-500 bg-green-500/15 text-green-600 dark:text-green-400 shadow-xs"
-                        : "border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
+                        ? "border-success bg-success/15 text-success shadow-xs"
+                        : "border-border bg-background text-text-muted hover:text-text"
                     }`}
                   >
                     <ArrowDownLeft size={14} className="sm:w-4 sm:h-4" />
@@ -688,7 +688,7 @@ const CustomersLedger = () => {
               </div>
 
               <div>
-                <label className="block text-[10px] sm:text-xs font-bold text-gray-500 dark:text-gray-400 mb-1">
+                <label className="block text-[10px] sm:text-xs font-bold text-text-muted mb-1">
                   Amount (₹) *
                 </label>
                 <input
@@ -699,12 +699,12 @@ const CustomersLedger = () => {
                   placeholder="Enter amount"
                   value={entryAmount}
                   onChange={(e) => setEntryAmount(e.target.value)}
-                  className="w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 px-3 sm:px-3.5 py-2 sm:py-2.5 text-base sm:text-lg font-black text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:border-blue-500 dark:focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20 dark:focus:ring-blue-400/20 outline-none transition"
+                  className="w-full rounded-xl border border-border bg-background px-3 sm:px-3.5 py-2 sm:py-2.5 text-base sm:text-lg font-black text-text placeholder:text-text-muted focus:border-primary outline-none transition"
                 />
               </div>
 
               <div>
-                <label className="block text-[10px] sm:text-xs font-bold text-gray-500 dark:text-gray-400 mb-1">
+                <label className="block text-[10px] sm:text-xs font-bold text-text-muted mb-1">
                   Description / Note
                 </label>
                 <input
@@ -712,7 +712,7 @@ const CustomersLedger = () => {
                   placeholder="e.g., Grocery items purchased on credit"
                   value={entryDesc}
                   onChange={(e) => setEntryDesc(e.target.value)}
-                  className="w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 px-3 sm:px-3.5 py-2 sm:py-2.5 text-sm text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:border-blue-500 dark:focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20 dark:focus:ring-blue-400/20 outline-none transition"
+                  className="w-full rounded-xl border border-border bg-background px-3 sm:px-3.5 py-2 sm:py-2.5 text-sm text-text placeholder:text-text-muted focus:border-primary outline-none transition"
                 />
               </div>
 
@@ -720,7 +720,7 @@ const CustomersLedger = () => {
                 <button
                   type="button"
                   onClick={() => setIsEntryModalOpen(false)}
-                  className="rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 px-4 sm:px-5 py-2 sm:py-2.5 text-xs sm:text-sm font-bold text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition w-full sm:w-auto"
+                  className="rounded-xl border border-border bg-background px-4 sm:px-5 py-2 sm:py-2.5 text-xs sm:text-sm font-bold text-text hover:bg-surface transition w-full sm:w-auto"
                 >
                   Cancel
                 </button>
@@ -728,8 +728,8 @@ const CustomersLedger = () => {
                   type="submit"
                   className={`rounded-xl px-4 sm:px-6 py-2 sm:py-2.5 text-xs sm:text-sm font-bold text-white shadow-md transition w-full sm:w-auto ${
                     entryType === "credit"
-                      ? "bg-red-600 hover:bg-red-700 dark:bg-red-500 dark:hover:bg-red-600 shadow-red-500/20"
-                      : "bg-green-600 hover:bg-green-700 dark:bg-green-500 dark:hover:bg-green-600 shadow-green-500/20"
+                      ? "bg-danger hover:bg-red-600 shadow-danger/20"
+                      : "bg-success hover:bg-emerald-600 shadow-success/20"
                   }`}
                 >
                   {isEditMode ? "Update Entry" : "Record Entry"}

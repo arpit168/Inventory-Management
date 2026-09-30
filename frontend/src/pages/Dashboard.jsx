@@ -136,10 +136,10 @@ const Dashboard = () => {
       <div className="rounded-3xl border border-border bg-surface  p-6 sm:p-8 text-white shadow-xl">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-6">
           <div>
-            <p className="text-[10px] sm:text-xs uppercase tracking-[0.3em] font-extrabold text-cyan-800">
+            <p className="text-[10px] sm:text-xs uppercase tracking-[0.3em] font-extrabold text-primary">
               Commercial Insights
             </p>
-            <h2 className="text-xl sm:text-2xl text-cyan-500 font-black mt-1">
+            <h2 className="text-xl sm:text-2xl text-text font-black mt-1">
               Financial & Ledger Overview
             </h2>
           </div>
