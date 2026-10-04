@@ -260,12 +260,15 @@ export const addLedgerEntry = async (req, res, next) => {
     await customer.save();
 
     if (customer.netBalance <= 0) {
-      const entriesWithInvoice = await LedgerEntry.find({ customer: customer._id, invoice: { $exists: true, $ne: null } });
-      const invoiceIds = entriesWithInvoice.map(e => e.invoice);
+      const entriesWithInvoice = await LedgerEntry.find({
+        customer: customer._id,
+        invoice: { $exists: true, $ne: null },
+      });
+      const invoiceIds = entriesWithInvoice.map((e) => e.invoice);
       if (invoiceIds.length > 0) {
         await Invoice.updateMany(
           { _id: { $in: invoiceIds }, status: "unpaid" },
-          { $set: { status: "paid" } }
+          { $set: { status: "paid" } },
         );
       }
     }
@@ -312,12 +315,15 @@ const recalculateCustomerBalance = async (customerId, userId) => {
   );
 
   if (netBalance <= 0) {
-    const entriesWithInvoice = await LedgerEntry.find({ customer: customerId, invoice: { $exists: true, $ne: null } });
-    const invoiceIds = entriesWithInvoice.map(e => e.invoice);
+    const entriesWithInvoice = await LedgerEntry.find({
+      customer: customerId,
+      invoice: { $exists: true, $ne: null },
+    });
+    const invoiceIds = entriesWithInvoice.map((e) => e.invoice);
     if (invoiceIds.length > 0) {
       await Invoice.updateMany(
         { _id: { $in: invoiceIds }, status: "unpaid" },
-        { $set: { status: "paid" } }
+        { $set: { status: "paid" } },
       );
     }
   }
