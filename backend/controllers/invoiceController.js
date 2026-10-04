@@ -227,7 +227,10 @@ export const updateInvoice = async (req, res, next) => {
 
     // If status changed to "paid", remove the associated ledger entry
     if (oldStatus !== "paid" && status === "paid") {
-      const entry = await LedgerEntry.findOne({ invoice: invoice._id, createdBy: req.user.id });
+      const entry = await LedgerEntry.findOne({
+        invoice: invoice._id,
+        createdBy: req.user.id,
+      });
       if (entry) {
         await LedgerEntry.deleteOne({ _id: entry._id });
         const customer = await Customer.findOne({ _id: entry.customer });

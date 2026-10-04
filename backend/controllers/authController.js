@@ -76,7 +76,11 @@ export const login = async (req, res, next) => {
     }
 
     if (user.lockUntil && user.lockUntil > Date.now()) {
-      return res.status(429).json({ message: "too many attempts please try again after 15 minutes" });
+      return res
+        .status(429)
+        .json({
+          message: "too many attempts please try again after 15 minutes",
+        });
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
@@ -86,7 +90,11 @@ export const login = async (req, res, next) => {
       if (user.loginAttempts >= 5) {
         user.lockUntil = Date.now() + 15 * 60 * 1000;
         await user.save();
-        return res.status(429).json({ message: "too many attempts please try again after 15 minutes" });
+        return res
+          .status(429)
+          .json({
+            message: "too many attempts please try again after 15 minutes",
+          });
       }
       await user.save();
       return res.status(401).json({ message: "Invalid email or password" });
